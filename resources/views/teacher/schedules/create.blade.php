@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="py-4 sm:py-6">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">
+            <div class="p-4 sm:p-6 bg-white border-b border-gray-200">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-3 sm:space-y-0">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
                         <i class="fas fa-calendar-plus mr-2"></i>
                         Add Schedule
                     </h2>
-                    <a href="{{ route('teacher.subjects.show', $subject) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <a href="{{ route('teacher.subjects.show', $subject) }}" class="mobile-btn inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         <i class="fas fa-arrow-left mr-2"></i>
                         Back to Subject
                     </a>
@@ -36,17 +36,15 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="day" class="block text-sm font-medium text-gray-700">Day of Week</label>
-                            <select name="day" id="day" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="">Select Day</option>
-                                <option value="monday" {{ old('day') == 'monday' ? 'selected' : '' }}>Monday</option>
-                                <option value="tuesday" {{ old('day') == 'tuesday' ? 'selected' : '' }}>Tuesday</option>
-                                <option value="wednesday" {{ old('day') == 'wednesday' ? 'selected' : '' }}>Wednesday</option>
-                                <option value="thursday" {{ old('day') == 'thursday' ? 'selected' : '' }}>Thursday</option>
-                                <option value="friday" {{ old('day') == 'friday' ? 'selected' : '' }}>Friday</option>
-                                <option value="saturday" {{ old('day') == 'saturday' ? 'selected' : '' }}>Saturday</option>
-                                <option value="sunday" {{ old('day') == 'sunday' ? 'selected' : '' }}>Sunday</option>
-                            </select>
+                            <label for="schedule_date" class="block text-sm font-medium text-gray-700">
+                                <i class="fas fa-calendar mr-1"></i>
+                                Schedule Date
+                            </label>
+                            <input type="date" name="schedule_date" id="schedule_date" required 
+                                   value="{{ old('schedule_date') }}" 
+                                   min="{{ date('Y-m-d') }}"
+                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <p class="mt-1 text-sm text-gray-500">Select the specific date for this schedule</p>
                         </div>
 
                         <div>
@@ -105,11 +103,11 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end space-x-3">
-                        <a href="{{ route('teacher.subjects.show', $subject) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <div class="flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+                        <a href="{{ route('teacher.subjects.show', $subject) }}" class="mobile-btn inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             Cancel
                         </a>
-                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        <button type="submit" class="mobile-btn inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                             <i class="fas fa-save mr-2"></i>
                             Add Schedule
                         </button>

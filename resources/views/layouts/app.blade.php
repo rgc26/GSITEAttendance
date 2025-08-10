@@ -6,13 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- Security Headers -->
-    
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none';"> -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <title>{{ config('app.name', 'SmartTrack') }}</title>
     
@@ -24,44 +23,150 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        /* Fallback styles in case Tailwind doesn't load */
-        .fallback-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
-        .fallback-card { background: white; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1rem; }
-        .fallback-button { display: inline-flex; align-items: center; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none; margin: 0.25rem; }
-        .fallback-button-primary { background: #3b82f6; color: white; }
-        .fallback-button-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
-        .fallback-button-success { background: #10b981; color: white; }
+        /* Mobile-first responsive styles */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Responsive table styles */
+        .responsive-table {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .responsive-table table {
+            min-width: 600px;
+        }
+        
+        /* Mobile card grid adjustments */
+        .mobile-card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .mobile-card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .mobile-card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Mobile button improvements */
+        .mobile-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        @media (min-width: 640px) {
+            .mobile-btn {
+                width: auto;
+            }
+        }
+        
+        /* Mobile form improvements */
+        .mobile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .mobile-form {
+                flex-direction: row;
+                align-items: end;
+            }
+        }
+        
+        /* Mobile navigation improvements */
+        .mobile-nav-toggle {
+            display: block;
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-nav-toggle {
+                display: none;
+            }
+        }
+        
+        .desktop-nav {
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .desktop-nav {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
     @auth
         <nav class="bg-white shadow-lg">
-            <div class="max-w-7xl mx-auto px-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
-                    <div class="flex">
+                    <!-- Logo and Brand -->
+                    <div class="flex items-center">
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ Auth::check() ? (Route::has('student.dashboard') ? route('student.dashboard') : '/') : (Route::has('login') ? route('login') : '/') }}" class="text-xl font-bold text-gray-800">
+                            <a href="{{ Auth::check() ? (Auth::user()->role === 'teacher' ? route('teacher.dashboard') : (Auth::user()->role === 'student' ? route('student.dashboard') : '/')) : (Route::has('login') ? route('login') : '/') }}" class="text-xl font-bold text-gray-800">
                                 {{ config('app.name', 'SmartTrack') }}
                             </a>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-4">
+                    
+                    <!-- Desktop Navigation -->
+                    <div class="desktop-nav items-center space-x-4">
                         <span class="text-gray-700 font-medium">{{ Auth::user() ? Auth::user()->name : 'Guest' }}</span>
-                        <form method="POST" action="{{ route('logout') }}" class="flex">
+                        <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
                             <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200">
                                 <i class="fas fa-sign-out-alt mr-2"></i>
-                                Logout
+                                <span>Logout</span>
                             </button>
                         </form>
                     </div>
+                    
+                    <!-- Mobile menu button -->
+                    <div class="mobile-nav-toggle flex items-center">
+                        <button id="mobile-menu-toggle" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="mobile-menu sm:hidden bg-white border-t border-gray-200">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <div class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">
+                        {{ Auth::user() ? Auth::user()->name : 'Guest' }}
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}" class="px-3 py-2">
+                        @csrf
+                        <button type="submit" class="w-full text-left inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </nav>
     @endauth
 
     <main class="py-4">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     {{ session('success') }}
@@ -89,152 +194,24 @@
     </main>
 
     <script>
-        // Secure JavaScript with strict mode and error handling
-        'use strict';
-        
-        // Prevent global scope pollution
-        (function() {
-            // Check if Tailwind CSS is loaded with error handling
+        // Mobile menu functionality
             document.addEventListener('DOMContentLoaded', function() {
-                try {
-                    const testElement = document.createElement('div');
-                    testElement.className = 'hidden';
-                    document.body.appendChild(testElement);
-                    
-                    const isTailwindLoaded = window.getComputedStyle(testElement).display === 'none';
-                    document.body.removeChild(testElement);
-                    
-                    if (!isTailwindLoaded) {
-                        console.warn('Tailwind CSS not loaded, applying fallback styles');
-                        applyFallbackStyles();
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('open');
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenu.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                        mobileMenu.classList.remove('open');
                     }
-                } catch (error) {
-                    console.error('Error checking Tailwind CSS:', error);
-                    applyFallbackStyles();
-                }
-            });
-
-            function applyFallbackStyles() {
-                try {
-                    const selectors = [
-                        { selector: '.max-w-7xl', class: 'fallback-container' },
-                        { selector: '.bg-white', class: 'fallback-card' },
-                        { selector: '.bg-indigo-600', class: 'fallback-button fallback-button-primary' },
-                        { selector: '.bg-gray-300', class: 'fallback-button fallback-button-secondary' },
-                        { selector: '.bg-green-600', class: 'fallback-button fallback-button-success' }
-                    ];
-                    
-                    selectors.forEach(({ selector, class: className }) => {
-                        document.querySelectorAll(selector).forEach(el => {
-                            el.classList.add(...className.split(' '));
-                        });
-                    });
-                } catch (error) {
-                    console.error('Error applying fallback styles:', error);
-                }
+                });
             }
-
-            // Secure confirmation functions with input validation
-            window.confirmDelete = function(event) {
-                if (!event || !event.preventDefault) {
-                    console.error('Invalid event object');
-                    return false;
-                }
-                
-                event.preventDefault();
-                
-                try {
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            title: 'Are you sure?',
-                            text: "You won't be able to revert this!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'Yes, delete it!',
-                            cancelButtonText: 'Cancel'
-                        }).then((result) => {
-                            if (result && result.isConfirmed) {
-                                const form = event.target.closest('form');
-                                if (form && form.tagName === 'FORM') {
-                                    form.submit();
-                                }
-                            }
-                        });
-                    } else {
-                        // Fallback to native confirm
-                        if (confirm('Are you sure you want to delete this item?')) {
-                            const form = event.target.closest('form');
-                            if (form && form.tagName === 'FORM') {
-                                form.submit();
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error in confirmDelete:', error);
-                    // Fallback to native confirm
-                    if (confirm('Are you sure you want to delete this item?')) {
-                        const form = event.target.closest('form');
-                        if (form && form.tagName === 'FORM') {
-                            form.submit();
-                        }
-                    }
-                }
-                
-                return false;
-            };
-
-            window.confirmArchive = function(event) {
-                if (!event || !event.preventDefault) {
-                    console.error('Invalid event object');
-                    return false;
-                }
-                
-                event.preventDefault();
-                
-                try {
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            title: 'Archive Subject?',
-                            text: "This subject will be moved to archived subjects. You can unarchive it later.",
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#f59e0b',
-                            cancelButtonColor: '#6b7280',
-                            confirmButtonText: 'Yes, archive it!',
-                            cancelButtonText: 'Cancel'
-                        }).then((result) => {
-                            if (result && result.isConfirmed) {
-                                const form = event.target.closest('form');
-                                if (form && form.tagName === 'FORM') {
-                                    form.submit();
-                                }
-                            }
-                        });
-                    } else {
-                        // Fallback to native confirm
-                        if (confirm('Are you sure you want to archive this subject?')) {
-                            const form = event.target.closest('form');
-                            if (form && form.tagName === 'FORM') {
-                                form.submit();
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error in confirmArchive:', error);
-                    // Fallback to native confirm
-                    if (confirm('Are you sure you want to archive this subject?')) {
-                        const form = event.target.closest('form');
-                        if (form && form.tagName === 'FORM') {
-                            form.submit();
-                        }
-                    }
-                }
-                
-                return false;
-            };
-        })();
+        });
     </script>
     
     @stack('scripts')

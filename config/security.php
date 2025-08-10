@@ -6,60 +6,104 @@ return [
     | Security Configuration
     |--------------------------------------------------------------------------
     |
-    | This file contains security-related configuration options for the application.
+    | This file contains security-related configuration options for your
+    | Laravel application. These settings help protect against common
+    | security vulnerabilities and attacks.
     |
     */
 
-    'session' => [
-        'secure' => env('SESSION_SECURE_COOKIE', false),
-        'http_only' => true,
-        'same_site' => 'lax',
-        'lifetime' => env('SESSION_LIFETIME', 120),
+    'headers' => [
+        'x-frame-options' => 'DENY',
+        'x-content-type-options' => 'nosniff',
+        'x-xss-protection' => '1; mode=block',
+        'referrer-policy' => 'strict-origin-when-cross-origin',
+        'permissions-policy' => 'geolocation=(), microphone=(), camera=()',
+        'strict-transport-security' => 'max-age=31536000; includeSubDomains',
     ],
 
-    'password' => [
-        'min_length' => 8,
-        'require_uppercase' => true,
-        'require_lowercase' => true,
-        'require_numbers' => true,
-        'require_symbols' => true,
+    'cors' => [
+        'allowed_origins' => env('CORS_ALLOWED_ORIGINS', ['http://localhost:8000']),
+        'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        'allowed_headers' => ['Content-Type', 'Authorization', 'X-Requested-With'],
+        'exposed_headers' => [],
+        'max_age' => 0,
+        'supports_credentials' => false,
     ],
 
     'rate_limiting' => [
-        'login_attempts' => 5,
-        'login_decay_minutes' => 15,
-        'registration_attempts' => 3,
-        'registration_decay_minutes' => 15,
-        'password_reset_attempts' => 3,
-        'password_reset_decay_minutes' => 15,
-    ],
-
-    'csp' => [
         'enabled' => true,
-        'report_only' => false,
-        'report_uri' => null,
+        'max_attempts' => 60,
+        'decay_minutes' => 1,
+        'throttle_requests' => [
+            'login' => 5,
+            'register' => 3,
+            'password_reset' => 3,
+        ],
     ],
 
-    'headers' => [
-        'x_frame_options' => 'DENY',
-        'x_content_type_options' => 'nosniff',
-        'x_xss_protection' => '1; mode=block',
-        'referrer_policy' => 'strict-origin-when-cross-origin',
-        'permissions_policy' => 'geolocation=(), microphone=(), camera=()',
+    'file_uploads' => [
+        'allowed_extensions' => ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'],
+        'max_size' => 10240, // 10MB in KB
+        'scan_for_viruses' => true,
+        'quarantine_suspicious' => true,
+    ],
+
+    'session' => [
+        'secure' => env('SESSION_SECURE_COOKIE', true),
+        'http_only' => true,
+        'same_site' => 'lax',
+        'lifetime' => 120, // 2 hours
+        'expire_on_close' => true,
+    ],
+
+    'authentication' => [
+        'password_min_length' => 12,
+        'require_special_chars' => true,
+        'require_numbers' => true,
+        'require_uppercase' => true,
+        'require_lowercase' => true,
+        'max_login_attempts' => 5,
+        'lockout_duration' => 15, // minutes
+        'two_factor_required' => false,
     ],
 
     'csrf' => [
         'enabled' => true,
-        'except' => [
-            // Add any routes that should be excluded from CSRF protection
-        ],
+        'token_lifetime' => 60, // minutes
+        'regenerate_on_login' => true,
     ],
 
-    'input_sanitization' => [
+    'logging' => [
+        'security_events' => true,
+        'failed_logins' => true,
+        'suspicious_activity' => true,
+        'file_access' => true,
+        'database_queries' => false,
+    ],
+
+    'firewall' => [
         'enabled' => true,
-        'strip_tags' => true,
-        'trim_whitespace' => true,
+        'blocked_ips' => [],
+        'allowed_ips' => [],
+        'block_suspicious_requests' => true,
+        'block_common_attacks' => true,
+    ],
+
+    'encryption' => [
+        'algorithm' => 'AES-256-CBC',
+        'key_rotation' => true,
+        'key_rotation_interval' => 30, // days
+    ],
+
+    'backup' => [
+        'enabled' => true,
+        'encrypt_backups' => true,
+        'backup_frequency' => 'daily',
+        'retention_days' => 30,
     ],
 ];
+
+
+
 
 

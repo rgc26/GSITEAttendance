@@ -12,6 +12,7 @@ class Schedule extends Model
     protected $fillable = [
         'subject_id',
         'day',
+        'schedule_date',
         'start_time',
         'end_time',
         'type',
@@ -22,6 +23,7 @@ class Schedule extends Model
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'schedule_date' => 'date',
     ];
 
     public function subject()

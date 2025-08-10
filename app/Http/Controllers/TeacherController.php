@@ -70,10 +70,9 @@ class TeacherController extends Controller
     {
         $this->authorize('view', $subject);
         
-        $schedules = $subject->schedules;
         $sessions = $subject->attendanceSessions()->with('attendances.user')->latest()->get();
         
-        return view('teacher.subjects.show', compact('subject', 'schedules', 'sessions'));
+        return view('teacher.subjects.show', compact('subject', 'sessions'));
     }
 
     public function createSchedule(Subject $subject)
@@ -87,7 +86,7 @@ class TeacherController extends Controller
         $this->authorize('view', $subject);
 
         $request->validate([
-            'day' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
+            'schedule_date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'type' => 'required|in:lecture,lab,online',
@@ -95,9 +94,14 @@ class TeacherController extends Controller
             'section' => 'required|string|max:50',
         ]);
 
+        // Get the day of the week from the selected date
+        $scheduleDate = \Carbon\Carbon::parse($request->schedule_date);
+        $dayOfWeek = strtolower($scheduleDate->format('l')); // 'l' gives full day name
+
         Schedule::create([
             'subject_id' => $subject->id,
-            'day' => $request->day,
+            'schedule_date' => $request->schedule_date,
+            'day' => $dayOfWeek,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'type' => $request->type,
@@ -105,7 +109,7 @@ class TeacherController extends Controller
             'section' => $request->section,
         ]);
 
-        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'Schedule created successfully!');
+        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'Schedule created successfully for ' . $scheduleDate->format('l, F j, Y') . '!');
     }
 
     public function editSchedule(Schedule $schedule)
@@ -139,6 +143,16 @@ class TeacherController extends Controller
         return redirect()->route('teacher.subjects.show', $schedule->subject)->with('success', 'Schedule updated successfully!');
     }
 
+    public function deleteSchedule(Schedule $schedule)
+    {
+        $this->authorize('view', $schedule->subject);
+        
+        $subject = $schedule->subject;
+        $schedule->delete();
+
+        return redirect()->route('teacher.subjects.show', $subject)->with('success', 'Schedule deleted successfully!');
+    }
+
     public function createSession(Subject $subject)
     {
         $this->authorize('view', $subject);
@@ -159,21 +173,28 @@ class TeacherController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        // Determine if this is a scheduled session
+        $isScheduled = $request->scheduled_start_time && $request->scheduled_end_time;
+        
         $session = AttendanceSession::create([
             'subject_id' => $subject->id,
             'name' => $request->name,
             'section' => $request->section,
             'session_type' => $request->session_type,
             'code' => strtoupper(substr(md5(uniqid()), 0, 6)),
-            'start_time' => now(),
+            'start_time' => $isScheduled ? null : now(), // Only set start_time if not scheduled
             'scheduled_start_time' => $request->scheduled_start_time ? now()->parse($request->scheduled_start_time) : null,
             'scheduled_end_time' => $request->scheduled_end_time ? now()->parse($request->scheduled_end_time) : null,
             'grace_period_minutes' => $request->grace_period_minutes ?? 15,
-            'is_active' => true,
+            'is_active' => !$isScheduled, // Only active immediately if not scheduled
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('teacher.sessions.show', $session)->with('success', 'Attendance session created!');
+        $message = $isScheduled 
+            ? 'Scheduled attendance session created! It will activate automatically at the scheduled time.'
+            : 'Attendance session created!';
+            
+        return redirect()->route('teacher.sessions.show', $session)->with('success', $message);
     }
 
     public function showSession(AttendanceSession $session)

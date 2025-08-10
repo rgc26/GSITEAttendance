@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -8,10 +6,11 @@
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">
                         <i class="fas fa-book mr-2"></i>
-                        {{ $subject->name }}
+                        <?php echo e($subject->name); ?>
+
                     </h2>
                     <div class="flex space-x-3">
-                        <a href="{{ route('teacher.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <a href="<?php echo e(route('teacher.dashboard')); ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             <i class="fas fa-home mr-2"></i>
                             Back to Dashboard
                         </a>
@@ -19,7 +18,7 @@
                             <i class="fas fa-edit mr-2"></i>
                             Edit Subject
                         </button>
-                        <a href="{{ route('teacher.reports.attendance', $subject) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                        <a href="<?php echo e(route('teacher.reports.attendance', $subject)); ?>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                             <i class="fas fa-chart-bar mr-2"></i>
                             Attendance Report
                         </a>
@@ -33,22 +32,22 @@
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Name:</span>
-                                <span class="font-medium">{{ $subject->name }}</span>
+                                <span class="font-medium"><?php echo e($subject->name); ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Code:</span>
-                                <span class="font-medium">{{ $subject->code }}</span>
+                                <span class="font-medium"><?php echo e($subject->code); ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Teacher:</span>
-                                <span class="font-medium">{{ $subject->teacher->name }}</span>
+                                <span class="font-medium"><?php echo e($subject->teacher->name); ?></span>
                             </div>
-                            @if($subject->description)
+                            <?php if($subject->description): ?>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Description:</span>
-                                    <span class="font-medium">{{ $subject->description }}</span>
+                                    <span class="font-medium"><?php echo e($subject->description); ?></span>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -57,15 +56,15 @@
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-blue-700">Total Sessions:</span>
-                                <span class="font-bold text-blue-900">{{ $sessions->count() }}</span>
+                                <span class="font-bold text-blue-900"><?php echo e($sessions->count()); ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-blue-700">Active Sessions:</span>
-                                <span class="font-bold text-green-600">{{ $sessions->where('is_active', true)->count() }}</span>
+                                <span class="font-bold text-green-600"><?php echo e($sessions->where('is_active', true)->count()); ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-blue-700">Total Attendees:</span>
-                                <span class="font-bold text-purple-600">{{ $sessions->sum(function($session) { return $session->attendances->count(); }) }}</span>
+                                <span class="font-bold text-purple-600"><?php echo e($sessions->sum(function($session) { return $session->attendances->count(); })); ?></span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +72,7 @@
 
                 <!-- Quick Actions -->
                 <div class="mb-8">
-                    <a href="{{ route('teacher.sessions.create', $subject) }}" class="mobile-btn inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    <a href="<?php echo e(route('teacher.sessions.create', $subject)); ?>" class="mobile-btn inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                         <i class="fas fa-qrcode mr-2"></i>
                         Start Attendance Session
                     </a>
@@ -106,9 +105,9 @@
                             <label for="sectionFilter" class="block text-sm font-medium text-blue-700 mb-2">Filter by Section</label>
                             <select id="sectionFilter" class="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">All Sections</option>
-                                @foreach($sessions->pluck('section')->unique() as $section)
-                                    <option value="{{ $section }}">{{ $section }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $sessions->pluck('section')->unique(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($section); ?>"><?php echo e($section); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div>
@@ -142,11 +141,11 @@
                 <!-- Sessions with Accordion -->
                 <div>
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Attendance Sessions</h3>
-                    @if($sessions->count() > 0)
+                    <?php if($sessions->count() > 0): ?>
                         <div class="space-y-4">
                             <!-- Active Sessions Accordion -->
 
-                            @if($sessions->where('is_active', true)->count() > 0)
+                            <?php if($sessions->where('is_active', true)->count() > 0): ?>
                                 <div class="border border-gray-200 rounded-lg overflow-hidden">
                                     <div class="accordion-header bg-green-50 hover:bg-green-100 cursor-pointer transition-colors duration-200">
                                         <div class="p-4">
@@ -160,10 +159,10 @@
                                                 </div>
                                                 <div class="flex items-center space-x-4">
                                                     <span class="text-sm text-green-600">
-                                                        <span class="font-medium">{{ $sessions->where('is_active', true)->count() }}</span> sessions
+                                                        <span class="font-medium"><?php echo e($sessions->where('is_active', true)->count()); ?></span> sessions
                                                     </span>
                                                     <span class="text-sm text-green-600">
-                                                        <span class="font-medium">{{ $sessions->where('is_active', true)->sum(function($s) { return $s->attendances->count(); }) }}</span> total attendees
+                                                        <span class="font-medium"><?php echo e($sessions->where('is_active', true)->sum(function($s) { return $s->attendances->count(); })); ?></span> total attendees
                                                     </span>
                                                 </div>
                                             </div>
@@ -172,26 +171,28 @@
                                     <div class="accordion-content bg-white">
                                         <div class="p-4">
                                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                                @foreach($sessions->where('is_active', true) as $session)
+                                                <?php $__currentLoopData = $sessions->where('is_active', true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $session): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     
                                                     <div class="session-card bg-white border border-gray-200 rounded-lg p-6 shadow-sm" 
-                                                         data-name="{{ strtolower($session->name ?? 'session #' . $session->id) }}"
+                                                         data-name="<?php echo e(strtolower($session->name ?? 'session #' . $session->id)); ?>"
                                                          data-status="active"
-                                                         data-section="{{ $session->section }}"
-                                                         data-date="{{ $session->start_time ? $session->start_time->format('Y-m-d') : ($session->scheduled_start_time ? $session->scheduled_start_time->format('Y-m-d') : 'N/A') }}">
+                                                         data-section="<?php echo e($session->section); ?>"
+                                                         data-date="<?php echo e($session->start_time ? $session->start_time->format('Y-m-d') : ($session->scheduled_start_time ? $session->scheduled_start_time->format('Y-m-d') : 'N/A')); ?>">
                                                         <div class="flex items-center justify-between mb-4">
                                                             <h5 class="text-lg font-semibold text-gray-900">
-                                                                @if($session->name)
-                                                                    {{ $session->name }}
-                                                                @else
-                                                                    Session #{{ $session->id }}
-                                                                @endif
+                                                                <?php if($session->name): ?>
+                                                                    <?php echo e($session->name); ?>
+
+                                                                <?php else: ?>
+                                                                    Session #<?php echo e($session->id); ?>
+
+                                                                <?php endif; ?>
                                                             </h5>
                                                             <div class="flex items-center space-x-2">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                                     Active
                                                                 </span>
-                                                                <button onclick="showDeleteConfirmation('{{ $session->name ?? 'Session #' . $session->id }}', {{ $session->id }})" class="text-red-500 hover:text-red-700 transition-colors duration-200">
+                                                                <button onclick="showDeleteConfirmation('<?php echo e($session->name ?? 'Session #' . $session->id); ?>', <?php echo e($session->id); ?>)" class="text-red-500 hover:text-red-700 transition-colors duration-200">
                                                                     <i class="fas fa-times"></i>
                                                                 </button>
                                                             </div>
@@ -200,48 +201,48 @@
                                                         <div class="space-y-2 mb-4">
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Section:</span>
-                                                                <span class="font-bold text-indigo-600">{{ $session->section }}</span>
+                                                                <span class="font-bold text-indigo-600"><?php echo e($session->section); ?></span>
                                                             </div>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Code:</span>
-                                                                <span class="font-mono font-bold">{{ $session->code }}</span>
+                                                                <span class="font-mono font-bold"><?php echo e($session->code); ?></span>
                                                             </div>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Started:</span>
-                                                                <span class="font-medium">{{ $session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet' }}</span>
+                                                                <span class="font-medium"><?php echo e($session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet'); ?></span>
                                                             </div>
                                                             
-                                                            @if($session->scheduled_start_time)
+                                                            <?php if($session->scheduled_start_time): ?>
                                                                 <div class="flex justify-between">
                                                                     <span class="text-gray-600">Scheduled:</span>
-                                                                    <span class="font-medium">{{ $session->scheduled_start_time->format('M d, Y H:i') }}</span>
+                                                                    <span class="font-medium"><?php echo e($session->scheduled_start_time->format('M d, Y H:i')); ?></span>
                                                                 </div>
-                                                            @endif
+                                                            <?php endif; ?>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Attendees:</span>
-                                                                <span class="font-medium text-green-600">{{ $session->attendances->count() }}</span>
+                                                                <span class="font-medium text-green-600"><?php echo e($session->attendances->count()); ?></span>
                                                             </div>
                                                         </div>
                                                         
                                                         <div class="flex space-x-2">
-                                                            <a href="{{ route('teacher.sessions.show', $session) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                                                            <a href="<?php echo e(route('teacher.sessions.show', $session)); ?>" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                                                                 <i class="fas fa-eye mr-2"></i>
                                                                 View
                                                             </a>
                                                         </div>
                                                     </div>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
                             <!-- Scheduled Sessions Accordion -->
-                            @php
+                            <?php
                                 $scheduledSessions = $sessions->filter(function($session) {
                                     return !$session->is_active && 
                                            $session->scheduled_start_time && 
@@ -251,9 +252,9 @@
                                     return !$session->is_active && 
                                            ($session->start_time || !$session->scheduled_start_time);
                                 });
-                            @endphp
+                            ?>
 
-                            @if($scheduledSessions->count() > 0)
+                            <?php if($scheduledSessions->count() > 0): ?>
                                 <div class="border border-gray-200 rounded-lg overflow-hidden">
                                     <div class="accordion-header bg-yellow-50 hover:bg-yellow-100 cursor-pointer transition-colors duration-200">
                                         <div class="p-4">
@@ -267,7 +268,7 @@
                                                 </div>
                                                 <div class="flex items-center space-x-4">
                                                     <span class="text-sm text-yellow-600">
-                                                        <span class="font-medium">{{ $scheduledSessions->count() }}</span> sessions
+                                                        <span class="font-medium"><?php echo e($scheduledSessions->count()); ?></span> sessions
                                                     </span>
                                                 </div>
                                             </div>
@@ -276,25 +277,27 @@
                                     <div class="accordion-content bg-white">
                                         <div class="p-4">
                                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                                @foreach($scheduledSessions as $session)
+                                                <?php $__currentLoopData = $scheduledSessions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $session): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <div class="session-card bg-white border border-gray-200 rounded-lg p-6 shadow-sm" 
-                                                         data-name="{{ strtolower($session->name ?? 'session #' . $session->id) }}"
+                                                         data-name="<?php echo e(strtolower($session->name ?? 'session #' . $session->id)); ?>"
                                                          data-status="scheduled"
-                                                         data-section="{{ $session->section }}"
-                                                         data-date="{{ $session->scheduled_start_time ? $session->scheduled_start_time->format('Y-m-d') : 'N/A' }}">
+                                                         data-section="<?php echo e($session->section); ?>"
+                                                         data-date="<?php echo e($session->scheduled_start_time ? $session->scheduled_start_time->format('Y-m-d') : 'N/A'); ?>">
                                                         <div class="flex items-center justify-between mb-4">
                                                             <h5 class="text-lg font-semibold text-gray-900">
-                                                                @if($session->name)
-                                                                    {{ $session->name }}
-                                                                @else
-                                                                    Session #{{ $session->id }}
-                                                                @endif
+                                                                <?php if($session->name): ?>
+                                                                    <?php echo e($session->name); ?>
+
+                                                                <?php else: ?>
+                                                                    Session #<?php echo e($session->id); ?>
+
+                                                                <?php endif; ?>
                                                             </h5>
                                                             <div class="flex items-center space-x-2">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                                                     Scheduled
                                                                 </span>
-                                                                <button onclick="showDeleteConfirmation('{{ $session->name ?? 'Session #' . $session->id }}', {{ $session->id }})" class="text-red-500 hover:text-red-700 transition-colors duration-200">
+                                                                <button onclick="showDeleteConfirmation('<?php echo e($session->name ?? 'Session #' . $session->id); ?>', <?php echo e($session->id); ?>)" class="text-red-500 hover:text-red-700 transition-colors duration-200">
                                                                     <i class="fas fa-times"></i>
                                                                 </button>
                                                             </div>
@@ -303,48 +306,48 @@
                                                         <div class="space-y-2 mb-4">
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Section:</span>
-                                                                <span class="font-bold text-indigo-600">{{ $session->section }}</span>
+                                                                <span class="font-bold text-indigo-600"><?php echo e($session->section); ?></span>
                                                             </div>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Code:</span>
-                                                                <span class="font-mono font-bold">{{ $session->code }}</span>
+                                                                <span class="font-mono font-bold"><?php echo e($session->code); ?></span>
                                                             </div>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Started:</span>
-                                                                <span class="font-medium">{{ $session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet' }}</span>
+                                                                <span class="font-medium"><?php echo e($session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet'); ?></span>
                                                             </div>
                                                             
-                                                            @if($session->scheduled_start_time)
+                                                            <?php if($session->scheduled_start_time): ?>
                                                                 <div class="flex justify-between">
                                                                     <span class="text-gray-600">Scheduled:</span>
-                                                                    <span class="font-medium">{{ $session->scheduled_start_time->format('M d, Y H:i') }}</span>
+                                                                    <span class="font-medium"><?php echo e($session->scheduled_start_time->format('M d, Y H:i')); ?></span>
                                                                 </div>
-                                                            @endif
+                                                            <?php endif; ?>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Attendees:</span>
-                                                                <span class="font-medium">{{ $session->attendances->count() }}</span>
+                                                                <span class="font-medium"><?php echo e($session->attendances->count()); ?></span>
                                                             </div>
                                                         </div>
                                                         
                                                         <div class="flex space-x-2">
-                                                            <a href="{{ route('teacher.sessions.show', $session) }}" class="mobile-btn flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                                            <a href="<?php echo e(route('teacher.sessions.show', $session)); ?>" class="mobile-btn flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                                                                 <i class="fas fa-eye mr-2"></i>
                                                                 View
                                                             </a>
                                                         </div>
                                                     </div>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
                             <!-- Ended Sessions Accordion -->
-                            @if($endedSessions->count() > 0)
+                            <?php if($endedSessions->count() > 0): ?>
                                 <div class="border border-gray-200 rounded-lg overflow-hidden">
                                     <div class="accordion-header bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors duration-200">
                                         <div class="p-4">
@@ -358,10 +361,10 @@
                                                 </div>
                                                 <div class="flex items-center space-x-4">
                                                     <span class="text-sm text-gray-600">
-                                                        <span class="font-medium">{{ $endedSessions->count() }}</span> sessions
+                                                        <span class="font-medium"><?php echo e($endedSessions->count()); ?></span> sessions
                                                     </span>
                                                     <span class="text-sm text-gray-600">
-                                                        <span class="font-medium">{{ $endedSessions->sum(function($s) { return $s->attendances->count(); }) }}</span> total attendees
+                                                        <span class="font-medium"><?php echo e($endedSessions->sum(function($s) { return $s->attendances->count(); })); ?></span> total attendees
                                                     </span>
                                                 </div>
                                             </div>
@@ -370,25 +373,27 @@
                                     <div class="accordion-content bg-white">
                                         <div class="p-4">
                                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                                @foreach($endedSessions as $session)
+                                                <?php $__currentLoopData = $endedSessions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $session): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <div class="session-card bg-white border border-gray-200 rounded-lg p-6 shadow-sm" 
-                                                         data-name="{{ strtolower($session->name ?? 'session #' . $session->id) }}"
+                                                         data-name="<?php echo e(strtolower($session->name ?? 'session #' . $session->id)); ?>"
                                                          data-status="ended"
-                                                         data-section="{{ $session->section }}"
-                                                         data-date="{{ $session->start_time ? $session->start_time->format('Y-m-d') : ($session->scheduled_start_time ? $session->scheduled_start_time->format('Y-m-d') : 'N/A') }}">
+                                                         data-section="<?php echo e($session->section); ?>"
+                                                         data-date="<?php echo e($session->start_time ? $session->start_time->format('Y-m-d') : ($session->scheduled_start_time ? $session->scheduled_start_time->format('Y-m-d') : 'N/A')); ?>">
                                                         <div class="flex items-center justify-between mb-4">
                                                             <h5 class="text-lg font-semibold text-gray-900">
-                                                                @if($session->name)
-                                                                    {{ $session->name }}
-                                                                @else
-                                                                    Session #{{ $session->id }}
-                                                                @endif
+                                                                <?php if($session->name): ?>
+                                                                    <?php echo e($session->name); ?>
+
+                                                                <?php else: ?>
+                                                                    Session #<?php echo e($session->id); ?>
+
+                                                                <?php endif; ?>
                                                             </h5>
                                                             <div class="flex items-center space-x-2">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                                     Ended
                                                                 </span>
-                                                                <button onclick="showDeleteConfirmation('{{ $session->name ?? 'Session #' . $session->id }}', {{ $session->id }})" class="text-red-500 hover:text-red-700 transition-colors duration-200">
+                                                                <button onclick="showDeleteConfirmation('<?php echo e($session->name ?? 'Session #' . $session->id); ?>', <?php echo e($session->id); ?>)" class="text-red-500 hover:text-red-700 transition-colors duration-200">
                                                                     <i class="fas fa-times"></i>
                                                                 </button>
                                                             </div>
@@ -397,60 +402,60 @@
                                                         <div class="space-y-2 mb-4">
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Section:</span>
-                                                                <span class="font-bold text-indigo-600">{{ $session->section }}</span>
+                                                                <span class="font-bold text-indigo-600"><?php echo e($session->section); ?></span>
                                                             </div>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Code:</span>
-                                                                <span class="font-mono font-bold">{{ $session->code }}</span>
+                                                                <span class="font-mono font-bold"><?php echo e($session->code); ?></span>
                                                             </div>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Started:</span>
-                                                                <span class="font-medium">{{ $session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet' }}</span>
+                                                                <span class="font-medium"><?php echo e($session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet'); ?></span>
                                                             </div>
                                                             
-                                                            @if($session->scheduled_start_time)
+                                                            <?php if($session->scheduled_start_time): ?>
                                                                 <div class="flex justify-between">
                                                                     <span class="text-gray-600">Scheduled:</span>
-                                                                    <span class="font-medium">{{ $session->scheduled_start_time->format('M d, Y H:i') }}</span>
+                                                                    <span class="font-medium"><?php echo e($session->scheduled_start_time->format('M d, Y H:i')); ?></span>
                                                                 </div>
-                                                            @endif
+                                                            <?php endif; ?>
                                                             
-                                                            @if($session->end_time)
+                                                            <?php if($session->end_time): ?>
                                                                 <div class="flex justify-between">
                                                                     <span class="text-gray-600">Ended:</span>
-                                                                    <span class="font-medium">{{ $session->end_time->format('M d, Y H:i') }}</span>
+                                                                    <span class="font-medium"><?php echo e($session->end_time->format('M d, Y H:i')); ?></span>
                                                                 </div>
-                                                            @endif
+                                                            <?php endif; ?>
                                                             
                                                             <div class="flex justify-between">
                                                                 <span class="text-gray-600">Attendees:</span>
-                                                                <span class="font-medium text-green-600">{{ $session->attendances->count() }}</span>
+                                                                <span class="font-medium text-green-600"><?php echo e($session->attendances->count()); ?></span>
                                                             </div>
                                                         </div>
                                                         
                                                         <div class="flex space-x-2">
-                                                            <a href="{{ route('teacher.sessions.show', $session) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                                                            <a href="<?php echo e(route('teacher.sessions.show', $session)); ?>" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                                                                 <i class="fas fa-eye mr-2"></i>
                                                                 View
                                                             </a>
                                                         </div>
                                                     </div>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="text-center py-8">
                             <i class="fas fa-qrcode text-4xl text-gray-400 mb-4"></i>
                             <h3 class="text-lg font-medium text-gray-900 mb-2">No Sessions Yet</h3>
                             <p class="text-gray-600">Start an attendance session to begin tracking student attendance.</p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -496,7 +501,7 @@
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -658,9 +663,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Edit Subject Modal Functions
     window.openEditModal = function() {
         // Populate the modal with current subject data
-        document.getElementById('edit-subject-name').value = '{{ $subject->name }}';
-        document.getElementById('edit-subject-code').value = '{{ $subject->code }}';
-        document.getElementById('edit-subject-description').value = '{{ $subject->description ?? "" }}';
+        document.getElementById('edit-subject-name').value = '<?php echo e($subject->name); ?>';
+        document.getElementById('edit-subject-code').value = '<?php echo e($subject->code); ?>';
+        document.getElementById('edit-subject-description').value = '<?php echo e($subject->description ?? ""); ?>';
         
         // Show the modal
         document.getElementById('editSubjectModal').classList.remove('hidden');
@@ -683,11 +688,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const formData = new FormData(this);
         
-        fetch('{{ route("teacher.subjects.update", $subject) }}', {
+        fetch('<?php echo e(route("teacher.subjects.update", $subject)); ?>', {
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
             }
         })
         .then(response => response.json())
@@ -743,12 +748,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sessionToDelete) {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '{{ route("teacher.sessions.delete", ":id") }}'.replace(':id', sessionToDelete);
+            form.action = '<?php echo e(route("teacher.sessions.delete", ":id")); ?>'.replace(':id', sessionToDelete);
             
             const csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
-            csrfToken.value = '{{ csrf_token() }}';
+            csrfToken.value = '<?php echo e(csrf_token()); ?>';
             
             const methodField = document.createElement('input');
             methodField.type = 'hidden';
@@ -838,3 +843,4 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\webSys\resources\views/teacher/subjects/show.blade.php ENDPATH**/ ?>

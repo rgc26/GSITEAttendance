@@ -98,6 +98,36 @@ Route::group([], function () {
         return redirect()->route('teacher.dashboard');
     })->name('teacher.subjects');
     Route::get('/teacher/subjects/archived', [TeacherController::class, 'archivedSubjects'])->name('teacher.subjects.archived');
+    Route::get('/test-archived', function () {
+        $subjects = auth()->user()->subjects()->where('archived', true)->get();
+        return response()->json([
+            'subjects_count' => $subjects->count(),
+            'subjects' => $subjects->toArray()
+        ]);
+    })->name('test.archived');
+    
+    Route::get('/test-scheduled-sessions', function () {
+        $scheduledSessions = \App\Models\AttendanceSession::whereNotNull('scheduled_start_time')
+            ->with('subject')
+            ->orderBy('scheduled_start_time')
+            ->get();
+            
+        return response()->json([
+            'scheduled_sessions' => $scheduledSessions->map(function($session) {
+                return [
+                    'id' => $session->id,
+                    'name' => $session->name,
+                    'subject_name' => $session->subject->name,
+                    'scheduled_start_time' => $session->scheduled_start_time?->format('Y-m-d H:i:s'),
+                    'scheduled_end_time' => $session->scheduled_end_time?->format('Y-m-d H:i:s'),
+                    'is_active' => $session->is_active,
+                    'start_time' => $session->start_time?->format('Y-m-d H:i:s'),
+                    'current_time' => now()->format('Y-m-d H:i:s'),
+                    'should_be_active' => $session->scheduled_start_time && $session->scheduled_start_time <= now() && !$session->start_time
+                ];
+            })
+        ]);
+    })->name('test.scheduled.sessions');
     Route::get('/teacher/subjects/create', [TeacherController::class, 'createSubject'])->name('teacher.subjects.create');
     Route::post('/teacher/subjects', [TeacherController::class, 'storeSubject'])->name('teacher.subjects.store');
     Route::get('/teacher/subjects/{subject}', [TeacherController::class, 'showSubject'])->name('teacher.subjects.show');
@@ -112,6 +142,7 @@ Route::group([], function () {
     Route::post('/teacher/subjects/{subject}/schedules', [TeacherController::class, 'storeSchedule'])->name('teacher.schedules.store');
     Route::get('/teacher/schedules/{schedule}/edit', [TeacherController::class, 'editSchedule'])->name('teacher.schedules.edit');
     Route::put('/teacher/schedules/{schedule}', [TeacherController::class, 'updateSchedule'])->name('teacher.schedules.update');
+    Route::delete('/teacher/schedules/{schedule}', [TeacherController::class, 'deleteSchedule'])->name('teacher.schedules.delete');
     
     // Attendance Sessions
     Route::get('/teacher/subjects/{subject}/sessions/create', [TeacherController::class, 'createSession'])->name('teacher.sessions.create');
