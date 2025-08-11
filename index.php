@@ -4,65 +4,78 @@
  * Laravel - A PHP Framework For Web Artisans
  * 
  * This file serves as the main entry point for Laravel
- * It handles redirects when .htaccess fails
+ * It includes error handling and debugging
  */
 
-// Get the current request URI
-$request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Extract the path after the domain
-$path = parse_url($request_uri, PHP_URL_PATH);
+try {
+    // Define the Laravel start time
+    define('LARAVEL_START', microtime(true));
 
-// Remove the base path if it exists
-$base_path = '/GSITEAttendance';
-if (strpos($path, $base_path) === 0) {
-    $path = substr($path, strlen($base_path));
+    // Change to the project root directory
+    chdir(__DIR__);
+
+    // Check if required files exist
+    if (!file_exists(__DIR__.'/vendor/autoload.php')) {
+        throw new Exception('vendor/autoload.php not found');
+    }
+
+    if (!file_exists(__DIR__.'/bootstrap/app.php')) {
+        throw new Exception('bootstrap/app.php not found');
+    }
+
+    // Include the Laravel bootstrap
+    require __DIR__.'/vendor/autoload.php';
+
+    // Bootstrap the Laravel application
+    $app = require_once __DIR__.'/bootstrap/app.php';
+
+    // Create the HTTP kernel
+    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+    // Handle the request
+    $response = $kernel->handle(
+        $request = Illuminate\Http\Request::capture()
+    );
+
+    // Send the response
+    $response->send();
+
+    // Terminate the application
+    $kernel->terminate($request, $response);
+
+} catch (Exception $e) {
+    // Display error information
+    echo "<h1>Laravel Error</h1>";
+    echo "<p><strong>Error:</strong> " . $e->getMessage() . "</p>";
+    echo "<p><strong>File:</strong> " . $e->getFile() . "</p>";
+    echo "<p><strong>Line:</strong> " . $e->getLine() . "</p>";
+    
+    // Show server information
+    echo "<h2>Server Information</h2>";
+    echo "<p><strong>PHP Version:</strong> " . PHP_VERSION . "</p>";
+    echo "<p><strong>Current Directory:</strong> " . __DIR__ . "</p>";
+    echo "<p><strong>Document Root:</strong> " . ($_SERVER['DOCUMENT_ROOT'] ?? 'Unknown') . "</p>";
+    
+    // Show file existence check
+    echo "<h2>File Check</h2>";
+    $files = [
+        'vendor/autoload.php',
+        'bootstrap/app.php',
+        'app/Http/Controllers/TeacherController.php',
+        'routes/web.php'
+    ];
+    
+    foreach ($files as $file) {
+        $exists = file_exists($file) ? 'EXISTS' : 'MISSING';
+        echo "<p>{$file}: {$exists}</p>";
+    }
+    
+    // Provide alternative access
+    echo "<hr>";
+    echo "<p><a href='./public/'>Access via public directory</a></p>";
+    echo "<p><a href='./test.php'>Run test file</a></p>";
 }
-
-// Ensure path starts with /
-if (empty($path) || $path[0] !== '/') {
-    $path = '/' . $path;
-}
-
-// Build the redirect URL
-$redirect_url = $base_path . '/public' . $path;
-
-// Add query string if it exists
-if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
-    $redirect_url .= '?' . $_SERVER['QUERY_STRING'];
-}
-
-// Set proper headers for redirect
-header("HTTP/1.1 301 Moved Permanently");
-header("Location: {$redirect_url}");
-header("Cache-Control: no-cache, must-revalidate");
-
-// Output a fallback message in case headers fail
-echo "<!DOCTYPE html>
-<html>
-<head>
-    <title>Redirecting to Laravel Application...</title>
-    <meta http-equiv='refresh' content='0;url={$redirect_url}'>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        .redirect-box { max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 3px; }
-    </style>
-</head>
-<body>
-    <div class='redirect-box'>
-        <h2>Redirecting...</h2>
-        <p>You are being redirected to the Laravel application.</p>
-        <p>If you are not redirected automatically, click the button below:</p>
-        <a href='{$redirect_url}' class='btn'>Go to Application</a>
-    </div>
-    <script>
-        // JavaScript redirect as backup
-        setTimeout(function() {
-            window.location.href = '{$redirect_url}';
-        }, 1000);
-    </script>
-</body>
-</html>";
-
-exit;
