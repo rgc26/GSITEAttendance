@@ -93,18 +93,6 @@ return [
         'xss_protection' => true,
         'content_type_nosniff' => true,
         'frame_options' => 'DENY',
-        'rate_limiting' => [
-            'enabled' => true,
-            'max_attempts' => 60,
-            'decay_minutes' => 1,
-            'throttle_requests' => [
-                'login' => 5,
-                'register' => 3,
-                'password_reset' => 10,
-                'password_update' => 5,
-                'email_verification' => 6,
-            ],
-        ],
     ],
     
     'logging' => [

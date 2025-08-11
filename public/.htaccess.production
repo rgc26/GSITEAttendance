@@ -112,11 +112,11 @@ RewriteRule ^ index.php [L]
     Require all denied
 </FilesMatch>
 
-# Rate limiting (if mod_ratelimit is available) - More permissive for better UX
+# Rate limiting (if mod_ratelimit is available)
 <IfModule mod_ratelimit.c>
     <Location />
         SetOutputFilter RATE_LIMIT
-        SetEnv rate-limit 1000
+        SetEnv rate-limit 400
     </Location>
 </IfModule>
 

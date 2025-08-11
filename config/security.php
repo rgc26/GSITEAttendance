@@ -37,7 +37,7 @@ return [
         'throttle_requests' => [
             'login' => 5,
             'register' => 3,
-            'password_reset' => 10,
+            'password_reset' => 3,
         ],
     ],
 
