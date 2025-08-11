@@ -1,44 +1,17 @@
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes -ExecCGI
+        Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
 
-    # Security Headers
+    # Security Headers (only if mod_headers is available)
     <IfModule mod_headers.c>
         Header always set X-Content-Type-Options nosniff
         Header always set X-Frame-Options DENY
         Header always set X-XSS-Protection "1; mode=block"
         Header always set Referrer-Policy "strict-origin-when-cross-origin"
-        Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
-        # HSTS Header (only for HTTPS - commented for local development)
-        # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
     </IfModule>
-
-    # Block access to sensitive files
-    <FilesMatch "\.(env|log|sql|sqlite|md|txt|lock|phar|htaccess|htpasswd)$">
-        Order allow,deny
-        Deny from all
-    </FilesMatch>
-
-    # Block access to hidden files
-    <FilesMatch "^\.">
-        Order allow,deny
-        Deny from all
-    </FilesMatch>
-
-    # Allow PHP files for local development
-    # <FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi|exe|bat|cmd|com|pif|scr|vbs|js)$">
-    #     Order allow,deny
-    #     Deny from all
-    # </FilesMatch>
-
-    # Allow all file types for local development
-    # <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
-    #     Order allow,deny
-    #     Allow from all
-    # </FilesMatch>
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -54,18 +27,3 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
-# Additional Security Rules (commented for local development)
-# <IfModule mod_rewrite.c>
-#     # Block suspicious user agents
-#     RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|scraper) [NC]
-#     RewriteRule .* - [F,L]
-#     
-#     # Block suspicious requests
-#     RewriteCond %{QUERY_STRING} (eval|exec|system|shell_exec|passthru|proc_open|popen) [NC]
-#     RewriteRule .* - [F,L]
-#     
-#     # Block access to common attack patterns
-#     RewriteCond %{QUERY_STRING} (union|select|insert|update|delete|drop|create|alter|grant|revoke) [NC]
-#     RewriteRule .* - [F,L]
-# </IfModule>
