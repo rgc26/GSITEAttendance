@@ -228,27 +228,33 @@ class TeacherController extends Controller
             })
             ->get();
         
-        // Create absent records for students who didn't attend
-        foreach ($allStudents as $student) {
-            $existingAttendance = $attendances->where('user_id', $student->id)->first();
-            
-            if (!$existingAttendance) {
-                // Create absent record
-                \App\Models\Attendance::create([
-                    'user_id' => $student->id,
-                    'attendance_session_id' => $session->id,
-                    'subject_id' => $session->subject_id,
-                    'check_in_time' => now(),
-                    'ip_address' => request()->ip(),
-                    'status' => 'absent',
-                ]);
+        // Only create absent records if this is the first time viewing the session
+        // Check if any absent records already exist for this session
+        $existingAbsentRecords = $attendances->where('status', 'absent')->count();
+        
+        if ($existingAbsentRecords == 0) {
+            // Create absent records for students who didn't attend
+            foreach ($allStudents as $student) {
+                $existingAttendance = $attendances->where('user_id', $student->id)->first();
+                
+                if (!$existingAttendance) {
+                    // Create absent record
+                    \App\Models\Attendance::create([
+                        'user_id' => $student->id,
+                        'attendance_session_id' => $session->id,
+                        'subject_id' => $session->subject_id,
+                        'check_in_time' => now(),
+                        'ip_address' => request()->ip(),
+                        'status' => 'absent',
+                    ]);
+                }
             }
+            
+            // Refresh attendances after creating absent records
+            $attendances = $session->attendances()->with('user')->get();
         }
         
-        // Refresh attendances after creating absent records
-        $attendances = $session->attendances()->with('user')->get();
-        
-        // Re-group attendances by student type
+        // Group attendances by student type
         $regularAttendances = $attendances->where('user.student_type', 'regular');
         $irregularAttendances = $attendances->where('user.student_type', 'irregular');
         $blockAttendances = $attendances->where('user.student_type', 'block');
