@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting to Laravel Application...</title>
-    <meta http-equiv="refresh" content="0;url=/GSITEAttendance/public/">
+    <title>GSITE Attendance System</title>
+    <meta http-equiv="refresh" content="0;url=/public/">
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -44,24 +44,19 @@
     <div class="redirect-box">
         <div class="logo">GSITE Attendance System</div>
         <h2>Redirecting...</h2>
-        <p>You are being redirected to the Laravel application.</p>
+        <p>You are being redirected to the application.</p>
         <p>If you are not redirected automatically, click the button below:</p>
-        <a href="/GSITEAttendance/public/" class="btn">Go to Application</a>
+        <a href="/public/" class="btn">Go to Application</a>
         <br>
-        <a href="/GSITEAttendance/public/login" class="btn">Go to Login</a>
-        <a href="/GSITEAttendance/public/teacher/dashboard" class="btn">Teacher Dashboard</a>
+        <a href="/public/login" class="btn">Go to Login</a>
+        <a href="/public/teacher/dashboard" class="btn">Teacher Dashboard</a>
     </div>
     
     <script>
         // JavaScript redirect as backup
         setTimeout(function() {
-            window.location.href = '/GSITEAttendance/public/';
+            window.location.href = '/public/';
         }, 1000);
-        
-        // Also redirect on any click
-        document.addEventListener('click', function() {
-            window.location.href = '/GSITEAttendance/public/';
-        });
     </script>
 </body>
 </html>
