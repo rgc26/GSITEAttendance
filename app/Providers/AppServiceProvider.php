@@ -17,11 +17,11 @@ class AppServiceProvider extends ServiceProvider
         // Set default timezone for Carbon
         Carbon::setDefaultTimezone('Asia/Manila');
         
-        // Add helper function for Philippine time
-        if (!function_exists('ph_time')) {
-            function ph_time() {
-                return now()->setTimezone('Asia/Manila');
-            }
-        }
+        // Helper function temporarily disabled to avoid conflicts
+        // if (!function_exists('ph_time')) {
+        //     function ph_time() {
+        //         return now()->setTimezone('Asia/Manila');
+        //     }
+        // }
     }
 } 

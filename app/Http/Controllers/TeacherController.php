@@ -182,7 +182,7 @@ class TeacherController extends Controller
             'section' => $request->section,
             'session_type' => $request->session_type,
             'code' => strtoupper(substr(md5(uniqid()), 0, 6)),
-            'start_time' => $isScheduled ? null : ph_time(), // Only set start_time if not scheduled
+            'start_time' => $isScheduled ? null : now()->setTimezone('Asia/Manila'), // Only set start_time if not scheduled
             'scheduled_start_time' => $request->scheduled_start_time ? now()->parse($request->scheduled_start_time) : null,
             'scheduled_end_time' => $request->scheduled_end_time ? now()->parse($request->scheduled_end_time) : null,
             'grace_period_minutes' => $request->grace_period_minutes ?? 15,
@@ -243,7 +243,7 @@ class TeacherController extends Controller
                         'user_id' => $student->id,
                         'attendance_session_id' => $session->id,
                         'subject_id' => $session->subject_id,
-                        'check_in_time' => ph_time(),
+                        'check_in_time' => now()->setTimezone('Asia/Manila'),
                         'ip_address' => request()->ip(),
                         'status' => 'absent',
                     ]);
@@ -280,7 +280,7 @@ class TeacherController extends Controller
         $this->authorize('view', $session->subject);
         
         $session->update([
-            'end_time' => ph_time(),
+            'end_time' => now()->setTimezone('Asia/Manila'),
             'is_active' => false,
         ]);
 

@@ -63,7 +63,7 @@ class AttendanceSession extends Model
             return 'present'; // No scheduled time, always present
         }
 
-        $checkInTime = $checkInTime ?: ph_time();
+        $checkInTime = $checkInTime ?: now()->setTimezone('Asia/Manila');
         
         // Calculate grace period end (15 minutes after start time)
         $gracePeriodEnd = $this->scheduled_start_time->addMinutes($this->grace_period_minutes);

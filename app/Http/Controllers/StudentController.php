@@ -121,9 +121,9 @@ class StudentController extends Controller
             'user_id' => Auth::id(),
             'attendance_session_id' => $session->id,
             'subject_id' => $session->subject_id,
-            'check_in_time' => ph_time(),
+            'check_in_time' => now()->setTimezone('Asia/Manila'),
             'ip_address' => $request->ip(),
-            'status' => $session->getAttendanceStatus(ph_time()),
+            'status' => $session->getAttendanceStatus(now()->setTimezone('Asia/Manila')),
         ];
 
         switch ($sessionType) {
