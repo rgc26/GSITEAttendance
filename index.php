@@ -4,8 +4,15 @@
  * Laravel - A PHP Framework For Web Artisans
  * 
  * This file serves as the main entry point for Laravel
- * It includes error handling and debugging
+ * It handles only GET requests to avoid method conflicts
  */
+
+// Only allow GET requests
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo "Method Not Allowed. Only GET requests are supported.";
+    exit;
+}
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
@@ -59,6 +66,7 @@ try {
     echo "<p><strong>PHP Version:</strong> " . PHP_VERSION . "</p>";
     echo "<p><strong>Current Directory:</strong> " . __DIR__ . "</p>";
     echo "<p><strong>Document Root:</strong> " . ($_SERVER['DOCUMENT_ROOT'] ?? 'Unknown') . "</p>";
+    echo "<p><strong>Request Method:</strong> " . ($_SERVER['REQUEST_METHOD'] ?? 'Unknown') . "</p>";
     
     // Show file existence check
     echo "<h2>File Check</h2>";
