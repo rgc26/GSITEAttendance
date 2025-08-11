@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .profile-picture {
+        transition: transform 0.2s ease-in-out;
+    }
+    .profile-picture:hover {
+        transform: scale(1.1);
+    }
+    .profile-placeholder {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+    }
+</style>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -263,8 +276,23 @@
                                                         data-section="regular"
                                                         data-type="{{ $attendance->user->student_type }}">
                                                         <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
-                                                            <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                                                    @if($attendance->user->profile_picture)
+                                                                        <img class="h-10 w-10 rounded-full object-cover profile-picture" 
+                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                             alt="{{ $attendance->user->name }}'s profile picture">
+                                                                    @else
+                                                                        <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->user->student_id ?? 'N/A' }}
@@ -355,8 +383,23 @@
                                                         data-section="irregular"
                                                         data-type="{{ $attendance->user->student_type }}">
                                                         <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
-                                                            <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                                                    @if($attendance->user->profile_picture)
+                                                                        <img class="h-10 w-10 rounded-full object-cover profile-picture" 
+                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                             alt="{{ $attendance->user->name }}'s profile picture">
+                                                                    @else
+                                                                        <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->user->student_id ?? 'N/A' }}

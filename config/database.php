@@ -60,6 +60,8 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                // Ensure MySQL session uses PH time (affects NOW(), CURRENT_TIMESTAMP, TIMESTAMP conversion)
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '+08:00'",
             ]) : [],
         ],
 

@@ -204,25 +204,21 @@ class TeacherController extends Controller
         // Get all attendances for this session
         $attendances = $session->attendances()->with('user')->get();
         
-        // Get all students from the target section
+        // Get all students from the target section (kept for section stats display)
         $targetSectionStudents = User::where('role', 'student')
             ->where('section', $session->section)
             ->get();
-        
-        // Get irregular students who attended (not from target section)
-        $irregularAttendances = $attendances->filter(function($attendance) use ($session) {
-            return $attendance->user->section !== $session->section;
-        });
-        
-        // Calculate summary
+
+        // Calculate section-based summary (kept for reference)
         $totalTargetStudents = $targetSectionStudents->count();
         $presentTargetStudents = $attendances->where('user.section', $session->section)->count();
         $absentTargetStudents = $totalTargetStudents - $presentTargetStudents;
+
+        // Group attendances by student type (requested categorization)
+        $regularAttendances = $attendances->where('user.student_type', 'regular');
+        $irregularAttendances = $attendances->where('user.student_type', 'irregular');
+        $blockAttendances = $attendances->where('user.student_type', 'block');
         $irregularCount = $irregularAttendances->count();
-        
-        // Group attendances by student type
-        $regularAttendances = $attendances->where('user.section', $session->section);
-        $irregularAttendances = $attendances->where('user.section', '!=', $session->section);
         
         return view('teacher.sessions.show', compact(
             'session', 
@@ -230,6 +226,7 @@ class TeacherController extends Controller
             'targetSectionStudents',
             'regularAttendances',
             'irregularAttendances',
+            'blockAttendances',
             'totalTargetStudents',
             'presentTargetStudents',
             'absentTargetStudents',
