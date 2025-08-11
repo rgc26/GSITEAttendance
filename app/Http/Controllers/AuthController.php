@@ -210,9 +210,15 @@ class AuthController extends Controller
 
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $profilePicturePath = $file->storeAs('profile_pictures', $filename, 'public');
+            try {
+                $file = $request->file('profile_picture');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $profilePicturePath = $file->storeAs('profile_pictures', $filename, 'public');
+            } catch (\Exception $e) {
+                \Log::error('Profile picture upload failed: ' . $e->getMessage());
+                // Continue without profile picture if upload fails
+                $profilePicturePath = null;
+            }
         }
 
         $name = $request->last_name . ', ' . $request->first_name;
@@ -233,11 +239,16 @@ class AuthController extends Controller
             'profile_picture' => $profilePicturePath,
         ]);
 
-        // Send email verification (only once)
-        event(new Registered($user));
+        try {
+            // Send email verification (only once)
+            event(new Registered($user));
+        } catch (\Exception $e) {
+            \Log::error('Email verification event failed: ' . $e->getMessage());
+            // Continue without email verification if it fails
+        }
 
         Auth::login($user);
-        return redirect()->route('teacher.dashboard')->with('status', 'Registration successful! Please check your email to verify your account.');
+        return redirect()->route('student.dashboard')->with('status', 'Registration successful! Please check your email to verify your account.');
     }
 
     public function registerTeacher(Request $request)
@@ -257,9 +268,15 @@ class AuthController extends Controller
 
         $profilePicturePath = null;
         if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $profilePicturePath = $file->storeAs('profile_pictures', $filename, 'public');
+            try {
+                $file = $request->file('profile_picture');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $profilePicturePath = $file->storeAs('profile_pictures', $filename, 'public');
+            } catch (\Exception $e) {
+                \Log::error('Profile picture upload failed: ' . $e->getMessage());
+                // Continue without profile picture if upload fails
+                $profilePicturePath = null;
+            }
         }
 
         $user = User::create([
@@ -272,11 +289,16 @@ class AuthController extends Controller
             'profile_picture' => $profilePicturePath,
         ]);
 
-        // Send email verification (only once)
-        event(new Registered($user));
+        try {
+            // Send email verification (only once)
+            event(new Registered($user));
+        } catch (\Exception $e) {
+            \Log::error('Email verification event failed: ' . $e->getMessage());
+            // Continue without email verification if it fails
+        }
 
         Auth::login($user);
-        return redirect()->route('student.dashboard')->with('status', 'Registration successful! Please check your email to verify your account.');
+        return redirect()->route('teacher.dashboard')->with('status', 'Registration successful! Please check your email to verify your account.');
     }
 
     public function logout(Request $request)
