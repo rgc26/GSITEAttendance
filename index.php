@@ -7,6 +7,30 @@
  * It bypasses the need for .htaccess redirects
  */
 
+// Check if this is a direct file access
+if (basename($_SERVER['SCRIPT_NAME']) === basename(__FILE__)) {
+    // This is a direct access, redirect to public
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+    $path = parse_url($request_uri, PHP_URL_PATH);
+    
+    // Remove the base path if it exists
+    $base_path = '/GSITEAttendance';
+    if (strpos($path, $base_path) === 0) {
+        $path = substr($path, strlen($base_path));
+    }
+    
+    // Build the redirect URL
+    $redirect_url = $base_path . '/public' . $path;
+    
+    // Add query string if it exists
+    if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
+        $redirect_url .= '?' . $_SERVER['QUERY_STRING'];
+    }
+    
+    header("Location: {$redirect_url}", true, 301);
+    exit;
+}
+
 // Define the Laravel start time
 define('LARAVEL_START', microtime(true));
 
