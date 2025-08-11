@@ -31,5 +31,18 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        // More generous and fair limiter for registration to reduce 429s
+        RateLimiter::for('register', function (Request $request) {
+            $emailKey = strtolower((string) $request->input('email'));
+            $compositeKey = sha1('register|'.$request->ip().'|'.$emailKey);
+
+            return [
+                // Up to 10 attempts per minute per IP+email to avoid double submits causing 429
+                Limit::perMinutes(1, 10)->by($compositeKey),
+                // And a broader cap per IP to prevent abuse while allowing labs with shared IPs
+                Limit::perMinutes(60, 100)->by('register-ip:'.$request->ip()),
+            ];
+        });
     }
 } 

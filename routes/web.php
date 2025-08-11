@@ -23,11 +23,11 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,15');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:3,15');
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
 Route::get('/register/student', [AuthController::class, 'showStudentRegister'])->name('register.student');
-Route::post('/register/student', [AuthController::class, 'registerStudent'])->middleware('throttle:3,15');
+Route::post('/register/student', [AuthController::class, 'registerStudent'])->middleware('throttle:register');
 Route::get('/register/teacher', [AuthController::class, 'showTeacherRegister'])->name('register.teacher');
-Route::post('/register/teacher', [AuthController::class, 'registerTeacher'])->middleware('throttle:3,15');
+Route::post('/register/teacher', [AuthController::class, 'registerTeacher'])->middleware('throttle:register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Forgot Password routes
