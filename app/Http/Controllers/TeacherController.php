@@ -218,6 +218,41 @@ class TeacherController extends Controller
         $regularAttendances = $attendances->where('user.student_type', 'regular');
         $irregularAttendances = $attendances->where('user.student_type', 'irregular');
         $blockAttendances = $attendances->where('user.student_type', 'block');
+        
+        // Get all students who should attend this session (based on section and student type)
+        $allStudents = User::where('role', 'student')
+            ->where(function($query) use ($session) {
+                $query->where('section', $session->section)
+                      ->orWhere('student_type', 'irregular')
+                      ->orWhere('student_type', 'block');
+            })
+            ->get();
+        
+        // Create absent records for students who didn't attend
+        foreach ($allStudents as $student) {
+            $existingAttendance = $attendances->where('user_id', $student->id)->first();
+            
+            if (!$existingAttendance) {
+                // Create absent record
+                \App\Models\Attendance::create([
+                    'user_id' => $student->id,
+                    'attendance_session_id' => $session->id,
+                    'subject_id' => $session->subject_id,
+                    'check_in_time' => now(),
+                    'ip_address' => request()->ip(),
+                    'status' => 'absent',
+                ]);
+            }
+        }
+        
+        // Refresh attendances after creating absent records
+        $attendances = $session->attendances()->with('user')->get();
+        
+        // Re-group attendances by student type
+        $regularAttendances = $attendances->where('user.student_type', 'regular');
+        $irregularAttendances = $attendances->where('user.student_type', 'irregular');
+        $blockAttendances = $attendances->where('user.student_type', 'block');
+        
         $irregularCount = $irregularAttendances->count();
         
         return view('teacher.sessions.show', compact(

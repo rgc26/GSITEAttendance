@@ -161,6 +161,10 @@
                                 <span class="font-medium text-yellow-600">{{ $irregularAttendances->count() }}</span>
                             </div>
                             <div class="flex justify-between">
+                                <span class="text-blue-700">Block Students:</span>
+                                <span class="font-medium text-purple-600">{{ $blockAttendances->count() }}</span>
+                            </div>
+                            <div class="flex justify-between">
                                 <span class="text-blue-700">On Time:</span>
                                 <span class="font-medium text-green-600">{{ $attendances->where('status', 'present')->count() }}</span>
                             </div>
@@ -199,6 +203,7 @@
                                 <option value="">All Sections</option>
                                 <option value="regular">Regular ({{ $session->section }})</option>
                                 <option value="irregular">Irregular (Other Sections)</option>
+                                <option value="block">Block Students</option>
                             </select>
                         </div>
                         <div>
@@ -229,6 +234,144 @@
 
                 <!-- Attendees List with Accordion -->
                 <div class="space-y-4">
+                    <!-- Block Students Accordion -->
+                    @if($blockAttendances->count() > 0)
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="accordion-header bg-purple-50 hover:bg-purple-100 cursor-pointer transition-colors duration-200">
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-chevron-down accordion-icon mr-3 text-purple-600 transition-transform duration-200"></i>
+                                            <h3 class="text-lg font-medium text-purple-900">
+                                                <i class="fas fa-user-clock text-purple-600 mr-2"></i>
+                                                Block Students
+                                            </h3>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <span class="text-sm text-purple-600">
+                                                <span class="font-medium">{{ $blockAttendances->count() }}</span> students
+                                            </span>
+                                            <span class="text-sm text-purple-600">
+                                                <span class="font-medium">{{ $blockAttendances->where('status', 'present')->count() }}</span> present
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-content bg-white">
+                                <div class="p-4">
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-purple-50">
+                                                <tr>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Their Section</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                @foreach($blockAttendances->where('status', '!=', 'absent') as $attendance)
+                                                    <tr class="bg-purple-50 attendance-row" 
+                                                        data-name="{{ strtolower($attendance->user->name) }}"
+                                                        data-status="{{ $attendance->status }}"
+                                                        data-section="block"
+                                                        data-type="{{ $attendance->user->student_type }}">
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                                                    @if($attendance->user->profile_picture)
+                                                                        <img class="h-10 w-10 rounded-full object-cover profile-picture" 
+                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                             alt="{{ $attendance->user->name }}'s profile picture">
+                                                                    @else
+                                                                        <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
+                                                                @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
+                                                                @else bg-purple-100 text-purple-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                                {{ $attendance->user->section }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                @if($attendance->status === 'present') bg-green-100 text-green-800
+                                                                @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
+                                                                @else bg-red-100 text-red-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        
+                                        <!-- Absent Students for Block Section -->
+                                        @if($blockAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $blockAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($blockAttendances->where('status', 'absent') as $attendance)
+                                                        <div class="flex items-center p-2 bg-red-50 rounded-lg">
+                                                            <div class="flex-shrink-0 h-8 w-8 mr-2">
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Regular Students Accordion -->
                     @if($regularAttendances->count() > 0)
                         <div class="border border-gray-200 rounded-lg overflow-hidden">
@@ -269,7 +412,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
-                                                @foreach($regularAttendances as $attendance)
+                                                @foreach($regularAttendances->where('status', '!=', 'absent') as $attendance)
                                                     <tr class="bg-green-50 attendance-row" 
                                                         data-name="{{ strtolower($attendance->user->name) }}"
                                                         data-status="{{ $attendance->status }}"
@@ -330,6 +473,37 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        
+                                        <!-- Absent Students for Regular Section -->
+                                        @if($regularAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $regularAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($regularAttendances->where('status', 'absent') as $attendance)
+                                                        <div class="flex items-center p-2 bg-red-50 rounded-lg">
+                                                            <div class="flex-shrink-0 h-8 w-8 mr-2">
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -376,7 +550,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
-                                                @foreach($irregularAttendances as $attendance)
+                                                @foreach($irregularAttendances->where('status', '!=', 'absent') as $attendance)
                                                     <tr class="bg-yellow-50 attendance-row" 
                                                         data-name="{{ strtolower($attendance->user->name) }}"
                                                         data-status="{{ $attendance->status }}"
@@ -437,12 +611,147 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        
+                                        <!-- Absent Students for Irregular Section -->
+                                        @if($irregularAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $irregularAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($irregularAttendances->where('status', 'absent') as $attendance)
+                                                        <div class="flex items-center p-2 bg-red-50 rounded-lg">
+                                                            <div class="flex-shrink-0 h-8 w-8 mr-2">
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @endif
 
+                    <!-- Block Students Accordion -->
+                    @if($blockAttendances->count() > 0)
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="accordion-header bg-purple-50 hover:bg-purple-100 cursor-pointer transition-colors duration-200">
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-chevron-down accordion-icon mr-3 text-purple-600 transition-transform duration-200"></i>
+                                            <h3 class="text-lg font-medium text-purple-900">
+                                                <i class="fas fa-user-clock text-purple-600 mr-2"></i>
+                                                Block Students
+                                            </h3>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <span class="text-sm text-purple-600">
+                                                <span class="font-medium">{{ $blockAttendances->count() }}</span> students
+                                            </span>
+                                            <span class="text-sm text-purple-600">
+                                                <span class="font-medium">{{ $blockAttendances->where('status', 'present')->count() }}</span> present
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-content bg-white">
+                                <div class="p-4">
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-purple-50">
+                                                <tr>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Their Section</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                @foreach($blockAttendances as $attendance)
+                                                    <tr class="bg-purple-50 attendance-row" 
+                                                        data-name="{{ strtolower($attendance->user->name) }}"
+                                                        data-status="{{ $attendance->status }}"
+                                                        data-section="block"
+                                                        data-type="{{ $attendance->user->student_type }}">
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                                                    @if($attendance->user->profile_picture)
+                                                                        <img class="h-10 w-10 rounded-full object-cover profile-picture" 
+                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                             alt="{{ $attendance->user->name }}'s profile picture">
+                                                                    @else
+                                                                        <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
+                                                                @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
+                                                                @else bg-purple-100 text-purple-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                                {{ $attendance->user->section }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                @if($attendance->status === 'present') bg-green-100 text-green-800
+                                                                @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
+                                                                @else bg-red-100 text-red-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                     @if($attendances->count() == 0)
                         <div class="text-center py-8">
                             <i class="fas fa-users text-4xl text-gray-400 mb-4"></i>
@@ -534,6 +843,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (countSpans.length >= 2) {
                 countSpans[0].innerHTML = `<span class="font-medium">${visibleIrregularRows.length}</span> students`;
                 countSpans[1].innerHTML = `<span class="font-medium">${presentIrregularRows.length}</span> present`;
+            }
+        }
+
+        // Update block students count
+        const blockRows = document.querySelectorAll('.attendance-row[data-section="block"]');
+        const visibleBlockRows = Array.from(blockRows).filter(row => row.style.display !== 'none');
+        const presentBlockRows = visibleBlockRows.filter(row => row.getAttribute('data-status') === 'present');
+        
+        const blockHeader = document.querySelector('.accordion-header:has(.fa-user-clock)');
+        if (blockHeader) {
+            const countSpans = blockHeader.querySelectorAll('span');
+            if (countSpans.length >= 2) {
+                countSpans[0].innerHTML = `<span class="font-medium">${visibleBlockRows.length}</span> students`;
+                countSpans[1].innerHTML = `<span class="font-medium">${presentBlockRows.length}</span> present`;
             }
         }
     }
