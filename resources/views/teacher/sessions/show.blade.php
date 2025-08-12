@@ -129,14 +129,22 @@
                                 <span class="font-medium text-green-600">{{ $presentTargetStudents }}</span>
                             </div>
                             <div class="flex justify-between">
+                                <span class="text-green-700">Late:</span>
+                                <span class="font-medium text-yellow-600">{{ $lateTargetStudents }}</span>
+                            </div>
+                            <div class="flex justify-between">
                                 <span class="text-green-700">Absent:</span>
                                 <span class="font-medium text-red-600">{{ $absentTargetStudents }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-green-700">Not Marked Yet:</span>
+                                <span class="font-medium text-gray-600">{{ $totalTargetStudents - $presentTargetStudents - $lateTargetStudents - $absentTargetStudents }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-green-700">Attendance Rate:</span>
                                 <span class="font-medium text-green-900">
                                     @if($totalTargetStudents > 0)
-                                        {{ round(($presentTargetStudents / $totalTargetStudents) * 100, 1) }}%
+                                        {{ round((($presentTargetStudents + $lateTargetStudents) / $totalTargetStudents) * 100, 1) }}%
                                     @else
                                         0%
                                     @endif
@@ -660,6 +668,82 @@
         </div>
     </div>
 </div>
+
+<!-- Students Who Haven't Marked Attendance Yet -->
+@if($session->is_active)
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        <i class="fas fa-clock mr-2"></i>
+                        Students Who Haven't Marked Attendance Yet
+                    </h3>
+                    
+                    @php
+                        $studentsNotMarked = $targetSectionStudents->filter(function($student) use ($attendances) {
+                            return !$attendances->where('user_id', $student->id)->first();
+                        });
+                    @endphp
+                    
+                    @if($studentsNotMarked->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach($studentsNotMarked as $student)
+                                <div class="flex items-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                        @if($student->profile_picture)
+                                            <img class="h-10 w-10 rounded-full object-cover" 
+                                                 src="{{ asset('storage/' . $student->profile_picture) }}" 
+                                                 alt="{{ $student->name }}'s profile picture">
+                                        @else
+                                            <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-semibold">
+                                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-gray-900">{{ $student->name }}</div>
+                                        <div class="text-sm text-gray-500">{{ $student->student_id ?? 'N/A' }}</div>
+                                        <div class="text-xs text-yellow-600">Waiting for attendance</div>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="inline">
+                                            @csrf
+                                            <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                            <button type="submit" 
+                                                    class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors"
+                                                    onclick="return confirm('Mark {{ $student->name }} as absent?')">
+                                                Mark Absent
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                                <div class="text-sm text-blue-700">
+                                    <strong>Note:</strong> These students haven't marked their attendance yet. 
+                                    You can manually mark them as absent if needed, or wait for them to mark attendance.
+                                    Students marked as absent cannot change their status to present later.
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="text-center py-8">
+                            <i class="fas fa-check-circle text-4xl text-green-400 mb-4"></i>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">All Students Have Marked Attendance</h4>
+                            <p class="text-gray-600">Every student in section {{ $session->section }} has either marked attendance or been marked as absent.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 @endsection
 
 <script>

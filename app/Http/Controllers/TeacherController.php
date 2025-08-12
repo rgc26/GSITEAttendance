@@ -204,52 +204,17 @@ class TeacherController extends Controller
         // Get all attendances for this session
         $attendances = $session->attendances()->with('user')->get();
         
-        // Get all students from the target section (kept for section stats display)
+        // Get all students from the target section
         $targetSectionStudents = User::where('role', 'student')
             ->where('section', $session->section)
             ->get();
 
-        // Calculate section-based summary (kept for reference)
+        // Calculate section-based summary
         $totalTargetStudents = $targetSectionStudents->count();
-        $presentTargetStudents = $attendances->where('user.section', $session->section)->count();
-        $absentTargetStudents = $totalTargetStudents - $presentTargetStudents;
+        $presentTargetStudents = $attendances->where('status', 'present')->count();
+        $lateTargetStudents = $attendances->where('status', 'late')->count();
+        $absentTargetStudents = $totalTargetStudents - $presentTargetStudents - $lateTargetStudents;
 
-        // Group attendances by student type (requested categorization)
-        $regularAttendances = $attendances->where('user.student_type', 'regular');
-        $irregularAttendances = $attendances->where('user.student_type', 'irregular');
-        $blockAttendances = $attendances->where('user.student_type', 'block');
-        
-        // Get all students who should attend this session (based on section and student type)
-        $allStudents = User::where('role', 'student')
-            ->where('section', $session->section)
-            ->get();
-        
-        // Only create absent records if this is the first time viewing the session
-        // Check if any absent records already exist for this session
-        $existingAbsentRecords = $attendances->where('status', 'absent')->count();
-        
-        if ($existingAbsentRecords == 0) {
-            // Create absent records for students who didn't attend (only from target section)
-            foreach ($allStudents as $student) {
-                $existingAttendance = $attendances->where('user_id', $student->id)->first();
-                
-                if (!$existingAttendance) {
-                    // Create absent record
-                    \App\Models\Attendance::create([
-                        'user_id' => $student->id,
-                        'attendance_session_id' => $session->id,
-                        'subject_id' => $session->subject_id,
-                        'check_in_time' => now()->setTimezone('Asia/Manila'),
-                        'ip_address' => request()->ip(),
-                        'status' => 'absent',
-                    ]);
-                }
-            }
-            
-            // Refresh attendances after creating absent records
-            $attendances = $session->attendances()->with('user')->get();
-        }
-        
         // Group attendances by student type
         $regularAttendances = $attendances->where('user.student_type', 'regular');
         $irregularAttendances = $attendances->where('user.student_type', 'irregular');
@@ -266,6 +231,7 @@ class TeacherController extends Controller
             'blockAttendances',
             'totalTargetStudents',
             'presentTargetStudents',
+            'lateTargetStudents',
             'absentTargetStudents',
             'irregularCount'
         ));
@@ -280,7 +246,76 @@ class TeacherController extends Controller
             'is_active' => false,
         ]);
 
+        // Now that the session has ended, mark students who didn't attend as absent
+        $this->markAbsentStudents($session);
+
         return redirect()->route('teacher.subjects.show', $session->subject)->with('success', 'Attendance session ended!');
+    }
+
+    /**
+     * Mark students who didn't attend as absent
+     */
+    private function markAbsentStudents(AttendanceSession $session)
+    {
+        // Get all students from the target section
+        $targetSectionStudents = User::where('role', 'student')
+            ->where('section', $session->section)
+            ->get();
+
+        // Get existing attendances for this session
+        $existingAttendances = $session->attendances()->pluck('user_id')->toArray();
+
+        // Mark students who didn't attend as absent
+        foreach ($targetSectionStudents as $student) {
+            if (!in_array($student->id, $existingAttendances)) {
+                \App\Models\Attendance::create([
+                    'user_id' => $student->id,
+                    'attendance_session_id' => $session->id,
+                    'subject_id' => $session->subject_id,
+                    'check_in_time' => now()->setTimezone('Asia/Manila'),
+                    'ip_address' => request()->ip(),
+                    'status' => 'absent',
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Manually mark a student as absent (for teachers who want to mark specific students)
+     */
+    public function markStudentAbsent(Request $request, AttendanceSession $session)
+    {
+        $this->authorize('view', $session->subject);
+        
+        $request->validate([
+            'student_id' => 'required|exists:users,id',
+        ]);
+
+        $student = User::findOrFail($request->student_id);
+        
+        // Check if student is from the correct section
+        if ($student->section !== $session->section) {
+            return redirect()->back()->with('error', 'Student is not from the target section.');
+        }
+
+        // Check if student already has an attendance record
+        $existingAttendance = $session->attendances()->where('user_id', $student->id)->first();
+        
+        if ($existingAttendance) {
+            return redirect()->back()->with('error', 'Student already has an attendance record.');
+        }
+
+        // Create absent record
+        \App\Models\Attendance::create([
+            'user_id' => $student->id,
+            'attendance_session_id' => $session->id,
+            'subject_id' => $session->subject_id,
+            'check_in_time' => now()->setTimezone('Asia/Manila'),
+            'ip_address' => request()->ip(),
+            'status' => 'absent',
+        ]);
+
+        return redirect()->back()->with('success', "Marked {$student->name} as absent.");
     }
 
     public function editSession(AttendanceSession $session)
