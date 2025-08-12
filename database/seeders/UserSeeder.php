@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create sample teachers
+        // Create teachers
         $teachers = [
             [
                 'name' => 'Dr. Sarah Johnson',
@@ -39,90 +38,130 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        foreach ($teachers as $teacher) {
-            User::create($teacher);
+        foreach ($teachers as $teacherData) {
+            User::firstOrCreate(
+                ['email' => $teacherData['email']],
+                $teacherData
+            );
         }
 
-        // Create sample students
-        $students = [
+        // Create students for section 301
+        $section301Students = [
             [
-                'name' => 'John Smith',
-                'email' => 'john.smith@student.edu',
+                'name' => 'Alice Johnson',
+                'email' => 'alice.johnson@student.com',
                 'password' => Hash::make('password123'),
                 'role' => 'student',
-                'student_id' => '2024001',
-                'department' => 'Computer Science',
+                'student_id' => '2024-001',
+                'year_level' => '2nd Year',
+                'section' => '301',
+                'student_type' => 'regular',
             ],
             [
-                'name' => 'Maria Garcia',
-                'email' => 'maria.garcia@student.edu',
+                'name' => 'Bob Wilson',
+                'email' => 'bob.wilson@student.com',
                 'password' => Hash::make('password123'),
                 'role' => 'student',
-                'student_id' => '2024002',
-                'department' => 'Computer Science',
+                'student_id' => '2024-002',
+                'year_level' => '2nd Year',
+                'section' => '301',
+                'student_type' => 'regular',
             ],
             [
-                'name' => 'David Lee',
-                'email' => 'david.lee@student.edu',
+                'name' => 'Charlie Brown',
+                'email' => 'charlie.brown@student.com',
                 'password' => Hash::make('password123'),
                 'role' => 'student',
-                'student_id' => '2024003',
-                'department' => 'Mathematics',
-            ],
-            [
-                'name' => 'Lisa Wang',
-                'email' => 'lisa.wang@student.edu',
-                'password' => Hash::make('password123'),
-                'role' => 'student',
-                'student_id' => '2024004',
-                'department' => 'Physics',
-            ],
-            [
-                'name' => 'Alex Thompson',
-                'email' => 'alex.thompson@student.edu',
-                'password' => Hash::make('password123'),
-                'role' => 'student',
-                'student_id' => '2024005',
-                'department' => 'Computer Science',
-            ],
-            [
-                'name' => 'Sophie Brown',
-                'email' => 'sophie.brown@student.edu',
-                'password' => Hash::make('password123'),
-                'role' => 'student',
-                'student_id' => '2024006',
-                'department' => 'Mathematics',
-            ],
-            [
-                'name' => 'James Wilson',
-                'email' => 'james.wilson@student.edu',
-                'password' => Hash::make('password123'),
-                'role' => 'student',
-                'student_id' => '2024007',
-                'department' => 'Physics',
-            ],
-            [
-                'name' => 'Emma Davis',
-                'email' => 'emma.davis@student.edu',
-                'password' => Hash::make('password123'),
-                'role' => 'student',
-                'student_id' => '2024008',
-                'department' => 'Computer Science',
+                'student_id' => '2024-003',
+                'year_level' => '2nd Year',
+                'section' => '301',
+                'student_type' => 'regular',
             ],
         ];
 
-        foreach ($students as $student) {
-            User::create($student);
+        foreach ($section301Students as $studentData) {
+            User::firstOrCreate(
+                ['email' => $studentData['email']],
+                $studentData
+            );
         }
 
-        $this->command->info('Sample users created successfully!');
-        $this->command->info('Teachers:');
-        foreach ($teachers as $teacher) {
-            $this->command->info("- {$teacher['name']} ({$teacher['email']}) - Password: password123");
+        // Create students for section 302
+        $section302Students = [
+            [
+                'name' => 'David Lee',
+                'email' => 'david.lee@student.com',
+                'password' => Hash::make('password123'),
+                'role' => 'student',
+                'student_id' => '2024-004',
+                'year_level' => '2nd Year',
+                'section' => '302',
+                'student_type' => 'regular',
+            ],
+            [
+                'name' => 'Eva Martinez',
+                'email' => 'eva.martinez@student.com',
+                'password' => Hash::make('password123'),
+                'role' => 'student',
+                'student_id' => '2024-005',
+                'year_level' => '2nd Year',
+                'section' => '302',
+                'student_type' => 'regular',
+            ],
+            [
+                'name' => 'Frank Garcia',
+                'email' => 'frank.garcia@student.com',
+                'password' => Hash::make('password123'),
+                'role' => 'student',
+                'student_id' => '2024-006',
+                'year_level' => '2nd Year',
+                'section' => '302',
+                'student_type' => 'regular',
+            ],
+        ];
+
+        foreach ($section302Students as $studentData) {
+            User::firstOrCreate(
+                ['email' => $studentData['email']],
+                $studentData
+            );
         }
-        $this->command->info('Students:');
-        foreach ($students as $student) {
-            $this->command->info("- {$student['name']} ({$student['email']}) - Student ID: {$student['student_id']} - Password: password123");
+
+        // Create students for section 304 (to test the issue)
+        $section304Students = [
+            [
+                'name' => 'Grace Kim',
+                'email' => 'grace.kim@student.com',
+                'password' => Hash::make('password123'),
+                'role' => 'student',
+                'student_id' => '2024-007',
+                'year_level' => '2nd Year',
+                'section' => '304',
+                'student_type' => 'regular',
+            ],
+            [
+                'name' => 'Henry Wang',
+                'email' => 'henry.wang@student.com',
+                'password' => Hash::make('password123'),
+                'role' => 'student',
+                'student_id' => '2024-008',
+                'year_level' => '2nd Year',
+                'section' => '304',
+                'student_type' => 'regular',
+            ],
+        ];
+
+        foreach ($section304Students as $studentData) {
+            User::firstOrCreate(
+                ['email' => $studentData['email']],
+                $studentData
+            );
         }
+
+        echo "Users created successfully!\n";
+        echo "- Teachers: " . count($teachers) . "\n";
+        echo "- Section 301 students: " . count($section301Students) . "\n";
+        echo "- Section 302 students: " . count($section302Students) . "\n";
+        echo "- Section 304 students: " . count($section304Students) . "\n";
     }
 }

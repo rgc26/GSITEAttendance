@@ -221,11 +221,7 @@ class TeacherController extends Controller
         
         // Get all students who should attend this session (based on section and student type)
         $allStudents = User::where('role', 'student')
-            ->where(function($query) use ($session) {
-                $query->where('section', $session->section)
-                      ->orWhere('student_type', 'irregular')
-                      ->orWhere('student_type', 'block');
-            })
+            ->where('section', $session->section)
             ->get();
         
         // Only create absent records if this is the first time viewing the session
@@ -233,7 +229,7 @@ class TeacherController extends Controller
         $existingAbsentRecords = $attendances->where('status', 'absent')->count();
         
         if ($existingAbsentRecords == 0) {
-            // Create absent records for students who didn't attend
+            // Create absent records for students who didn't attend (only from target section)
             foreach ($allStudents as $student) {
                 $existingAttendance = $attendances->where('user_id', $student->id)->first();
                 
