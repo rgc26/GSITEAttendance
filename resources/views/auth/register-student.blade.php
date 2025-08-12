@@ -34,30 +34,30 @@
             <div class="rounded-md shadow-sm -space-y-px">
                 <div class="grid grid-cols-3 gap-0">
                     <div>
-                        <label for="last_name" class="sr-only">Last Name</label>
-                        <input id="last_name" name="last_name" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" placeholder="Last Name" value="{{ old('last_name') }}">
+                        <label for="last_name" class="sr-only">Last Name <span class="text-red-500">*</span></label>
+                        <input id="last_name" name="last_name" type="text" required maxlength="255" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" placeholder="Last Name" value="{{ old('last_name') }}" title="Last name is required and cannot exceed 255 characters">
                     </div>
                     <div>
-                        <label for="first_name" class="sr-only">First Name</label>
-                        <input id="first_name" name="first_name" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" placeholder="First Name" value="{{ old('first_name') }}">
+                        <label for="first_name" class="sr-only">First Name <span class="text-red-500">*</span></label>
+                        <input id="first_name" name="first_name" type="text" required maxlength="255" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" placeholder="First Name" value="{{ old('first_name') }}" title="First name is required and cannot exceed 255 characters">
                     </div>
                     <div>
                         <label for="middle_initial" class="sr-only">Middle Initial</label>
-                        <input id="middle_initial" name="middle_initial" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="M.I. (Optional)" value="{{ old('middle_initial') }}">
+                        <input id="middle_initial" name="middle_initial" type="text" maxlength="10" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="M.I. (Optional)" value="{{ old('middle_initial') }}" title="Middle initial cannot exceed 10 characters">
                     </div>
                 </div>
                 <div>
-                    <label for="email" class="sr-only">Email address</label>
-                    <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" value="{{ old('email') }}">
+                    <label for="email" class="sr-only">Email address <span class="text-red-500">*</span></label>
+                    <input id="email" name="email" type="email" autocomplete="email" required maxlength="255" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" value="{{ old('email') }}" title="Email is required and must be a valid email address">
                 </div>
                 <div>
-                    <label for="student_id" class="sr-only">Student ID</label>
-                    <input id="student_id" name="student_id" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Student ID" value="{{ old('student_id') }}">
+                    <label for="student_id" class="sr-only">Student ID <span class="text-red-500">*</span></label>
+                    <input id="student_id" name="student_id" type="text" required maxlength="255" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Student ID" value="{{ old('student_id') }}" title="Student ID is required and cannot exceed 255 characters">
                 </div>
                 <div class="grid grid-cols-3 gap-0">
                     <div>
-                        <label for="year_level" class="sr-only">Year Level</label>
-                        <select id="year_level" name="year_level" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0">
+                        <label for="year_level" class="sr-only">Year Level <span class="text-red-500">*</span></label>
+                        <select id="year_level" name="year_level" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" title="Please select a valid year level">
                             <option value="">Select Year Level</option>
                             <option value="1st Year" {{ old('year_level') == '1st Year' ? 'selected' : '' }}>1st Year</option>
                             <option value="2nd Year" {{ old('year_level') == '2nd Year' ? 'selected' : '' }}>2nd Year</option>
@@ -66,12 +66,13 @@
                         </select>
                     </div>
                     <div>
-                        <label for="section" class="sr-only">Section</label>
-                        <input id="section" name="section" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" placeholder="Section (e.g., 301, 302, A1, B2)" value="{{ old('section') }}">
+                        <label for="section" class="sr-only">Section <span class="text-red-500">*</span></label>
+                        <input id="section" name="section" type="text" required maxlength="3" pattern="[0-9]{3}" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm border-r-0" placeholder="Section (e.g., 301, 302, 303)" value="{{ old('section') }}" title="Section must be exactly 3 digits (e.g., 301, 302, 303)" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)">
+                        <p class="text-xs text-gray-500 mt-1">Section must be exactly 3 digits (e.g., 301, 302, 303)</p>
                     </div>
                     <div>
-                        <label for="student_type" class="sr-only">Student Type</label>
-                        <select id="student_type" name="student_type" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Student Type">
+                        <label for="student_type" class="sr-only">Student Type <span class="text-red-500">*</span></label>
+                        <select id="student_type" name="student_type" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" title="Please select a valid student type">
                             <option value="">Select Type</option>
                             <option value="regular" {{ old('student_type') == 'regular' ? 'selected' : '' }}>Regular</option>
                             <option value="irregular" {{ old('student_type') == 'irregular' ? 'selected' : '' }}>Irregular</option>
@@ -80,12 +81,46 @@
                     </div>
                 </div>
                 <div>
-                    <label for="password" class="sr-only">Password</label>
-                    <input id="password" name="password" type="password" autocomplete="new-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+                    <label for="password" class="sr-only">Password <span class="text-red-500">*</span></label>
+                    <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password" title="Password must contain at least 8 characters, including uppercase, lowercase, number, and special character">
                 </div>
                 <div>
-                    <label for="password_confirmation" class="sr-only">Confirm Password</label>
-                    <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Confirm Password">
+                    <label for="password_confirmation" class="sr-only">Confirm Password <span class="text-red-500">*</span></label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required minlength="8" maxlength="128" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Confirm Password" title="Password confirmation is required">
+                </div>
+            </div>
+
+            <!-- Password Requirements Box -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="text-sm font-medium text-blue-900 mb-3">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Password Requirements
+                </h4>
+                <div class="grid grid-cols-2 gap-2 text-xs text-blue-700">
+                    <div class="flex items-center">
+                        <span id="length-check" class="mr-2">❌</span>
+                        <span>At least 8 characters</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="uppercase-check" class="mr-2">❌</span>
+                        <span>1 uppercase letter (A-Z)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="lowercase-check" class="mr-2">❌</span>
+                        <span>1 lowercase letter (a-z)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="number-check" class="mr-2">❌</span>
+                        <span>1 number (0-9)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="special-check" class="mr-2">❌</span>
+                        <span>1 special character (@$!%*?&)</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="match-check" class="mr-2">❌</span>
+                        <span>Passwords match</span>
+                    </div>
                 </div>
             </div>
 
@@ -131,20 +166,47 @@ function previewImage(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+// Password validation
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('password_confirmation');
+    
+    function validatePassword() {
+        const value = password.value;
+        const confirmValue = confirmPassword.value;
+        
+        // Length check
+        document.getElementById('length-check').textContent = value.length >= 8 ? '✅' : '❌';
+        
+        // Uppercase check
+        document.getElementById('uppercase-check').textContent = /[A-Z]/.test(value) ? '✅' : '❌';
+        
+        // Lowercase check
+        document.getElementById('lowercase-check').textContent = /[a-z]/.test(value) ? '✅' : '❌';
+        
+        // Number check
+        document.getElementById('number-check').textContent = /\d/.test(value) ? '✅' : '❌';
+        
+        // Special character check
+        document.getElementById('special-check').textContent = /[@$!%*?&]/.test(value) ? '✅' : '❌';
+        
+        // Match check
+        document.getElementById('match-check').textContent = value === confirmValue && value.length > 0 ? '✅' : '❌';
+    }
+    
+    password.addEventListener('input', validatePassword);
+    confirmPassword.addEventListener('input', validatePassword);
+    
+    // Section field validation - only allow numbers
+    const sectionField = document.getElementById('section');
+    sectionField.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3);
+    });
+});
 </script>
 @endsection
 
 @push('scripts')
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-<script>
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('preview').src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
 @endpush 
