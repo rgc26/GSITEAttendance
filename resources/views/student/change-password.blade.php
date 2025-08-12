@@ -43,17 +43,58 @@
                         @method('PUT')
 
                         <div>
-                            <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                            <input type="password" id="current_password" name="current_password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your current password">
+                            <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Current Password <span class="text-red-500">*</span></label>
+                            <input type="password" 
+                                   id="current_password" 
+                                   name="current_password" 
+                                   required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                                   placeholder="Enter your current password"
+                                   minlength="1"
+                                   maxlength="128">
+                            <p class="mt-1 text-xs text-gray-500">Enter your current password to verify your identity</p>
                             @error('current_password')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                            <input type="password" id="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your new password">
-                            <p class="mt-1 text-sm text-gray-500">Password must be at least 8 characters long</p>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">New Password <span class="text-red-500">*</span></label>
+                            <input type="password" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                                   placeholder="Enter your new password"
+                                   minlength="8"
+                                   maxlength="128"
+                                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                                   title="Password must contain at least 8 characters, including uppercase, lowercase, number, and special character">
+                            <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <h4 class="text-sm font-medium text-blue-800 mb-2">Password Requirements:</h4>
+                                <ul class="text-xs text-blue-700 space-y-1">
+                                    <li class="flex items-center">
+                                        <span id="length-check" class="w-4 h-4 mr-2 rounded-full border-2 border-gray-300"></span>
+                                        Minimum 8 characters
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span id="uppercase-check" class="w-4 h-4 mr-2 rounded-full border-2 border-gray-300"></span>
+                                        At least 1 uppercase letter (A-Z)
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span id="lowercase-check" class="w-4 h-4 mr-2 rounded-full border-2 border-gray-300"></span>
+                                        At least 1 lowercase letter (a-z)
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span id="number-check" class="w-4 h-4 mr-2 rounded-full border-2 border-gray-300"></span>
+                                        At least 1 number (0-9)
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span id="special-check" class="w-4 h-4 mr-2 rounded-full border-2 border-gray-300"></span>
+                                        At least 1 special character (@$!%*?&)
+                                    </li>
+                                </ul>
+                            </div>
                             @error('password')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -82,4 +123,70 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const lengthCheck = document.getElementById('length-check');
+    const uppercaseCheck = document.getElementById('uppercase-check');
+    const lowercaseCheck = document.getElementById('lowercase-check');
+    const numberCheck = document.getElementById('number-check');
+    const specialCheck = document.getElementById('special-check');
+
+    function updatePasswordChecks(password) {
+        // Length check (8+ characters)
+        if (password.length >= 8) {
+            lengthCheck.className = 'w-4 h-4 mr-2 rounded-full bg-green-500 border-2 border-green-500';
+            lengthCheck.innerHTML = '✓';
+        } else {
+            lengthCheck.className = 'w-4 h-4 mr-2 rounded-full border-2 border-gray-300';
+            lengthCheck.innerHTML = '';
+        }
+
+        // Uppercase check
+        if (/[A-Z]/.test(password)) {
+            uppercaseCheck.className = 'w-4 h-4 mr-2 rounded-full bg-green-500 border-2 border-green-500';
+            uppercaseCheck.innerHTML = '✓';
+        } else {
+            uppercaseCheck.className = 'w-4 h-4 mr-2 rounded-full border-2 border-gray-300';
+            uppercaseCheck.innerHTML = '';
+        }
+
+        // Lowercase check
+        if (/[a-z]/.test(password)) {
+            lowercaseCheck.className = 'w-4 h-4 mr-2 rounded-full bg-green-500 border-2 border-green-500';
+            lowercaseCheck.innerHTML = '✓';
+        } else {
+            lowercaseCheck.className = 'w-4 h-4 mr-2 rounded-full border-2 border-gray-300';
+            lowercaseCheck.innerHTML = '';
+        }
+
+        // Number check
+        if (/\d/.test(password)) {
+            numberCheck.className = 'w-4 h-4 mr-2 rounded-full bg-green-500 border-2 border-green-500';
+            numberCheck.innerHTML = '✓';
+        } else {
+            numberCheck.className = 'w-4 h-4 mr-2 rounded-full border-2 border-gray-300';
+            numberCheck.innerHTML = '';
+        }
+
+        // Special character check
+        if (/[@$!%*?&]/.test(password)) {
+            specialCheck.className = 'w-4 h-4 mr-2 rounded-full bg-green-500 border-2 border-green-500';
+            specialCheck.innerHTML = '✓';
+        } else {
+            specialCheck.className = 'w-4 h-4 mr-2 rounded-full border-2 border-gray-300';
+            specialCheck.innerHTML = '';
+        }
+    }
+
+    passwordInput.addEventListener('input', function() {
+        updatePasswordChecks(this.value);
+    });
+
+    // Initial check
+    updatePasswordChecks(passwordInput.value);
+});
+</script>
+
 @endsection 

@@ -67,6 +67,35 @@
                     <p class="text-gray-600">Here's your attendance summary across all subjects.</p>
                 </div>
 
+                <!-- Form Requirements Summary -->
+                <div class="mb-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                    <h3 class="text-sm font-medium text-indigo-900 mb-3">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Form Requirements & Restrictions
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-indigo-700">
+                        <div>
+                            <h4 class="font-medium mb-2">Profile Updates:</h4>
+                            <ul class="space-y-1">
+                                <li>• Section: Exactly 3 digits only (301, 302, 303, 101, 102)</li>
+                                <li>• Year Level: Must select from dropdown</li>
+                                <li>• Student Type: Must select from dropdown</li>
+                                <li>• Profile Picture: Max 2MB (JPEG, PNG, JPG, GIF)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2">Password Changes:</h4>
+                            <ul class="space-y-1">
+                                <li>• Minimum 8 characters</li>
+                                <li>• At least 1 uppercase letter (A-Z)</li>
+                                <li>• At least 1 lowercase letter (a-z)</li>
+                                <li>• At least 1 number (0-9)</li>
+                                <li>• At least 1 special character (@$!%*?&)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Attendance Code Input Form -->
                 <div class="mb-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
                     <h3 class="text-lg font-medium text-blue-900 mb-4">

@@ -116,7 +116,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'GSITE PROJECT: SmartTrack "Attendance Management System"'),
 
     /*
     |--------------------------------------------------------------------------

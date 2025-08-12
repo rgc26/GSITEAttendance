@@ -219,10 +219,21 @@ class StudentController extends Controller
         $user = Auth::user();
         
         $request->validate([
-            'year_level' => 'required|string|max:50',
-            'section' => 'required|string|max:50',
-            'student_type' => 'required|in:regular,irregular,block',
+            'year_level' => 'required|string|in:1st Year,2nd Year,3rd Year,4th Year',
+            'section' => 'required|string|regex:/^[0-9]{3}$/|max:3',
+            'student_type' => 'required|string|in:regular,irregular,block',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'year_level.required' => 'Year level is required.',
+            'year_level.in' => 'Please select a valid year level.',
+            'section.required' => 'Section is required.',
+            'section.regex' => 'Section must be exactly 3 digits (e.g., 301, 302, 303).',
+            'section.max' => 'Section cannot exceed 3 characters.',
+            'student_type.required' => 'Student type is required.',
+            'student_type.in' => 'Please select a valid student type.',
+            'profile_picture.image' => 'Profile picture must be an image file.',
+            'profile_picture.mimes' => 'Profile picture must be JPEG, PNG, JPG, or GIF.',
+            'profile_picture.max' => 'Profile picture cannot exceed 2MB.',
         ]);
 
         $data = [
@@ -256,8 +267,17 @@ class StudentController extends Controller
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|string|min:8|confirmed',
+            'current_password' => 'required|string|min:1|max:128',
+            'password' => 'required|string|min:8|max:128|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/|confirmed',
+        ], [
+            'current_password.required' => 'Current password is required.',
+            'current_password.min' => 'Current password must be at least 1 character.',
+            'current_password.max' => 'Current password cannot exceed 128 characters.',
+            'password.required' => 'New password is required.',
+            'password.min' => 'New password must be at least 8 characters.',
+            'password.max' => 'New password cannot exceed 128 characters.',
+            'password.regex' => 'New password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).',
+            'password.confirmed' => 'Password confirmation does not match.',
         ]);
 
         $user = Auth::user();

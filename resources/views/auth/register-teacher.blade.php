@@ -60,7 +60,7 @@
 
             <div>
                 <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Register as Teacher
+                    Register
                 </button>
             </div>
 
@@ -73,8 +73,9 @@
                 </p>
                 <p class="text-sm text-gray-600 mt-2">
                     Are you a student? 
-                    <a href="{{ route('register.student') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                        Register as Student
+                    <a href="{{ route('register.student') }}" class="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-user-graduate mr-2"></i>
+                        Register
                     </a>
                 </p>
             </div>

@@ -89,7 +89,7 @@
                                 <!-- Editable Information -->
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div>
-                                        <label for="year_level" class="block text-sm font-medium text-gray-700 mb-2">Year Level</label>
+                                        <label for="year_level" class="block text-sm font-medium text-gray-700 mb-2">Year Level <span class="text-red-500">*</span></label>
                                         <select id="year_level" name="year_level" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                             <option value="">Select Year Level</option>
                                             <option value="1st Year" {{ $user->year_level == '1st Year' ? 'selected' : '' }}>1st Year</option>
@@ -97,19 +97,32 @@
                                             <option value="3rd Year" {{ $user->year_level == '3rd Year' ? 'selected' : '' }}>3rd Year</option>
                                             <option value="4th Year" {{ $user->year_level == '4th Year' ? 'selected' : '' }}>4th Year</option>
                                         </select>
+                                        <p class="mt-1 text-xs text-gray-500">Required field</p>
                                     </div>
                                     <div>
-                                        <label for="section" class="block text-sm font-medium text-gray-700 mb-2">Section</label>
-                                        <input type="text" id="section" name="section" value="{{ $user->section }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., 301, 302, A1, B2">
+                                        <label for="section" class="block text-sm font-medium text-gray-700 mb-2">Section <span class="text-red-500">*</span></label>
+                                        <input type="text" 
+                                               id="section" 
+                                               name="section" 
+                                               value="{{ $user->section }}" 
+                                               required 
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                                               placeholder="e.g., 301, 302, 303"
+                                               maxlength="3"
+                                               pattern="[0-9]{3}"
+                                               title="Please enter exactly 3 digits (e.g., 301, 302, 303)"
+                                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)">
+                                        <p class="mt-1 text-xs text-gray-500">Exactly 3 digits only (e.g., 301, 302, 303, 101, 102)</p>
                                     </div>
                                     <div>
-                                        <label for="student_type" class="block text-sm font-medium text-gray-700 mb-2">Student Type</label>
+                                        <label for="student_type" class="block text-sm font-medium text-gray-700 mb-2">Student Type <span class="text-red-500">*</span></label>
                                         <select id="student_type" name="student_type" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                             <option value="">Select Type</option>
                                             <option value="regular" {{ $user->student_type == 'regular' ? 'selected' : '' }}>Regular</option>
                                             <option value="irregular" {{ $user->student_type == 'irregular' ? 'selected' : '' }}>Irregular</option>
                                             <option value="block" {{ $user->student_type == 'block' ? 'selected' : '' }}>Block</option>
                                         </select>
+                                        <p class="mt-1 text-xs text-gray-500">Required field</p>
                                     </div>
                                 </div>
 
