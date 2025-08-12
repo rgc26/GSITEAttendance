@@ -29,20 +29,70 @@ class StudentController extends Controller
         }])->get();
 
         $attendanceSummary = [];
+        $sessionTypeBreakdown = [
+            'lab' => [],
+            'online' => [],
+            'lecture' => []
+        ];
+        
         foreach ($subjects as $subject) {
             $totalSessions = $subject->attendanceSessions()->count();
             $attendedSessions = $subject->attendances()->where('user_id', $user->id)->count();
             $attendancePercentage = $totalSessions > 0 ? round(($attendedSessions / $totalSessions) * 100, 2) : 0;
+            
+            // Get session type breakdown for this subject
+            $subjectAttendances = $subject->attendances()
+                ->where('user_id', $user->id)
+                ->with('attendanceSession')
+                ->get();
+            
+            $labSessions = $subjectAttendances->filter(function($attendance) {
+                return $attendance->attendanceSession && $attendance->attendanceSession->session_type === 'lab';
+            });
+            $onlineSessions = $subjectAttendances->filter(function($attendance) {
+                return $attendance->attendanceSession && $attendance->attendanceSession->session_type === 'online';
+            });
+            $lectureSessions = $subjectAttendances->filter(function($attendance) {
+                return $attendance->attendanceSession && $attendance->attendanceSession->session_type === 'lecture';
+            });
             
             $attendanceSummary[] = [
                 'subject' => $subject,
                 'total_sessions' => $totalSessions,
                 'attended_sessions' => $attendedSessions,
                 'percentage' => $attendancePercentage,
+                'lab_sessions' => $labSessions->count(),
+                'online_sessions' => $onlineSessions->count(),
+                'lecture_sessions' => $lectureSessions->count(),
             ];
+            
+            // Add to session type breakdowns
+            if ($labSessions->count() > 0) {
+                $sessionTypeBreakdown['lab'][] = [
+                    'subject' => $subject,
+                    'sessions' => $labSessions,
+                    'count' => $labSessions->count()
+                ];
+            }
+            
+            if ($onlineSessions->count() > 0) {
+                $sessionTypeBreakdown['online'][] = [
+                    'subject' => $subject,
+                    'sessions' => $onlineSessions,
+                    'count' => $onlineSessions->count()
+                ];
+            }
+            
+            if ($lectureSessions->count() > 0) {
+                $sessionTypeBreakdown['lecture'][] = [
+                    'subject' => $subject,
+                    'sessions' => $lectureSessions,
+                    'count' => $lectureSessions->count()
+                ];
+            }
         }
 
-        return view('student.dashboard', compact('attendanceSummary'));
+        return view('student.dashboard', compact('attendanceSummary', 'sessionTypeBreakdown'));
     }
 
     public function showAttendanceForm(Request $request)

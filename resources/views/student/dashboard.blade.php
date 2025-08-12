@@ -117,40 +117,169 @@
                 </div>
 
                 @if(count($attendanceSummary) > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach($attendanceSummary as $summary)
-                            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h4 class="text-lg font-semibold text-gray-900">{{ $summary['subject']->name }}</h4>
-                                    <span class="text-sm text-gray-500">{{ $summary['subject']->code }}</span>
-                                </div>
-                                
-                                <div class="space-y-3">
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600">Total Sessions:</span>
-                                        <span class="font-medium">{{ $summary['total_sessions'] }}</span>
+                    <!-- Overall Attendance Summary -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <i class="fas fa-chart-pie mr-2"></i>
+                            Overall Attendance Summary
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($attendanceSummary as $summary)
+                                <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-lg font-semibold text-gray-900">{{ $summary['subject']->name }}</h4>
+                                        <span class="text-sm text-gray-500">{{ $summary['subject']->code }}</span>
                                     </div>
                                     
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600">Attended:</span>
-                                        <span class="font-medium text-green-600">{{ $summary['attended_sessions'] }}</span>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Total Sessions:</span>
+                                            <span class="font-medium">{{ $summary['total_sessions'] }}</span>
+                                        </div>
+                                        
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Attended:</span>
+                                            <span class="font-medium text-green-600">{{ $summary['attended_sessions'] }}</span>
+                                        </div>
+                                        
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Attendance Rate:</span>
+                                            <span class="font-medium {{ $summary['percentage'] >= 80 ? 'text-green-600' : ($summary['percentage'] >= 60 ? 'text-yellow-600' : 'text-red-600') }}">
+                                                {{ $summary['percentage'] }}%
+                                            </span>
+                                        </div>
                                     </div>
                                     
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-600">Attendance Rate:</span>
-                                        <span class="font-medium {{ $summary['percentage'] >= 80 ? 'text-green-600' : ($summary['percentage'] >= 60 ? 'text-yellow-600' : 'text-red-600') }}">
-                                            {{ $summary['percentage'] }}%
-                                        </span>
+                                    <div class="mt-4 pt-4 border-t border-gray-200">
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $summary['percentage'] }}%"></div>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <div class="mt-4 pt-4 border-t border-gray-200">
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $summary['percentage'] }}%"></div>
-                                    </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Session Type Breakdowns -->
+                    <div class="space-y-8">
+                        <!-- LAB Sessions -->
+                        @if(count($sessionTypeBreakdown['lab']) > 0)
+                            <div class="bg-orange-50 border border-orange-200 rounded-lg p-6">
+                                <h3 class="text-lg font-medium text-orange-900 mb-4">
+                                    <i class="fas fa-desktop mr-2"></i>
+                                    Lab Sessions
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    @foreach($sessionTypeBreakdown['lab'] as $labData)
+                                        <div class="bg-white border border-orange-200 rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <h4 class="font-semibold text-gray-900">{{ $labData['subject']->name }}</h4>
+                                                <span class="text-sm text-orange-600 font-medium">{{ $labData['count'] }} sessions</span>
+                                            </div>
+                                            <div class="space-y-2 text-sm">
+                                                @foreach($labData['sessions'] as $session)
+                                                    <div class="flex items-center justify-between p-2 bg-orange-50 rounded">
+                                                        <span class="text-gray-700">{{ $session->attendanceSession->name ?? 'Lab Session' }}</span>
+                                                        <div class="flex items-center space-x-2">
+                                                            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">
+                                                                PC{{ $session->pc_number ?? 'N/A' }}
+                                                            </span>
+                                                            <span class="text-xs px-2 py-1 {{ $session->status === 'present' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }} rounded">
+                                                                {{ ucfirst($session->status) }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
-                        @endforeach
+                        @endif
+
+                        <!-- ONLINE Sessions -->
+                        @if(count($sessionTypeBreakdown['online']) > 0)
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                                <h3 class="text-lg font-medium text-green-900 mb-4">
+                                    <i class="fas fa-wifi mr-2"></i>
+                                    Online Sessions
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    @foreach($sessionTypeBreakdown['online'] as $onlineData)
+                                        <div class="bg-white border border-green-200 rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <h4 class="font-semibold text-gray-900">{{ $onlineData['subject']->name }}</h4>
+                                                <span class="text-sm text-green-600 font-medium">{{ $onlineData['count'] }} sessions</span>
+                                            </div>
+                                            <div class="space-y-2 text-sm">
+                                                @foreach($onlineData['sessions'] as $session)
+                                                    <div class="flex items-center justify-between p-2 bg-green-50 rounded">
+                                                        <span class="text-gray-700">{{ $session->attendanceSession->name ?? 'Online Session' }}</span>
+                                                        <div class="flex items-center space-x-2">
+                                                            <span class="text-xs px-2 py-1 
+                                                                @if($session->device_type === 'mobile') bg-green-100 text-green-800
+                                                                @elseif($session->device_type === 'desktop') bg-blue-100 text-blue-800
+                                                                @elseif($session->device_type === 'laptop') bg-purple-100 text-purple-800
+                                                                @else bg-gray-100 text-gray-800
+                                                                @endif rounded">
+                                                                {{ ucfirst($session->device_type ?? 'N/A') }}
+                                                            </span>
+                                                            <span class="text-xs px-2 py-1 {{ $session->status === 'present' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }} rounded">
+                                                                {{ ucfirst($session->status) }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- LECTURE Sessions -->
+                        @if(count($sessionTypeBreakdown['lecture']) > 0)
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                                <h3 class="text-lg font-medium text-yellow-900 mb-4">
+                                    <i class="fas fa-image mr-2"></i>
+                                    Lecture Sessions
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    @foreach($sessionTypeBreakdown['lecture'] as $lectureData)
+                                        <div class="bg-white border border-yellow-200 rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-3">
+                                                <h4 class="font-semibold text-gray-900">{{ $lectureData['subject']->name }}</h4>
+                                                <span class="text-sm text-yellow-600 font-medium">{{ $lectureData['count'] }} sessions</span>
+                                            </div>
+                                            <div class="space-y-2 text-sm">
+                                                @foreach($lectureData['sessions'] as $session)
+                                                    <div class="flex items-center justify-between p-2 bg-yellow-50 rounded">
+                                                        <span class="text-gray-700">{{ $session->attendanceSession->name ?? 'Lecture Session' }}</span>
+                                                        <div class="flex items-center space-x-2">
+                                                            @if($session->attached_image)
+                                                                <a href="{{ asset('storage/' . $session->attached_image) }}" 
+                                                                   target="_blank" 
+                                                                   class="text-xs px-2 py-1 bg-indigo-100 text-indigo-800 rounded hover:bg-indigo-200">
+                                                                    <i class="fas fa-image mr-1"></i>
+                                                                    View Image
+                                                                </a>
+                                                            @else
+                                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded">
+                                                                    No Image
+                                                                </span>
+                                                            @endif
+                                                            <span class="text-xs px-2 py-1 {{ $session->status === 'present' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }} rounded">
+                                                                {{ ucfirst($session->status) }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @else
                     <div class="text-center py-12">
