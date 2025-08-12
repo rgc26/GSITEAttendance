@@ -16,19 +16,25 @@
             <p class="mt-1 text-center text-sm text-gray-500">
                 Session Type: <span class="font-medium text-indigo-600">{{ ucfirst($session->session_type ?? 'lecture') }}</span>
             </p>
+            
+            <!-- Helpful note about attendance code -->
+            <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    <div class="text-sm text-blue-700">
+                        <strong>Note:</strong> You've already entered the attendance code to access this form. 
+                        You don't need to enter it again - just fill in the required information below.
+                    </div>
+                </div>
+            </div>
         </div>
         
         <form class="mt-8 space-y-6" action="{{ route('student.attendance.mark', $session->code) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <!-- Hidden session code for security (students don't need to re-enter this) -->
+            <input type="hidden" name="session_code" value="{{ $session->code }}">
+            
             <div class="space-y-4">
-                <!-- Attendance Code (always required) -->
-                <div>
-                    <label for="attendance_code" class="block text-sm font-medium text-gray-700">Attendance Code</label>
-                    <input id="attendance_code" name="attendance_code" type="text" required 
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                           placeholder="Enter the attendance code provided by your teacher">
-                </div>
-
                 @php
                     $sessionType = $session->session_type ?? 'lecture';
                 @endphp

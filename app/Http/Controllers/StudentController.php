@@ -72,7 +72,7 @@ class StudentController extends Controller
             ->first();
 
         if ($existingAttendance) {
-            return redirect()->route('student.dashboard')->with('error', 'You have already marked your attendance for this session.');
+            return redirect()->back()->with('error', 'You have already marked your attendance for this session.');
         }
 
         return view('student.attendance-form', compact('session'));
@@ -102,21 +102,10 @@ class StudentController extends Controller
             return redirect()->back()->with('error', 'You have already marked your attendance for this session.');
         }
 
-        // Validate attendance code
-        $request->validate([
-            'attendance_code' => 'required|string',
-        ]);
-
-        // Verify attendance code matches session code
-        if (strtoupper($request->attendance_code) !== $session->code) {
-            return redirect()->back()->with('error', 'Invalid attendance code. Please check the code provided by your teacher.');
-        }
-
         // Get session type
         $sessionType = $session->session_type ?? 'lecture';
         
         // Validate based on session type
-        $validationRules = [];
         $attendanceData = [
             'user_id' => Auth::id(),
             'attendance_session_id' => $session->id,

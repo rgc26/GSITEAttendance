@@ -184,6 +184,80 @@
                     </div>
                 </div>
 
+                <!-- Session-Specific Summary -->
+                @if($session->session_type === 'lab')
+                    <div class="mt-6 bg-orange-50 rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-orange-900 mb-4">
+                            <i class="fas fa-desktop mr-2"></i>
+                            Lab Session Summary
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            @php
+                                $pcNumbers = $attendances->where('status', '!=', 'absent')->pluck('pc_number')->filter()->sort()->values();
+                                $pcRanges = [];
+                                for ($i = 1; $i <= 40; $i++) {
+                                    $count = $pcNumbers->filter(function($pc) use ($i) {
+                                        return str_contains(strtolower($pc), strtolower($i));
+                                    })->count();
+                                    if ($count > 0) {
+                                        $pcRanges[] = ['pc' => $i, 'count' => $count];
+                                    }
+                                }
+                            @endphp
+                            @foreach($pcRanges as $range)
+                                <div class="text-center p-3 bg-orange-100 rounded-lg">
+                                    <div class="text-lg font-bold text-orange-800">PC{{ $range['pc'] }}</div>
+                                    <div class="text-sm text-orange-600">{{ $range['count'] }} student(s)</div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mt-4 text-sm text-orange-700">
+                            <strong>Total PCs Used:</strong> {{ $pcNumbers->count() }} out of 40 available
+                        </div>
+                    </div>
+                @elseif($session->session_type === 'online')
+                    <div class="mt-6 bg-green-50 rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-green-900 mb-4">
+                            <i class="fas fa-wifi mr-2"></i>
+                            Online Session Summary
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="text-center p-4 bg-green-100 rounded-lg">
+                                <div class="text-2xl font-bold text-green-800">{{ $attendances->where('device_type', 'mobile')->count() }}</div>
+                                <div class="text-sm text-green-600">Mobile Users</div>
+                            </div>
+                            <div class="text-center p-4 bg-blue-100 rounded-lg">
+                                <div class="text-2xl font-bold text-blue-800">{{ $attendances->where('device_type', 'desktop')->count() }}</div>
+                                <div class="text-sm text-blue-600">Desktop Users</div>
+                            </div>
+                            <div class="text-center p-4 bg-purple-100 rounded-lg">
+                                <div class="text-2xl font-bold text-purple-800">{{ $attendances->where('device_type', 'laptop')->count() }}</div>
+                                <div class="text-sm text-purple-600">Laptop Users</div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($session->session_type === 'lecture')
+                    <div class="mt-6 bg-yellow-50 rounded-lg p-6">
+                        <h3 class="text-lg font-medium text-yellow-900 mb-4">
+                            <i class="fas fa-image mr-2"></i>
+                            Lecture Session Summary
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-yellow-100 rounded-lg">
+                                <div class="text-2xl font-bold text-yellow-800">{{ $attendances->where('attached_image', '!=', null)->count() }}</div>
+                                <div class="text-sm text-yellow-600">Images Uploaded</div>
+                            </div>
+                            <div class="text-center p-4 bg-red-100 rounded-lg">
+                                <div class="text-2xl font-bold text-red-800">{{ $attendances->where('attached_image', null)->count() }}</div>
+                                <div class="text-sm text-red-600">No Images</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-yellow-700">
+                            <strong>Image Upload Rate:</strong> {{ $attendances->count() > 0 ? round(($attendances->where('attached_image', '!=', null)->count() / $attendances->count()) * 100, 1) : 0 }}%
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Search Filters -->
                 <div class="mb-6 p-4 bg-blue-50 rounded-lg">
                     <h3 class="text-lg font-medium text-blue-900 mb-4">
@@ -278,6 +352,13 @@
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Their Section</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    @if($session->session_type === 'lab')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PC Number</th>
+                                                    @elseif($session->session_type === 'online')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Type</th>
+                                                    @elseif($session->session_type === 'lecture')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
+                                                    @endif
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
                                                 </tr>
                                             </thead>
@@ -336,6 +417,37 @@
                                                                 {{ ucfirst($attendance->status) }}
                                                             </span>
                                                         </td>
+                                                        @if($session->session_type === 'lab')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                    {{ $attendance->pc_number ?? 'N/A' }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'online')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                    @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
+                                                                    @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
+                                                                    @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
+                                                                    @else bg-gray-100 text-gray-800
+                                                                    @endif">
+                                                                    {{ ucfirst($attendance->device_type ?? 'N/A') }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'lecture')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                @if($attendance->attached_image)
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
+                                                                       target="_blank" 
+                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200">
+                                                                        <i class="fas fa-image mr-1"></i>
+                                                                        View Image
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-gray-500 text-xs">No image</span>
+                                                                @endif
+                                                            </td>
+                                                        @endif
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
@@ -416,6 +528,13 @@
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Section</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    @if($session->session_type === 'lab')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PC Number</th>
+                                                    @elseif($session->session_type === 'online')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Type</th>
+                                                    @elseif($session->session_type === 'lecture')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
+                                                    @endif
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
                                                 </tr>
                                             </thead>
@@ -474,6 +593,37 @@
                                                                 {{ ucfirst($attendance->status) }}
                                                             </span>
                                                         </td>
+                                                        @if($session->session_type === 'lab')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                    {{ $attendance->pc_number ?? 'N/A' }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'online')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                    @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
+                                                                    @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
+                                                                    @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
+                                                                    @else bg-gray-100 text-gray-800
+                                                                    @endif">
+                                                                    {{ ucfirst($attendance->device_type ?? 'N/A') }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'lecture')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                @if($attendance->attached_image)
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
+                                                                       target="_blank" 
+                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200">
+                                                                        <i class="fas fa-image mr-1"></i>
+                                                                        View Image
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-gray-500 text-xs">No image</span>
+                                                                @endif
+                                                            </td>
+                                                        @endif
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
@@ -554,6 +704,13 @@
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Their Section</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    @if($session->session_type === 'lab')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PC Number</th>
+                                                    @elseif($session->session_type === 'online')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Type</th>
+                                                    @elseif($session->session_type === 'lecture')
+                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
+                                                    @endif
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
                                                 </tr>
                                             </thead>
@@ -612,6 +769,37 @@
                                                                 {{ ucfirst($attendance->status) }}
                                                             </span>
                                                         </td>
+                                                        @if($session->session_type === 'lab')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                    {{ $attendance->pc_number ?? 'N/A' }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'online')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                    @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
+                                                                    @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
+                                                                    @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
+                                                                    @else bg-gray-100 text-gray-800
+                                                                    @endif">
+                                                                    {{ ucfirst($attendance->device_type ?? 'N/A') }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'lecture')
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                @if($attendance->attached_image)
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
+                                                                       target="_blank" 
+                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200">
+                                                                        <i class="fas fa-image mr-1"></i>
+                                                                        View Image
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-gray-500 text-xs">No image</span>
+                                                                @endif
+                                                            </td>
+                                                        @endif
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
