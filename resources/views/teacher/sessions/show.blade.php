@@ -17,13 +17,31 @@
     /* Prevent horizontal scrolling */
     .attendance-table {
         width: 100%;
-        table-layout: fixed;
+        table-layout: auto;
+        min-width: 0;
     }
     
     .attendance-table th,
     .attendance-table td {
         word-wrap: break-word;
         overflow-wrap: break-word;
+        max-width: 0;
+    }
+    
+    /* Column-specific styling */
+    .attendance-table th:nth-child(1), /* Student */
+    .attendance-table td:nth-child(1) {
+        min-width: 200px;
+    }
+    
+    .attendance-table th:nth-child(2), /* Student ID */
+    .attendance-table td:nth-child(2) {
+        min-width: 120px;
+    }
+    
+    .attendance-table th:nth-child(8), /* Check-in Time */
+    .attendance-table td:nth-child(8) {
+        min-width: 140px;
     }
     
     /* Responsive table adjustments */
@@ -41,6 +59,21 @@
             padding-left: 0.25rem;
             padding-right: 0.25rem;
             font-size: 0.75rem;
+        }
+        
+        .attendance-table th:nth-child(1),
+        .attendance-table td:nth-child(1) {
+            min-width: 150px;
+        }
+        
+        .attendance-table th:nth-child(2),
+        .attendance-table td:nth-child(2) {
+            min-width: 100px;
+        }
+        
+        .attendance-table th:nth-child(8),
+        .attendance-table td:nth-child(8) {
+            min-width: 120px;
         }
     }
 </style>
@@ -461,8 +494,8 @@
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-purple-50">
                                                 <tr>
-                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Student</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student ID</th>
+                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Student</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Student ID</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Year Level</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student Type</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Their Section</th>
@@ -474,8 +507,8 @@
                                                     @elseif($session->session_type === 'lecture')
                                                         <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Attached Image</th>
                                                     @endif
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Check-in Time</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Check-in Time</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -505,10 +538,10 @@
                                                             </div>
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->user->student_id ?? 'N/A' }}</div>
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->user->year_level ?? 'N/A' }}</div>
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
@@ -564,7 +597,7 @@
                                                             </td>
                                                         @endif
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->check_in_time->format('M d, Y H:i:s') }}</div>
+                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
@@ -622,11 +655,11 @@
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-green-50">
                                                 <tr>
-                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Student</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student ID</th>
+                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Student</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Student ID</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Year Level</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student Type</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Section</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Their Section</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Status</th>
                                                     @if($session->session_type === 'lab')
                                                         <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">PC Number</th>
@@ -635,8 +668,8 @@
                                                     @elseif($session->session_type === 'lecture')
                                                         <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Attached Image</th>
                                                     @endif
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Check-in Time</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Check-in Time</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -666,10 +699,10 @@
                                                             </div>
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->user->student_id ?? 'N/A' }}</div>
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->user->year_level ?? 'N/A' }}</div>
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
@@ -725,7 +758,7 @@
                                                             </td>
                                                         @endif
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->check_in_time->format('M d, Y H:i:s') }}</div>
+                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
@@ -783,8 +816,8 @@
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-yellow-50">
                                                 <tr>
-                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Student</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student ID</th>
+                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Student</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Student ID</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Year Level</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student Type</th>
                                                     <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Their Section</th>
@@ -796,8 +829,8 @@
                                                     @elseif($session->session_type === 'lecture')
                                                         <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Attached Image</th>
                                                     @endif
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Check-in Time</th>
-                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Check-in Time</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -827,10 +860,10 @@
                                                             </div>
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->user->student_id ?? 'N/A' }}</div>
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->user->year_level ?? 'N/A' }}</div>
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
@@ -886,7 +919,7 @@
                                                             </td>
                                                         @endif
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="truncate">{{ $attendance->check_in_time->format('M d, Y H:i:s') }}</div>
+                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
