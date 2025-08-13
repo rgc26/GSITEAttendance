@@ -24,13 +24,19 @@
     
     <style>
         /* Mobile-first responsive styles */
-        .mobile-menu {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
+        .mobile-friendly-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .mobile-menu.open {
-            transform: translateX(0);
+        @media (min-width: 640px) {
+            .mobile-friendly-nav {
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+            }
         }
         
         /* Responsive table styles */
@@ -91,23 +97,57 @@
         }
         
         /* Mobile navigation improvements */
-        .mobile-nav-toggle {
-            display: block;
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
         }
         
-        @media (min-width: 768px) {
-            .mobile-nav-toggle {
-                display: none;
+        @media (min-width: 640px) {
+            .nav-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0;
             }
         }
         
-        .desktop-nav {
-            display: none;
+        /* Mobile-friendly spacing */
+        .mobile-spacing {
+            padding: 0.5rem;
         }
         
-        @media (min-width: 768px) {
-            .desktop-nav {
-                display: flex;
+        @media (min-width: 640px) {
+            .mobile-spacing {
+                padding: 1rem;
+            }
+        }
+        
+        /* Mobile-friendly text sizes */
+        .mobile-text {
+            font-size: 0.875rem;
+        }
+        
+        @media (min-width: 640px) {
+            .mobile-text {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Mobile-friendly buttons */
+        .mobile-action-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            min-height: 2.5rem;
+        }
+        
+        @media (min-width: 640px) {
+            .mobile-action-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+                min-height: 2.75rem;
             }
         }
     </style>
@@ -116,50 +156,27 @@
     @auth
         <nav class="bg-white shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
+                <div class="nav-container">
                     <!-- Logo and Brand -->
                     <div class="flex items-center">
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ Auth::check() ? (Auth::user()->role === 'teacher' ? route('teacher.dashboard') : (Auth::user()->role === 'student' ? route('student.dashboard') : '/')) : (Route::has('login') ? route('login') : '/') }}" class="text-xl font-bold text-gray-800">
+                            <a href="{{ Auth::check() ? (Auth::user()->role === 'teacher' ? route('teacher.dashboard') : (Auth::user()->role === 'student' ? route('student.dashboard') : '/')) : (Route::has('login') ? route('login') : '/') }}" class="text-lg sm:text-xl font-bold text-gray-800">
                                 {{ config('app.name', 'SmartTrack') }}
                             </a>
                         </div>
                     </div>
                     
-                    <!-- Desktop Navigation -->
-                    <div class="desktop-nav items-center space-x-4">
-                        <span class="text-gray-700 font-medium">{{ Auth::user() ? Auth::user()->name : 'Guest' }}</span>
+                    <!-- Navigation - Always Visible -->
+                    <div class="mobile-friendly-nav">
+                        <span class="text-gray-700 font-medium mobile-text text-center">{{ Auth::user() ? Auth::user()->name : 'Guest' }}</span>
                         <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
-                            <button type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200">
+                            <button type="submit" class="mobile-btn inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200">
                                 <i class="fas fa-sign-out-alt mr-2"></i>
                                 <span>Logout</span>
                             </button>
                         </form>
                     </div>
-                    
-                    <!-- Mobile menu button -->
-                    <div class="mobile-nav-toggle flex items-center">
-                        <button id="mobile-menu-toggle" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="mobile-menu sm:hidden bg-white border-t border-gray-200">
-                <div class="px-2 pt-2 pb-3 space-y-1">
-                    <div class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">
-                        {{ Auth::user() ? Auth::user()->name : 'Guest' }}
-                    </div>
-                    <form method="POST" action="{{ route('logout') }}" class="px-3 py-2">
-                        @csrf
-                        <button type="submit" class="w-full text-left inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200">
-                            <i class="fas fa-sign-out-alt mr-2"></i>
-                            Logout
-                        </button>
-                    </form>
                 </div>
             </div>
         </nav>
@@ -168,19 +185,19 @@
     <main class="py-4">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mobile-spacing">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mobile-spacing">
                     {{ session('error') }}
                 </div>
             @endif
 
             @if(isset($errors) && $errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mobile-spacing">
                     <ul>
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -192,27 +209,6 @@
             @yield('content')
         </div>
     </main>
-
-    <script>
-        // Mobile menu functionality
-            document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuToggle && mobileMenu) {
-                mobileMenuToggle.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('open');
-                });
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', function(event) {
-                    if (!mobileMenu.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
-                        mobileMenu.classList.remove('open');
-                    }
-                });
-            }
-        });
-    </script>
     
     @stack('scripts')
 </body>

@@ -102,6 +102,30 @@
         white-space: nowrap;
     }
     
+    /* Mobile-specific improvements */
+    .mobile-friendly-container {
+        padding: 0.5rem;
+    }
+    
+    .mobile-friendly-text {
+        font-size: 0.875rem;
+    }
+    
+    .mobile-friendly-button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        min-height: 2.5rem;
+    }
+    
+    .mobile-friendly-table {
+        font-size: 0.75rem;
+    }
+    
+    .mobile-friendly-table th,
+    .mobile-friendly-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
     /* Responsive table adjustments */
     @media (max-width: 1024px) {
         .attendance-table th,
@@ -139,24 +163,70 @@
             font-size: 0.7rem;
             min-height: 28px;
         }
+        
+        .mobile-friendly-container {
+            padding: 0.25rem;
+        }
+        
+        .mobile-friendly-text {
+            font-size: 0.75rem;
+        }
+        
+        .mobile-friendly-button {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.7rem;
+            min-height: 2.25rem;
+        }
+        
+        .mobile-friendly-table {
+            font-size: 0.7rem;
+        }
+        
+        .mobile-friendly-table th,
+        .mobile-friendly-table td {
+            padding: 0.375rem 0.125rem;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .attendance-table th:nth-child(1),
+        .attendance-table td:nth-child(1) {
+            min-width: 120px;
+        }
+        
+        .attendance-table th:nth-child(2),
+        .attendance-table td:nth-child(2) {
+            min-width: 80px;
+        }
+        
+        .attendance-table th:nth-child(8),
+        .attendance-table td:nth-child(8) {
+            min-width: 100px;
+        }
+        
+        .action-button {
+            padding: 0.25rem 0.375rem;
+            font-size: 0.65rem;
+            min-height: 24px;
+        }
     }
 </style>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">
+            <div class="p-6 bg-white border-b border-gray-200 mobile-friendly-container">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mobile-friendly-text">
                         <i class="fas fa-qrcode mr-2"></i>
                         Attendance Session
                     </h2>
-                    <div class="flex space-x-3">
-                        <a href="{{ route('teacher.subjects.show', $session->subject) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <a href="{{ route('teacher.subjects.show', $session->subject) }}" class="mobile-btn inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             <i class="fas fa-arrow-left mr-2"></i>
                             Back to Subject
                         </a>
                         @if($session->is_active)
-                            <a href="{{ route('teacher.sessions.edit', $session) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <a href="{{ route('teacher.sessions.edit', $session) }}" class="mobile-btn inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                 <i class="fas fa-edit mr-2"></i>
                                 Edit Session
                             </a>
@@ -165,36 +235,36 @@
                 </div>
 
                 <!-- Session Information -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-gray-50 rounded-lg p-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Session Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+                    <div class="bg-gray-50 rounded-lg p-4 sm:p-6 mobile-friendly-container">
+                        <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-4 mobile-friendly-text">Session Details</h3>
                         <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Subject:</span>
-                                <span class="font-medium">{{ $session->subject->name }} ({{ $session->subject->code }})</span>
+                            <div class="flex flex-col sm:flex-row sm:justify-between">
+                                <span class="text-gray-600 mobile-friendly-text">Subject:</span>
+                                <span class="font-medium mobile-friendly-text">{{ $session->subject->name }} ({{ $session->subject->code }})</span>
                             </div>
                             @if($session->name)
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Session Name:</span>
-                                    <span class="font-medium">{{ $session->name }}</span>
+                                <div class="flex flex-col sm:flex-row sm:justify-between">
+                                    <span class="text-gray-600 mobile-friendly-text">Session Name:</span>
+                                    <span class="font-medium mobile-friendly-text">{{ $session->name }}</span>
                                 </div>
                             @endif
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Target Section:</span>
-                                <span class="font-bold text-indigo-600">{{ $session->section }}</span>
+                            <div class="flex flex-col sm:flex-row sm:justify-between">
+                                <span class="text-gray-600 mobile-friendly-text">Target Section:</span>
+                                <span class="font-bold text-indigo-600 mobile-friendly-text">{{ $session->section }}</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Session Type:</span>
+                            <div class="flex flex-col sm:flex-row sm:justify-between">
+                                <span class="text-gray-600 mobile-friendly-text">Session Type:</span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $session->session_type === 'lab' ? 'bg-blue-100 text-blue-800' : ($session->session_type === 'online' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800') }}">
                                     {{ ucfirst($session->session_type ?? 'lecture') }}
                                 </span>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Attendance Code:</span>
-                                <span class="font-mono font-bold text-lg">{{ $session->code }}</span>
+                            <div class="flex flex-col sm:flex-row sm:justify-between">
+                                <span class="text-gray-600 mobile-friendly-text">Attendance Code:</span>
+                                <span class="font-mono font-bold text-base sm:text-lg">{{ $session->code }}</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Status:</span>
+                            <div class="flex flex-col sm:flex-row sm:justify-between">
+                                <span class="text-gray-600 mobile-friendly-text">Status:</span>
                                 @if($session->is_active)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         Active
@@ -209,36 +279,30 @@
                                     </span>
                                 @endif
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Started:</span>
-                                <span class="font-medium">{{ $session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet' }}</span>
+                            <div class="flex flex-col sm:flex-row sm:justify-between">
+                                <span class="text-gray-600 mobile-friendly-text">Started:</span>
+                                <span class="font-medium mobile-friendly-text">{{ $session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet' }}</span>
                             </div>
                             @if($session->scheduled_start_time)
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Scheduled Start:</span>
-                                    <span class="font-medium">{{ $session->scheduled_start_time->format('M d, Y H:i') }}</span>
+                                <div class="flex flex-col sm:flex-row sm:justify-between">
+                                    <span class="text-gray-600 mobile-friendly-text">Scheduled Start:</span>
+                                    <span class="font-medium mobile-friendly-text">{{ $session->scheduled_start_time->format('M d, Y H:i') }}</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Grace Period End:</span>
-                                    <span class="font-medium">{{ $session->getGracePeriodEndTime()->format('M d, Y H:i') }}</span>
+                                <div class="flex flex-col sm:flex-row sm:justify-between">
+                                    <span class="text-gray-600 mobile-friendly-text">Grace Period End:</span>
+                                    <span class="font-medium mobile-friendly-text">{{ $session->getGracePeriodEndTime()->format('M d, Y H:i') }}</span>
                                 </div>
                             @endif
                             @if($session->scheduled_end_time)
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Scheduled End:</span>
-                                    <span class="font-medium">{{ $session->scheduled_end_time->format('M d, Y H:i') }}</span>
+                                <div class="flex flex-col sm:flex-row sm:justify-between">
+                                    <span class="text-gray-600 mobile-friendly-text">Scheduled End:</span>
+                                    <span class="font-medium mobile-friendly-text">{{ $session->scheduled_end_time->format('M d, Y H:i') }}</span>
                                 </div>
                             @endif
                             @if($session->end_time)
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Ended:</span>
-                                    <span class="font-medium">{{ $session->end_time->format('M d, Y H:i') }}</span>
-                                </div>
-                            @endif
-                            @if($session->notes)
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Notes:</span>
-                                    <span class="font-medium">{{ $session->notes }}</span>
+                                <div class="flex flex-col sm:flex-row sm:justify-between">
+                                    <span class="text-gray-600 mobile-friendly-text">Ended:</span>
+                                    <span class="font-medium mobile-friendly-text">{{ $session->end_time->format('M d, Y H:i') }}</span>
                                 </div>
                             @endif
                         </div>
