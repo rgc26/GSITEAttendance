@@ -212,11 +212,11 @@
     }
 </style>
 <div class="py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-full mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200 mobile-friendly-container">
+            <div class="p-4 sm:p-6 lg:p-8 bg-white border-b border-gray-200 mobile-friendly-container">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mobile-friendly-text">
+                    <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mobile-friendly-text">
                         <i class="fas fa-qrcode mr-2"></i>
                         Attendance Session
                     </h2>
@@ -235,9 +235,9 @@
                 </div>
 
                 <!-- Session Information -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
-                    <div class="bg-gray-50 rounded-lg p-4 sm:p-6 mobile-friendly-container">
-                        <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-4 mobile-friendly-text">Session Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8">
+                    <div class="bg-gray-50 rounded-lg p-4 sm:p-6 lg:p-8 mobile-friendly-container">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-medium text-gray-900 mb-4 mobile-friendly-text">Session Details</h3>
                         <div class="space-y-3">
                             <div class="flex flex-col sm:flex-row sm:justify-between">
                                 <span class="text-gray-600 mobile-friendly-text">Subject:</span>
@@ -308,32 +308,32 @@
                         </div>
                     </div>
 
-                    <div class="bg-green-50 rounded-lg p-6">
-                        <h3 class="text-lg font-medium text-green-900 mb-4">Section {{ $session->section }} Summary</h3>
+                    <div class="bg-green-50 rounded-lg p-4 sm:p-6 lg:p-8">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-medium text-green-900 mb-4 mobile-friendly-text">Section {{ $session->section }} Summary</h3>
                         <div class="space-y-3">
                             <div class="flex justify-between">
-                                <span class="text-green-700">Total Students:</span>
-                                <span class="font-bold text-green-900 text-xl">{{ $totalTargetStudents }}</span>
+                                <span class="text-green-700 mobile-friendly-text">Total Students:</span>
+                                <span class="font-bold text-green-900 text-lg sm:text-xl">{{ $totalTargetStudents }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-green-700">Present:</span>
-                                <span class="font-medium text-green-600">{{ $presentTargetStudents }}</span>
+                                <span class="text-green-700 mobile-friendly-text">Present:</span>
+                                <span class="font-medium text-green-600 mobile-friendly-text">{{ $presentTargetStudents }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-green-700">Late:</span>
-                                <span class="font-medium text-yellow-600">{{ $lateTargetStudents }}</span>
+                                <span class="text-green-700 mobile-friendly-text">Late:</span>
+                                <span class="font-medium text-yellow-600 mobile-friendly-text">{{ $lateTargetStudents }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-green-700">Absent:</span>
-                                <span class="font-medium text-red-600">{{ $absentTargetStudents }}</span>
+                                <span class="text-green-700 mobile-friendly-text">Absent:</span>
+                                <span class="font-medium text-red-600 mobile-friendly-text">{{ $absentTargetStudents }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-green-700">Not Marked Yet:</span>
-                                <span class="font-medium text-gray-600">{{ $notMarkedYet }}</span>
+                                <span class="text-green-700 mobile-friendly-text">Not Marked Yet:</span>
+                                <span class="font-medium text-gray-600 mobile-friendly-text">{{ $notMarkedYet }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-green-700">Attendance Rate:</span>
-                                <span class="font-medium text-green-900">
+                                <span class="text-green-700 mobile-friendly-text">Attendance Rate:</span>
+                                <span class="font-medium text-green-900 mobile-friendly-text">
                                     @if($totalTargetStudents > 0)
                                         {{ round((($presentTargetStudents + $lateTargetStudents) / $totalTargetStudents) * 100, 1) }}%
                                     @else
@@ -359,32 +359,81 @@
                     </div>
                     @endif
 
-                    <div class="bg-blue-50 rounded-lg p-6">
-                        <h3 class="text-lg font-medium text-blue-900 mb-4">Overall Summary</h3>
+                    <div class="bg-blue-50 rounded-lg p-4 sm:p-6 lg:p-8">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-medium text-blue-900 mb-4 mobile-friendly-text">Overall Summary</h3>
                         <div class="space-y-3">
                             <div class="flex justify-between">
-                                <span class="text-blue-700">Total Attendees:</span>
-                                <span class="font-bold text-blue-900 text-xl">{{ $attendances->count() }}</span>
+                                <span class="text-blue-700 mobile-friendly-text">Total Attendees:</span>
+                                <span class="font-bold text-blue-900 text-lg sm:text-xl">{{ $attendances->count() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-blue-700">Regular Students:</span>
-                                <span class="font-medium text-green-600">{{ $regularAttendances->count() }}</span>
+                                <span class="text-blue-700 mobile-friendly-text">Regular Students:</span>
+                                <span class="font-medium text-green-600 mobile-friendly-text">{{ $regularAttendances->count() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-blue-700">Irregular Students:</span>
-                                <span class="font-medium text-yellow-600">{{ $irregularAttendances->count() }}</span>
+                                <span class="text-blue-700 mobile-friendly-text">Irregular Students:</span>
+                                <span class="font-medium text-yellow-600 mobile-friendly-text">{{ $irregularAttendances->count() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-blue-700">Block Students:</span>
-                                <span class="font-medium text-purple-600">{{ $blockAttendances->count() }}</span>
+                                <span class="text-blue-700 mobile-friendly-text">Block Students:</span>
+                                <span class="font-medium text-purple-600 mobile-friendly-text">{{ $blockAttendances->count() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-blue-700">On Time:</span>
-                                <span class="font-medium text-green-600">{{ $attendances->where('status', 'present')->count() }}</span>
+                                <span class="text-blue-700 mobile-friendly-text">On Time:</span>
+                                <span class="font-medium text-green-600 mobile-friendly-text">{{ $attendances->where('status', 'present')->count() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-blue-700">Late:</span>
-                                <span class="font-medium text-yellow-600">{{ $attendances->where('status', 'late')->count() }}</span>
+                                <span class="text-blue-700 mobile-friendly-text">Late:</span>
+                                <span class="font-medium text-yellow-600 mobile-friendly-text">{{ $attendances->where('status', 'late')->count() }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session Statistics Card -->
+                    <div class="bg-purple-50 rounded-lg p-4 sm:p-6 lg:p-8">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-medium text-purple-900 mb-4 mobile-friendly-text">Session Statistics</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-purple-700 mobile-friendly-text">Session Duration:</span>
+                                <span class="font-medium text-purple-900 mobile-friendly-text">
+                                    @if($session->start_time && $session->end_time)
+                                        {{ $session->start_time->diffForHumans($session->end_time, true) }}
+                                    @elseif($session->start_time)
+                                        {{ $session->start_time->diffForHumans(null, true) }}
+                                    @else
+                                        Not started
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-purple-700 mobile-friendly-text">PC Numbers Used:</span>
+                                <span class="font-medium text-purple-900 mobile-friendly-text">
+                                    {{ $attendances->whereNotNull('pc_number')->unique('pc_number')->count() }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-purple-700 mobile-friendly-text">Device Types:</span>
+                                <span class="font-medium text-purple-900 mobile-friendly-text">
+                                    {{ $attendances->whereNotNull('device_type')->unique('device_type')->count() }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-purple-700 mobile-friendly-text">With Images:</span>
+                                <span class="font-medium text-purple-900 mobile-friendly-text">
+                                    {{ $attendances->whereNotNull('attached_image')->count() }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-purple-700 mobile-friendly-text">Created:</span>
+                                <span class="font-medium text-purple-900 mobile-friendly-text">
+                                    {{ $session->created_at->format('M d, Y H:i') }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-purple-700 mobile-friendly-text">Last Updated:</span>
+                                <span class="font-medium text-purple-900 mobile-friendly-text">
+                                    {{ $session->updated_at->format('M d, Y H:i') }}
+                                </span>
                             </div>
                         </div>
                     </div>
