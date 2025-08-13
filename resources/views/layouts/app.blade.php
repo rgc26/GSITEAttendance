@@ -28,14 +28,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
+            text-align: center;
         }
         
         @media (min-width: 640px) {
             .mobile-friendly-nav {
                 flex-direction: row;
                 align-items: center;
+                justify-content: flex-end;
                 gap: 1rem;
+                text-align: left;
             }
         }
         
@@ -101,8 +105,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
             padding: 0.5rem 0;
+            min-height: 4rem;
         }
         
         @media (min-width: 640px) {
@@ -111,7 +117,102 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: 0;
+                min-height: 4rem;
             }
+        }
+        
+        /* Logo container improvements */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (min-width: 640px) {
+            .logo-container {
+                justify-content: flex-start;
+            }
+        }
+        
+        /* User info and logout alignment */
+        .user-nav-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (min-width: 640px) {
+            .user-nav-section {
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+        
+        .user-name {
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        @media (min-width: 640px) {
+            .user-name {
+                text-align: left;
+            }
+        }
+        
+        /* Logout button specific styling */
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            text-decoration: none;
+            min-height: 2.5rem;
+        }
+        
+        .logout-btn:hover {
+            color: #111827;
+            background-color: #f3f4f6;
+        }
+        
+        .logout-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        @media (min-width: 640px) {
+            .logout-btn {
+                padding: 0.75rem 1rem;
+                min-height: 2.75rem;
+            }
+        }
+        
+        /* Ensure proper vertical centering */
+        .nav-container > * {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Logo link styling */
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s ease-in-out;
+        }
+        
+        .logo-link:hover {
+            color: #1f2937;
         }
         
         /* Mobile-friendly spacing */
@@ -158,20 +259,20 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="nav-container">
                     <!-- Logo and Brand -->
-                    <div class="flex items-center">
+                    <div class="logo-container">
                         <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ Auth::check() ? (Auth::user()->role === 'teacher' ? route('teacher.dashboard') : (Auth::user()->role === 'student' ? route('student.dashboard') : '/')) : (Route::has('login') ? route('login') : '/') }}" class="text-lg sm:text-xl font-bold text-gray-800">
+                            <a href="{{ Auth::check() ? (Auth::user()->role === 'teacher' ? route('teacher.dashboard') : (Auth::user()->role === 'student' ? route('student.dashboard') : '/')) : (Route::has('login') ? route('login') : '/') }}" class="logo-link text-lg sm:text-xl font-bold text-gray-800">
                                 {{ config('app.name', 'SmartTrack') }}
                             </a>
                         </div>
                     </div>
                     
                     <!-- Navigation - Always Visible -->
-                    <div class="mobile-friendly-nav">
-                        <span class="text-gray-700 font-medium mobile-text text-center">{{ Auth::user() ? Auth::user()->name : 'Guest' }}</span>
+                    <div class="user-nav-section">
+                        <span class="user-name mobile-text">{{ Auth::user() ? Auth::user()->name : 'Guest' }}</span>
                         <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
-                            <button type="submit" class="mobile-btn inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200">
+                            <button type="submit" class="logout-btn">
                                 <i class="fas fa-sign-out-alt mr-2"></i>
                                 <span>Logout</span>
                             </button>
