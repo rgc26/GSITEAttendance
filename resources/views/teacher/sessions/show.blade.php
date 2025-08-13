@@ -138,7 +138,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-green-700">Not Marked Yet:</span>
-                                <span class="font-medium text-gray-600">{{ $totalTargetStudents - $presentTargetStudents - $lateTargetStudents - $absentTargetStudents }}</span>
+                                <span class="font-medium text-gray-600">{{ $notMarkedYet }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-green-700">Attendance Rate:</span>
@@ -152,6 +152,21 @@
                             </div>
                         </div>
                     </div>
+
+                    @if(config('app.debug'))
+                    <div class="mt-4 p-3 bg-gray-100 border border-gray-300 rounded-lg">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Debug - Section Summary Calculation:</h4>
+                        <div class="text-xs text-gray-600 space-y-1">
+                            <div><strong>Total Students in Section {{ $session->section }}:</strong> {{ $totalTargetStudents }}</div>
+                            <div><strong>Present Students:</strong> {{ $presentTargetStudents }}</div>
+                            <div><strong>Late Students:</strong> {{ $lateTargetStudents }}</div>
+                            <div><strong>Absent Students:</strong> {{ $absentTargetStudents }}</div>
+                            <div><strong>Not Marked Yet:</strong> {{ $notMarkedYet }}</div>
+                            <div><strong>Calculation:</strong> {{ $totalTargetStudents }} - {{ $presentTargetStudents }} - {{ $lateTargetStudents }} - {{ $absentTargetStudents }} = {{ $notMarkedYet }}</div>
+                            <div><strong>Attendance Rate:</strong> ({{ $presentTargetStudents }} + {{ $lateTargetStudents }}) / {{ $totalTargetStudents }} × 100 = {{ round((($presentTargetStudents + $lateTargetStudents) / $totalTargetStudents) * 100, 1) }}%</div>
+                        </div>
+                    </div>
+                    @endif
 
                     <div class="bg-blue-50 rounded-lg p-6">
                         <h3 class="text-lg font-medium text-blue-900 mb-4">Overall Summary</h3>
@@ -205,22 +220,37 @@
                         </h3>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             @php
-                                $pcNumbers = $attendances->where('status', '!=', 'absent')->pluck('pc_number')->filter()->sort()->values();
-                                $pcRanges = [];
+                                // Get all non-absent attendances with PC numbers
+                                $labAttendances = $attendances->where('status', '!=', 'absent')->where('pc_number', '!=', null)->where('pc_number', '!=', '');
                                 
-                                // Group students by PC number
+                                // Group students by PC number, ensuring no duplicate names per PC
                                 $pcGroups = [];
-                                foreach ($attendances->where('status', '!=', 'absent') as $attendance) {
-                                    if ($attendance->pc_number) {
-                                        $pcNum = $attendance->pc_number;
-                                        // Extract just the number from PC input (remove "PC", "pc", etc.)
-                                        $pcNum = preg_replace('/[^0-9]/', '', $pcNum);
-                                        if ($pcNum && is_numeric($pcNum) && $pcNum >= 1 && $pcNum <= 40) {
-                                            if (!isset($pcGroups[$pcNum])) {
-                                                $pcGroups[$pcNum] = [];
-                                            }
-                                            $pcGroups[$pcNum][] = $attendance->user->name;
+                                $studentPcMap = []; // Track which PC each student is assigned to
+                                
+                                foreach ($labAttendances as $attendance) {
+                                    $pcNum = $attendance->pc_number;
+                                    $studentName = $attendance->user->name;
+                                    $studentId = $attendance->user->id;
+                                    
+                                    // Extract just the number from PC input (remove "PC", "pc", etc.)
+                                    $pcNum = preg_replace('/[^0-9]/', '', $pcNum);
+                                    
+                                    if ($pcNum && is_numeric($pcNum) && $pcNum >= 1 && $pcNum <= 40) {
+                                        // If student already has a PC assigned, skip this record
+                                        if (isset($studentPcMap[$studentId])) {
+                                            continue;
                                         }
+                                        
+                                        if (!isset($pcGroups[$pcNum])) {
+                                            $pcGroups[$pcNum] = [];
+                                        }
+                                        
+                                        // Add student to this PC group and mark them as assigned
+                                        $pcGroups[$pcNum][] = [
+                                            'id' => $studentId,
+                                            'name' => $studentName
+                                        ];
+                                        $studentPcMap[$studentId] = $pcNum;
                                     }
                                 }
                                 
@@ -234,7 +264,7 @@
                                     <div class="text-sm text-orange-600">{{ count($students) }} student(s)</div>
                                     <div class="text-xs text-orange-700 mt-1">
                                         @foreach($students as $student)
-                                            <div class="truncate" title="{{ $student }}">{{ $student }}</div>
+                                            <div class="truncate" title="{{ $student['name'] }}">{{ $student['name'] }}</div>
                                         @endforeach
                                     </div>
                                 </div>
@@ -242,7 +272,29 @@
                         </div>
                         <div class="mt-4 text-sm text-orange-700">
                             <strong>Total PCs Used:</strong> {{ count($pcGroups) }} out of 40 available
+                            <br>
+                            <strong>Total Unique Students:</strong> {{ count($studentPcMap) }} students
                         </div>
+                        
+                        @if(config('app.debug'))
+                        <div class="mt-4 p-3 bg-gray-100 border border-gray-300 rounded-lg">
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Debug Information:</h4>
+                            <div class="text-xs text-gray-600 space-y-1">
+                                <div><strong>Raw PC Numbers:</strong> {{ $labAttendances->pluck('pc_number')->implode(', ') }}</div>
+                                <div><strong>Student-PC Mapping:</strong> 
+                                    @foreach($studentPcMap as $studentId => $pcNum)
+                                        Student ID {{ $studentId }} → PC{{ $pcNum }},
+                                    @endforeach
+                                </div>
+                                <div><strong>Processed PC Groups:</strong> 
+                                    @foreach($pcGroups as $pcNum => $students)
+                                        PC{{ $pcNum }}: {{ count($students) }} students ({{ implode(', ', array_column($students, 'name')) }})
+                                        @if(!$loop->last), @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 @elseif($session->session_type === 'online')
                     <div class="mt-6 bg-green-50 rounded-lg p-6">

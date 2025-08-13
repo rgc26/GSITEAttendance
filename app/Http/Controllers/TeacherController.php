@@ -209,11 +209,23 @@ class TeacherController extends Controller
             ->where('section', $session->section)
             ->get();
 
-        // Calculate section-based summary
+        // Calculate section-based summary - ONLY for students from the target section
         $totalTargetStudents = $targetSectionStudents->count();
-        $presentTargetStudents = $attendances->where('status', 'present')->count();
-        $lateTargetStudents = $attendances->where('status', 'late')->count();
-        $absentTargetStudents = $attendances->where('status', 'absent')->count();
+        
+        // Get attendances for students from the target section only
+        $targetSectionAttendances = $attendances->filter(function($attendance) use ($session) {
+            return $attendance->user->section === $session->section;
+        });
+        
+        $presentTargetStudents = $targetSectionAttendances->where('status', 'present')->count();
+        $lateTargetStudents = $targetSectionAttendances->where('status', 'late')->count();
+        $absentTargetStudents = $targetSectionAttendances->where('status', 'absent')->count();
+        
+        // Calculate not marked yet (students from target section without any attendance record)
+        $notMarkedYet = $totalTargetStudents - $presentTargetStudents - $lateTargetStudents - $absentTargetStudents;
+        
+        // Ensure not marked yet is not negative
+        $notMarkedYet = max(0, $notMarkedYet);
 
         // Group attendances by student type
         $regularAttendances = $attendances->where('user.student_type', 'regular');
@@ -233,6 +245,7 @@ class TeacherController extends Controller
             'presentTargetStudents',
             'lateTargetStudents',
             'absentTargetStudents',
+            'notMarkedYet',
             'irregularCount'
         ));
     }
