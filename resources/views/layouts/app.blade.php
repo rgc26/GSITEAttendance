@@ -342,7 +342,7 @@
     @endauth
 
     <main class="py-4">
-        <div class="max-w-full mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mobile-spacing">
                     {{ session('success') }}
