@@ -19,6 +19,7 @@
         width: 100%;
         table-layout: auto;
         min-width: 0;
+        border-collapse: collapse;
     }
     
     .attendance-table th,
@@ -26,6 +27,23 @@
         word-wrap: break-word;
         overflow-wrap: break-word;
         max-width: 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .attendance-table th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        padding: 0.75rem 0.5rem;
+        text-align: left;
+        vertical-align: top;
+    }
+    
+    .attendance-table td {
+        padding: 1rem 0.5rem;
+        vertical-align: top;
     }
     
     /* Column-specific styling */
@@ -42,6 +60,46 @@
     .attendance-table th:nth-child(8), /* Check-in Time */
     .attendance-table td:nth-child(8) {
         min-width: 140px;
+    }
+    
+    /* Button styling improvements */
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        width: 100%;
+        min-height: 32px;
+    }
+    
+    .action-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .action-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Status badge improvements */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
     }
     
     /* Responsive table adjustments */
@@ -74,6 +132,12 @@
         .attendance-table th:nth-child(8),
         .attendance-table td:nth-child(8) {
             min-width: 120px;
+        }
+        
+        .action-button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            min-height: 28px;
         }
     }
 </style>
@@ -544,7 +608,7 @@
                                                             {{ $attendance->user->year_level ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            <span class="status-badge 
                                                                 @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
                                                                 @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
                                                                 @else bg-purple-100 text-purple-800
@@ -553,12 +617,12 @@
                                                             </span>
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                            <span class="status-badge bg-purple-100 text-purple-800">
                                                                 {{ $attendance->user->section }}
                                                             </span>
                                                         </td>
                                                         <td class="px-2 py-4">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            <span class="status-badge 
                                                                 @if($attendance->status === 'present') bg-green-100 text-green-800
                                                                 @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
                                                                 @else bg-red-100 text-red-800
@@ -568,13 +632,13 @@
                                                         </td>
                                                         @if($session->session_type === 'lab')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                <span class="status-badge bg-blue-100 text-blue-800">
                                                                     {{ $attendance->pc_number ?? 'N/A' }}
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'online')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                <span class="status-badge 
                                                                     @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
                                                                     @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
                                                                     @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
@@ -587,8 +651,8 @@
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
                                                                     <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
-                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
-                                                                        <i class="fas fa-image mr-1"></i>
+                                                                       class="action-button bg-blue-500 text-white">
+                                                                        <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
                                                                     </a>
                                                                 @else
@@ -600,17 +664,17 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="flex space-x-2">
+                                                            <div class="flex flex-col space-y-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer relative z-10">
-                                                                    <i class="fas fa-edit mr-1"></i>
+                                                                        class="action-button bg-blue-500 text-white">
+                                                                    <i class="fas fa-edit mr-1.5"></i>
                                                                     Edit
                                                                 </button>
                                                                 <button type="button" 
                                                                         onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer relative z-10">
-                                                                    <i class="fas fa-trash mr-1"></i>
+                                                                        class="action-button bg-red-500 text-white">
+                                                                    <i class="fas fa-trash mr-1.5"></i>
                                                                     Delete
                                                                 </button>
                                                             </div>
@@ -705,7 +769,7 @@
                                                             {{ $attendance->user->year_level ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            <span class="status-badge 
                                                                 @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
                                                                 @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
                                                                 @else bg-purple-100 text-purple-800
@@ -714,12 +778,12 @@
                                                             </span>
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            <span class="status-badge bg-purple-100 text-purple-800">
                                                                 {{ $attendance->user->section }}
                                                             </span>
                                                         </td>
                                                         <td class="px-2 py-4">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            <span class="status-badge 
                                                                 @if($attendance->status === 'present') bg-green-100 text-green-800
                                                                 @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
                                                                 @else bg-red-100 text-red-800
@@ -729,13 +793,13 @@
                                                         </td>
                                                         @if($session->session_type === 'lab')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                <span class="status-badge bg-blue-100 text-blue-800">
                                                                     {{ $attendance->pc_number ?? 'N/A' }}
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'online')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                <span class="status-badge 
                                                                     @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
                                                                     @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
                                                                     @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
@@ -748,8 +812,8 @@
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
                                                                     <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
-                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
-                                                                        <i class="fas fa-image mr-1"></i>
+                                                                       class="action-button bg-blue-500 text-white">
+                                                                        <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
                                                                     </a>
                                                                 @else
@@ -761,17 +825,17 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="flex space-x-2">
+                                                            <div class="flex flex-col space-y-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer relative z-10">
-                                                                    <i class="fas fa-edit mr-1"></i>
+                                                                        class="action-button bg-blue-500 text-white">
+                                                                    <i class="fas fa-edit mr-1.5"></i>
                                                                     Edit
                                                                 </button>
                                                                 <button type="button" 
                                                                         onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer relative z-10">
-                                                                    <i class="fas fa-trash mr-1"></i>
+                                                                        class="action-button bg-red-500 text-white">
+                                                                    <i class="fas fa-trash mr-1.5"></i>
                                                                     Delete
                                                                 </button>
                                                             </div>
@@ -866,7 +930,7 @@
                                                             {{ $attendance->user->year_level ?? 'N/A' }}
                                                         </td>
                                                         <td class="px-2 py-4">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            <span class="status-badge 
                                                                 @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
                                                                 @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
                                                                 @else bg-purple-100 text-purple-800
@@ -875,12 +939,12 @@
                                                             </span>
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                            <span class="status-badge bg-purple-100 text-purple-800">
                                                                 {{ $attendance->user->section }}
                                                             </span>
                                                         </td>
                                                         <td class="px-2 py-4">
-                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                            <span class="status-badge 
                                                                 @if($attendance->status === 'present') bg-green-100 text-green-800
                                                                 @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
                                                                 @else bg-red-100 text-red-800
@@ -890,13 +954,13 @@
                                                         </td>
                                                         @if($session->session_type === 'lab')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                <span class="status-badge bg-blue-100 text-blue-800">
                                                                     {{ $attendance->pc_number ?? 'N/A' }}
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'online')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                                <span class="status-badge 
                                                                     @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
                                                                     @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
                                                                     @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
@@ -909,8 +973,8 @@
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
                                                                     <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
-                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
-                                                                        <i class="fas fa-image mr-1"></i>
+                                                                       class="action-button bg-blue-500 text-white">
+                                                                        <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
                                                                     </a>
                                                                 @else
@@ -922,17 +986,17 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="flex space-x-2">
+                                                            <div class="flex flex-col space-y-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer relative z-10">
-                                                                    <i class="fas fa-edit mr-1"></i>
+                                                                        class="action-button bg-blue-500 text-white">
+                                                                    <i class="fas fa-edit mr-1.5"></i>
                                                                     Edit
                                                                 </button>
                                                                 <button type="button" 
                                                                         onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer relative z-10">
-                                                                    <i class="fas fa-trash mr-1"></i>
+                                                                        class="action-button bg-red-500 text-white">
+                                                                    <i class="fas fa-trash mr-1.5"></i>
                                                                     Delete
                                                                 </button>
                                                             </div>
