@@ -150,25 +150,12 @@
             }
         }
         
-        .user-name {
-            text-align: center;
-            white-space: nowrap;
-            font-weight: 500;
-            color: #374151;
-        }
-        
-        @media (min-width: 640px) {
-            .user-name {
-                text-align: left;
-            }
-        }
-        
         /* Logout button specific styling */
         .logout-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.5rem 0.75rem;
+            padding: 0.5rem 0.75rem 0.5rem 0.75rem;
             font-size: 0.875rem;
             font-weight: 500;
             color: #6b7280;
@@ -178,7 +165,9 @@
             transition: all 0.2s ease-in-out;
             cursor: pointer;
             text-decoration: none;
-            min-height: 2.5rem;
+            min-height: auto;
+            line-height: 1;
+            margin: 0;
         }
         
         .logout-btn:hover {
@@ -193,8 +182,77 @@
         
         @media (min-width: 640px) {
             .logout-btn {
-                padding: 0.75rem 1rem;
-                min-height: 2.75rem;
+                padding: 0.75rem 1rem 0.75rem 1rem;
+                min-height: auto;
+            }
+        }
+        
+        /* User name alignment improvements */
+        .user-name {
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 500;
+            color: #374151;
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+        
+        @media (min-width: 640px) {
+            .user-name {
+                text-align: left;
+            }
+        }
+        
+        /* Ensure perfect inline alignment */
+        .user-nav-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            line-height: 1;
+        }
+        
+        @media (min-width: 640px) {
+            .user-nav-section {
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+                line-height: 1;
+            }
+        }
+        
+        /* Remove any extra spacing from form elements */
+        .user-nav-section form {
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        
+        /* Ensure button and text are perfectly aligned */
+        .user-nav-section .user-name,
+        .user-nav-section .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: baseline;
+            line-height: 1;
+        }
+        
+        /* Remove any default button margins */
+        .logout-btn {
+            margin: 0;
+            padding: 0.5rem 0.75rem;
+            border: none;
+            background: none;
+            font: inherit;
+            cursor: pointer;
+            outline: inherit;
+        }
+        
+        /* Mobile-specific button adjustments */
+        @media (max-width: 639px) {
+            .logout-btn {
+                padding: 0.375rem 0.5rem;
             }
         }
         
