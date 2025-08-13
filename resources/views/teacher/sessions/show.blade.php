@@ -538,11 +538,18 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
-                                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
-                                                                <i class="fas fa-edit mr-1"></i>
-                                                                Edit
-                                                            </button>
+                                                            <div class="flex space-x-2">
+                                                                <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                    <i class="fas fa-edit mr-1"></i>
+                                                                    Edit
+                                                                </button>
+                                                                <button onclick="deleteAttendance('{{ $attendance->id }}', '{{ $attendance->user->name }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200">
+                                                                    <i class="fas fa-trash mr-1"></i>
+                                                                    Delete
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -722,11 +729,18 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
-                                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
-                                                                <i class="fas fa-edit mr-1"></i>
-                                                                Edit
-                                                            </button>
+                                                            <div class="flex space-x-2">
+                                                                <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                    <i class="fas fa-edit mr-1"></i>
+                                                                    Edit
+                                                                </button>
+                                                                <button onclick="deleteAttendance('{{ $attendance->id }}', '{{ $attendance->user->name }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200">
+                                                                    <i class="fas fa-trash mr-1"></i>
+                                                                    Delete
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -906,11 +920,18 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
-                                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
-                                                                <i class="fas fa-edit mr-1"></i>
-                                                                Edit
-                                                            </button>
+                                                            <div class="flex space-x-2">
+                                                                <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                    <i class="fas fa-edit mr-1"></i>
+                                                                    Edit
+                                                                </button>
+                                                                <button onclick="deleteAttendance('{{ $attendance->id }}', '{{ $attendance->user->name }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200">
+                                                                    <i class="fas fa-trash mr-1"></i>
+                                                                    Delete
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -1131,6 +1152,35 @@
     </div>
 </div>
 
+<!-- Delete Attendance Confirmation Modal -->
+<div id="deleteAttendanceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Attendance Record</h3>
+            <p class="text-sm text-gray-500 mb-6" id="deleteConfirmationText">
+                Are you sure you want to delete this attendance record? This action cannot be undone.
+            </p>
+            <form id="deleteAttendanceForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeDeleteModal()" 
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
+                        Delete Record
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 <script>
@@ -1248,6 +1298,18 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('editAttendanceModal').classList.remove('hidden');
     }
 
+    function deleteAttendance(attendanceId, studentName) {
+        // Set the confirmation text
+        document.getElementById('deleteConfirmationText').innerHTML = 
+            `Are you sure you want to delete <strong>${studentName}</strong>'s attendance record? This action cannot be undone.`;
+        
+        // Set the form action
+        document.getElementById('deleteAttendanceForm').action = `/teacher/sessions/{{ $session->id }}/attendance/${attendanceId}`;
+        
+        // Show the delete confirmation modal
+        document.getElementById('deleteAttendanceModal').classList.remove('hidden');
+    }
+
     function closeEditModal() {
         document.getElementById('editAttendanceModal').classList.add('hidden');
     }
@@ -1256,6 +1318,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('editAttendanceModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeEditModal();
+        }
+    });
+
+    // Close delete modal when clicking outside
+    document.getElementById('deleteAttendanceModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
         }
     });
 
@@ -1292,5 +1361,9 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.style.transform = 'rotate(0deg)';
         });
     };
+
+    function closeDeleteModal() {
+        document.getElementById('deleteAttendanceModal').classList.add('hidden');
+    }
 });
 </script> 

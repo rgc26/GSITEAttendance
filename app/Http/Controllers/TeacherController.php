@@ -498,36 +498,54 @@ class TeacherController extends Controller
         
         $request->validate([
             'status' => 'required|in:present,late,absent',
-            'pc_number' => 'nullable|integer|min:1|max:40',
-            'device_type' => 'nullable|in:mobile,desktop,laptop',
-            'attached_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'pc_number' => $session->session_type === 'lab' ? 'required|integer|min:1|max:40' : 'nullable',
+            'device_type' => $session->session_type === 'online' ? 'required|in:mobile,desktop,laptop' : 'nullable',
+            'attached_image' => $session->session_type === 'lecture' ? 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' : 'nullable',
         ]);
 
-        // Check if attendance belongs to this session
+        // Check if the attendance record belongs to this session
         if ($attendance->attendance_session_id !== $session->id) {
             return redirect()->back()->with('error', 'Invalid attendance record.');
         }
 
-        // Update attendance data
-        $updateData = [
-            'status' => $request->status,
-        ];
+        $updateData = ['status' => $request->status];
 
-        // Update session-specific data
-        if ($session->session_type === 'lab' && $request->pc_number) {
+        if ($session->session_type === 'lab') {
             $updateData['pc_number'] = $request->pc_number;
-        } elseif ($session->session_type === 'online' && $request->device_type) {
+        } elseif ($session->session_type === 'online') {
             $updateData['device_type'] = $request->device_type;
         } elseif ($session->session_type === 'lecture' && $request->hasFile('attached_image')) {
-            $file = $request->file('attached_image');
-            $filename = time() . '_' . $attendance->user_id . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('attendance_images', $filename, 'public');
-            $updateData['attached_image'] = $path;
+            // Handle image upload
+            $image = $request->file('attached_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/attendance_images', $imageName);
+            $updateData['attached_image'] = $imageName;
         }
 
         $attendance->update($updateData);
 
-        return redirect()->back()->with('success', "Updated {$attendance->user->name}'s attendance.");
+        return redirect()->back()->with('success', 'Attendance updated successfully!');
+    }
+
+    /**
+     * Delete an attendance record
+     */
+    public function deleteAttendance(AttendanceSession $session, Attendance $attendance)
+    {
+        $this->authorize('view', $session->subject);
+        
+        // Check if the attendance record belongs to this session
+        if ($attendance->attendance_session_id !== $session->id) {
+            return redirect()->back()->with('error', 'Invalid attendance record.');
+        }
+
+        // Store student name for success message
+        $studentName = $attendance->user->name;
+        
+        // Delete the attendance record
+        $attendance->delete();
+
+        return redirect()->back()->with('success', "{$studentName}'s attendance record has been deleted successfully!");
     }
 
     public function editSession(AttendanceSession $session)

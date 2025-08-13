@@ -154,6 +154,7 @@ Route::group([], function () {
     Route::post('/teacher/sessions/{session}/mark-absent', [TeacherController::class, 'markStudentAbsent'])->name('teacher.sessions.mark-absent');
     Route::post('/teacher/sessions/{session}/mark-present', [TeacherController::class, 'markStudentPresent'])->name('teacher.sessions.mark-present');
     Route::put('/teacher/sessions/{session}/attendance/{attendance}', [TeacherController::class, 'updateAttendance'])->name('teacher.sessions.update-attendance');
+    Route::delete('/teacher/sessions/{session}/attendance/{attendance}', [TeacherController::class, 'deleteAttendance'])->name('teacher.sessions.delete-attendance');
     Route::delete('/teacher/sessions/{session}', [TeacherController::class, 'deleteSession'])->name('teacher.sessions.delete');
     
     // Reports
