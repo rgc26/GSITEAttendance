@@ -683,6 +683,54 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        
+                                        <!-- Absent Students for Block Section -->
+                                        @if($blockAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $blockAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($blockAttendances->where('status', 'absent') as $attendance)
+                                                        <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
+                                                            <div class="flex-shrink-0 h-8 w-8 mr-3">
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                                <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
+                                                            </div>
+                                                            <div class="flex-shrink-0">
+                                                                <div class="flex flex-col space-y-1">
+                                                                    <button type="button" 
+                                                                            onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
+                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1">
+                                                                        <i class="fas fa-edit mr-1"></i>
+                                                                        Edit
+                                                                    </button>
+                                                                    <button type="button" 
+                                                                            onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
+                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1">
+                                                                        <i class="fas fa-trash mr-1"></i>
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -844,6 +892,54 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        
+                                        <!-- Absent Students for Regular Section -->
+                                        @if($regularAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $regularAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($regularAttendances->where('status', 'absent') as $attendance)
+                                                        <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
+                                                            <div class="flex-shrink-0 h-8 w-8 mr-3">
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                                <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
+                                                            </div>
+                                                            <div class="flex-shrink-0">
+                                                                <div class="flex flex-col space-y-1">
+                                                                    <button type="button" 
+                                                                            onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
+                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1">
+                                                                        <i class="fas fa-edit mr-1"></i>
+                                                                        Edit
+                                                                    </button>
+                                                                    <button type="button" 
+                                                                            onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
+                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1">
+                                                                        <i class="fas fa-trash mr-1"></i>
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -1005,6 +1101,54 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        
+                                        <!-- Absent Students for Irregular Section -->
+                                        @if($irregularAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $irregularAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($irregularAttendances->where('status', 'absent') as $attendance)
+                                                        <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
+                                                            <div class="flex-shrink-0 h-8 w-8 mr-3">
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                                <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
+                                                            </div>
+                                                            <div class="flex-shrink-0">
+                                                                <div class="flex flex-col space-y-1">
+                                                                    <button type="button" 
+                                                                            onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
+                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1">
+                                                                        <i class="fas fa-edit mr-1"></i>
+                                                                        Edit
+                                                                    </button>
+                                                                    <button type="button" 
+                                                                            onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
+                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1">
+                                                                        <i class="fas fa-trash mr-1"></i>
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
