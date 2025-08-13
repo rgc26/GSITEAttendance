@@ -204,6 +204,9 @@ class TeacherController extends Controller
         // Get all attendances for this session
         $attendances = $session->attendances()->with('user')->get();
         
+        // Clean up any duplicate attendance records
+        $this->cleanupDuplicateAttendances($session);
+        
         // Get all students from the target section
         $targetSectionStudents = User::where('role', 'student')
             ->where('section', $session->section)
@@ -227,10 +230,35 @@ class TeacherController extends Controller
         // Ensure not marked yet is not negative
         $notMarkedYet = max(0, $notMarkedYet);
 
-        // Group attendances by student type
-        $regularAttendances = $attendances->where('user.student_type', 'regular');
-        $irregularAttendances = $attendances->where('user.student_type', 'irregular');
-        $blockAttendances = $attendances->where('user.student_type', 'block');
+        // Group attendances by student type - ALWAYS use current student data
+        // First, get all unique student IDs from attendances
+        $studentIds = $attendances->pluck('user_id')->unique();
+        
+        // Fetch fresh student data to ensure we have current student types
+        $currentStudents = User::whereIn('id', $studentIds)->get()->keyBy('id');
+        
+        // Now group attendances by current student type
+        $regularAttendances = collect();
+        $irregularAttendances = collect();
+        $blockAttendances = collect();
+        
+        foreach ($attendances as $attendance) {
+            $student = $currentStudents->get($attendance->user_id);
+            if ($student) {
+                // Use current student type, not cached data
+                switch ($student->student_type) {
+                    case 'regular':
+                        $regularAttendances->push($attendance);
+                        break;
+                    case 'irregular':
+                        $irregularAttendances->push($attendance);
+                        break;
+                    case 'block':
+                        $blockAttendances->push($attendance);
+                        break;
+                }
+            }
+        }
         
         $irregularCount = $irregularAttendances->count();
         
@@ -248,6 +276,54 @@ class TeacherController extends Controller
             'notMarkedYet',
             'irregularCount'
         ));
+    }
+
+    /**
+     * Clean up duplicate attendance records for a session
+     * This ensures each student has only one attendance record per session
+     */
+    private function cleanupDuplicateAttendances(AttendanceSession $session)
+    {
+        // Get all attendances for this session
+        $attendances = $session->attendances()->get();
+        
+        // Group by user_id to find duplicates
+        $groupedAttendances = $attendances->groupBy('user_id');
+        
+        foreach ($groupedAttendances as $userId => $userAttendances) {
+            if ($userAttendances->count() > 1) {
+                // Keep the most recent attendance record, delete the rest
+                $mostRecent = $userAttendances->sortByDesc('created_at')->first();
+                $duplicates = $userAttendances->where('id', '!=', $mostRecent->id);
+                
+                foreach ($duplicates as $duplicate) {
+                    $duplicate->delete();
+                }
+            }
+        }
+    }
+
+    /**
+     * Handle student type changes and update attendance records
+     * This method can be called when a student's account details are updated
+     */
+    public function handleStudentTypeChange($userId, $oldType, $newType)
+    {
+        // Get all active sessions for this student
+        $activeSessions = AttendanceSession::whereHas('attendances', function($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->where('is_active', true)->get();
+
+        // Log the change for audit purposes
+        \Log::info("Student type changed", [
+            'user_id' => $userId,
+            'old_type' => $oldType,
+            'new_type' => $newType,
+            'affected_sessions' => $activeSessions->pluck('id')->toArray()
+        ]);
+
+        // Note: Attendance records will automatically reflect the new student type
+        // when the session is viewed, due to the fresh data fetching in showSession
     }
 
     public function endSession(AttendanceSession $session)

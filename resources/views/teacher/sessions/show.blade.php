@@ -207,6 +207,10 @@
                             <strong>Attendance Management:</strong> 
                             Students who have already marked attendance (even if marked as absent) can be updated using the "Edit" buttons below. 
                             This prevents duplicate records and allows you to correct any attendance status or details.
+                            <br><br>
+                            <strong>Student Type Display:</strong> 
+                            Student types (Regular, Irregular, Block) are always shown based on their current account details, 
+                            not the details from when they originally marked attendance. This ensures accurate categorization even after account updates.
                         </div>
                     </div>
                 </div>
