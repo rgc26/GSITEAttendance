@@ -298,14 +298,20 @@ class TeacherController extends Controller
             return redirect()->back()->with('error', 'Student is not from the target section.');
         }
 
-        // Check if student already has an attendance record
+        // Check if student already has an attendance record for this session
         $existingAttendance = $session->attendances()->where('user_id', $student->id)->first();
         
         if ($existingAttendance) {
-            return redirect()->back()->with('error', 'Student already has an attendance record.');
+            // Update existing attendance record instead of creating a new one
+            $existingAttendance->update([
+                'status' => 'absent',
+                'check_in_time' => now()->setTimezone('Asia/Manila'),
+            ]);
+
+            return redirect()->back()->with('success', "Updated {$student->name}'s attendance to absent.");
         }
 
-        // Create absent record
+        // If no existing record, create a new absent record
         \App\Models\Attendance::create([
             'user_id' => $student->id,
             'attendance_session_id' => $session->id,
@@ -339,14 +345,34 @@ class TeacherController extends Controller
             return redirect()->back()->with('error', 'Student is not from the target section.');
         }
 
-        // Check if student already has an attendance record
+        // Check if student already has an attendance record for this session
         $existingAttendance = $session->attendances()->where('user_id', $student->id)->first();
         
         if ($existingAttendance) {
-            return redirect()->back()->with('error', 'Student already has an attendance record.');
+            // Update existing attendance record instead of creating a new one
+            $updateData = [
+                'status' => 'present',
+                'check_in_time' => now()->setTimezone('Asia/Manila'),
+            ];
+
+            // Update session-specific data
+            if ($session->session_type === 'lab' && $request->pc_number) {
+                $updateData['pc_number'] = $request->pc_number;
+            } elseif ($session->session_type === 'online' && $request->device_type) {
+                $updateData['device_type'] = $request->device_type;
+            } elseif ($session->session_type === 'lecture' && $request->hasFile('attached_image')) {
+                $file = $request->file('attached_image');
+                $filename = time() . '_' . $student->id . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('attendance_images', $filename, 'public');
+                $updateData['attached_image'] = $path;
+            }
+
+            $existingAttendance->update($updateData);
+
+            return redirect()->back()->with('success', "Updated {$student->name}'s attendance to present.");
         }
 
-        // Prepare attendance data
+        // If no existing record, create a new one
         $attendanceData = [
             'user_id' => $student->id,
             'attendance_session_id' => $session->id,
@@ -363,7 +389,7 @@ class TeacherController extends Controller
             $attendanceData['device_type'] = $request->device_type;
         } elseif ($session->session_type === 'lecture' && $request->hasFile('attached_image')) {
             $file = $request->file('attached_image');
-            $filename = time() . '_' . $student->id . '_' . $file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('attendance_images', $filename, 'public');
             $attendanceData['attached_image'] = $path;
         }

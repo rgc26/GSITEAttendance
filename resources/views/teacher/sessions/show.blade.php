@@ -184,6 +184,18 @@
                     </div>
                 </div>
 
+                <!-- Helpful Note for Teachers -->
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-green-500 mr-2"></i>
+                        <div class="text-sm text-green-700">
+                            <strong>Attendance Management:</strong> 
+                            Students who have already marked attendance (even if marked as absent) can be updated using the "Edit" buttons below. 
+                            This prevents duplicate records and allows you to correct any attendance status or details.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Session-Specific Summary -->
                 @if($session->session_type === 'lab')
                     <div class="mt-6 bg-orange-50 rounded-lg p-6">
@@ -906,11 +918,12 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">
                         <i class="fas fa-clock mr-2"></i>
-                        Students Who Haven't Marked Attendance Yet
+                        Students Without Attendance Records
                     </h3>
                     
                     @php
                         $studentsNotMarked = $targetSectionStudents->filter(function($student) use ($attendances) {
+                            // Check if student has any attendance record (present, late, or absent)
                             return !$attendances->where('user_id', $student->id)->first();
                         });
                     @endphp
@@ -933,7 +946,7 @@
                                     <div class="flex-1">
                                         <div class="text-sm font-medium text-gray-900">{{ $student->name }}</div>
                                         <div class="text-sm text-gray-500">{{ $student->student_id ?? 'N/A' }}</div>
-                                        <div class="text-xs text-yellow-600">Waiting for attendance</div>
+                                        <div class="text-xs text-yellow-600">No attendance record</div>
                                     </div>
                                     <div class="flex-shrink-0 space-y-2">
                                         <!-- Mark Present Button -->
@@ -986,17 +999,17 @@
                             <div class="flex items-center">
                                 <i class="fas fa-info-circle text-blue-500 mr-2"></i>
                                 <div class="text-sm text-blue-700">
-                                    <strong>Note:</strong> These students haven't marked their attendance yet. 
+                                    <strong>Note:</strong> These students have no attendance records yet. 
                                     You can manually mark them as <strong>present</strong> (with required details) or <strong>absent</strong>.
-                                    Students marked as absent cannot change their status to present later.
+                                    If a student already has attendance marked but shows as absent, use the "Edit" button in the attendance list above to change their status.
                                 </div>
                             </div>
                         </div>
                     @else
                         <div class="text-center py-8">
                             <i class="fas fa-check-circle text-4xl text-green-400 mb-4"></i>
-                            <h4 class="text-lg font-medium text-gray-900 mb-2">All Students Have Marked Attendance</h4>
-                            <p class="text-gray-600">Every student in section {{ $session->section }} has either marked attendance or been marked as absent.</p>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">All Students Have Attendance Records</h4>
+                            <p class="text-gray-600">Every student in section {{ $session->section }} has an attendance record. Use the "Edit" buttons above to modify any attendance details.</p>
                         </div>
                     @endif
                 </div>
