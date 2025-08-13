@@ -13,6 +13,36 @@
         color: white;
         font-weight: 600;
     }
+    
+    /* Prevent horizontal scrolling */
+    .attendance-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    
+    .attendance-table th,
+    .attendance-table td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Responsive table adjustments */
+    @media (max-width: 1024px) {
+        .attendance-table th,
+        .attendance-table td {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .attendance-table th,
+        .attendance-table td {
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+            font-size: 0.75rem;
+        }
+    }
 </style>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -213,14 +243,6 @@
                             not the details from when they originally marked attendance. This ensures accurate categorization even after account updates.
                         </div>
                     </div>
-                </div>
-
-                <!-- JavaScript Test Button -->
-                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <button type="button" onclick="testJavaScript()" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                        Test JavaScript Functions
-                    </button>
-                    <span class="ml-3 text-sm text-yellow-700">Click this to test if JavaScript functions are working</span>
                 </div>
 
                 <!-- Session-Specific Summary -->
@@ -435,25 +457,25 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="overflow-x-auto">
-                                        <table class="min-w-full divide-y divide-gray-200">
+                                    <div class="w-full">
+                                        <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-purple-50">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Their Section</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Student</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student ID</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Year Level</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student Type</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Their Section</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Status</th>
                                                     @if($session->session_type === 'lab')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PC Number</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">PC Number</th>
                                                     @elseif($session->session_type === 'online')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Type</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Device Type</th>
                                                     @elseif($session->session_type === 'lecture')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Attached Image</th>
                                                     @endif
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Check-in Time</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -463,7 +485,7 @@
                                                         data-status="{{ $attendance->status }}"
                                                         data-section="block"
                                                         data-type="{{ $attendance->user->student_type }}">
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-3 py-4">
                                                             <div class="flex items-center">
                                                                 <div class="flex-shrink-0 h-10 w-10 mr-3">
                                                                     @if($attendance->user->profile_picture)
@@ -476,19 +498,19 @@
                                                                         </div>
                                                                     @endif
                                                                 </div>
-                                                                <div>
-                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
-                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                <div class="min-w-0">
+                                                                    <div class="text-sm font-medium text-gray-900 truncate">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500 truncate">{{ $attendance->user->email }}</div>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->user->student_id ?? 'N/A' }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->user->year_level ?? 'N/A' }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                 @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
                                                                 @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
@@ -497,12 +519,12 @@
                                                                 {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
                                                             </span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                                                 {{ $attendance->user->section }}
                                                             </span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                 @if($attendance->status === 'present') bg-green-100 text-green-800
                                                                 @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
@@ -512,13 +534,13 @@
                                                             </span>
                                                         </td>
                                                         @if($session->session_type === 'lab')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                                     {{ $attendance->pc_number ?? 'N/A' }}
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'online')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                     @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
                                                                     @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
@@ -529,11 +551,10 @@
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'lecture')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
-                                                                       target="_blank" 
-                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200">
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
+                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
                                                                         <i class="fas fa-image mr-1"></i>
                                                                         View Image
                                                                     </a>
@@ -542,10 +563,10 @@
                                                                 @endif
                                                             </td>
                                                         @endif
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->check_in_time->format('M d, Y H:i:s') }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
@@ -565,37 +586,6 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        
-                                        <!-- Absent Students for Block Section -->
-                                        @if($blockAttendances->where('status', 'absent')->count() > 0)
-                                            <div class="mt-4 pt-4 border-t border-gray-200">
-                                                <h4 class="text-sm font-medium text-red-700 mb-3">
-                                                    <i class="fas fa-user-times mr-2"></i>
-                                                    Absent Students ({{ $blockAttendances->where('status', 'absent')->count() }})
-                                                </h4>
-                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                    @foreach($blockAttendances->where('status', 'absent') as $attendance)
-                                                        <div class="flex items-center p-2 bg-red-50 rounded-lg">
-                                                            <div class="flex-shrink-0 h-8 w-8 mr-2">
-                                                                @if($attendance->user->profile_picture)
-                                                                    <img class="h-8 w-8 rounded-full object-cover" 
-                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                         alt="{{ $attendance->user->name }}'s profile picture">
-                                                                @else
-                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="min-w-0 flex-1">
-                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
-                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -628,25 +618,25 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="overflow-x-auto">
-                                        <table class="min-w-full divide-y divide-gray-200">
+                                    <div class="w-full">
+                                        <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-green-50">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Section</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Student</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student ID</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Year Level</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student Type</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Section</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Status</th>
                                                     @if($session->session_type === 'lab')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PC Number</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">PC Number</th>
                                                     @elseif($session->session_type === 'online')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Type</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Device Type</th>
                                                     @elseif($session->session_type === 'lecture')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Attached Image</th>
                                                     @endif
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Check-in Time</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -656,7 +646,7 @@
                                                         data-status="{{ $attendance->status }}"
                                                         data-section="regular"
                                                         data-type="{{ $attendance->user->student_type }}">
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-3 py-4">
                                                             <div class="flex items-center">
                                                                 <div class="flex-shrink-0 h-10 w-10 mr-3">
                                                                     @if($attendance->user->profile_picture)
@@ -669,19 +659,19 @@
                                                                         </div>
                                                                     @endif
                                                                 </div>
-                                                                <div>
-                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
-                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                <div class="min-w-0">
+                                                                    <div class="text-sm font-medium text-gray-900 truncate">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500 truncate">{{ $attendance->user->email }}</div>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->user->student_id ?? 'N/A' }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->user->year_level ?? 'N/A' }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                 @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
                                                                 @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
@@ -690,12 +680,12 @@
                                                                 {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
                                                             </span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                                 {{ $attendance->user->section }}
                                                             </span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                 @if($attendance->status === 'present') bg-green-100 text-green-800
                                                                 @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
@@ -705,13 +695,13 @@
                                                             </span>
                                                         </td>
                                                         @if($session->session_type === 'lab')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                                     {{ $attendance->pc_number ?? 'N/A' }}
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'online')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                     @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
                                                                     @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
@@ -722,11 +712,10 @@
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'lecture')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
-                                                                       target="_blank" 
-                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200">
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
+                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
                                                                         <i class="fas fa-image mr-1"></i>
                                                                         View Image
                                                                     </a>
@@ -735,10 +724,10 @@
                                                                 @endif
                                                             </td>
                                                         @endif
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->check_in_time->format('M d, Y H:i:s') }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
@@ -758,37 +747,6 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        
-                                        <!-- Absent Students for Regular Section -->
-                                        @if($regularAttendances->where('status', 'absent')->count() > 0)
-                                            <div class="mt-4 pt-4 border-t border-gray-200">
-                                                <h4 class="text-sm font-medium text-red-700 mb-3">
-                                                    <i class="fas fa-user-times mr-2"></i>
-                                                    Absent Students ({{ $regularAttendances->where('status', 'absent')->count() }})
-                                                </h4>
-                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                    @foreach($regularAttendances->where('status', 'absent') as $attendance)
-                                                        <div class="flex items-center p-2 bg-red-50 rounded-lg">
-                                                            <div class="flex-shrink-0 h-8 w-8 mr-2">
-                                                                @if($attendance->user->profile_picture)
-                                                                    <img class="h-8 w-8 rounded-full object-cover" 
-                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                         alt="{{ $attendance->user->name }}'s profile picture">
-                                                                @else
-                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="min-w-0 flex-1">
-                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
-                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -821,25 +779,25 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="overflow-x-auto">
-                                        <table class="min-w-full divide-y divide-gray-200">
+                                    <div class="w-full">
+                                        <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-yellow-50">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Type</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Their Section</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Student</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student ID</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Year Level</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Student Type</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Their Section</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Status</th>
                                                     @if($session->session_type === 'lab')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PC Number</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">PC Number</th>
                                                     @elseif($session->session_type === 'online')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Type</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Device Type</th>
                                                     @elseif($session->session_type === 'lecture')
-                                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
+                                                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Attached Image</th>
                                                     @endif
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/8">Check-in Time</th>
+                                                    <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -849,7 +807,7 @@
                                                         data-status="{{ $attendance->status }}"
                                                         data-section="irregular"
                                                         data-type="{{ $attendance->user->student_type }}">
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-3 py-4">
                                                             <div class="flex items-center">
                                                                 <div class="flex-shrink-0 h-10 w-10 mr-3">
                                                                     @if($attendance->user->profile_picture)
@@ -862,19 +820,19 @@
                                                                         </div>
                                                                     @endif
                                                                 </div>
-                                                                <div>
-                                                                    <div class="text-sm font-medium text-gray-900">{{ $attendance->user->name }}</div>
-                                                                    <div class="text-sm text-gray-500">{{ $attendance->user->email }}</div>
+                                                                <div class="min-w-0">
+                                                                    <div class="text-sm font-medium text-gray-900 truncate">{{ $attendance->user->name }}</div>
+                                                                    <div class="text-sm text-gray-500 truncate">{{ $attendance->user->email }}</div>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->user->student_id ?? 'N/A' }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->user->year_level ?? 'N/A' }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                 @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
                                                                 @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
@@ -883,12 +841,12 @@
                                                                 {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
                                                             </span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                                                 {{ $attendance->user->section }}
                                                             </span>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                        <td class="px-2 py-4">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                 @if($attendance->status === 'present') bg-green-100 text-green-800
                                                                 @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
@@ -898,13 +856,13 @@
                                                             </span>
                                                         </td>
                                                         @if($session->session_type === 'lab')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                                     {{ $attendance->pc_number ?? 'N/A' }}
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'online')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                                     @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
                                                                     @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
@@ -915,11 +873,10 @@
                                                                 </span>
                                                             </td>
                                                         @elseif($session->session_type === 'lecture')
-                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
-                                                                       target="_blank" 
-                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200">
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
+                                                                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
                                                                         <i class="fas fa-image mr-1"></i>
                                                                         View Image
                                                                     </a>
@@ -928,10 +885,10 @@
                                                                 @endif
                                                             </td>
                                                         @endif
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
+                                                            <div class="truncate">{{ $attendance->check_in_time->format('M d, Y H:i:s') }}</div>
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
@@ -951,37 +908,6 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        
-                                        <!-- Absent Students for Irregular Section -->
-                                        @if($irregularAttendances->where('status', 'absent')->count() > 0)
-                                            <div class="mt-4 pt-4 border-t border-gray-200">
-                                                <h4 class="text-sm font-medium text-red-700 mb-3">
-                                                    <i class="fas fa-user-times mr-2"></i>
-                                                    Absent Students ({{ $irregularAttendances->where('status', 'absent')->count() }})
-                                                </h4>
-                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                    @foreach($irregularAttendances->where('status', 'absent') as $attendance)
-                                                        <div class="flex items-center p-2 bg-red-50 rounded-lg">
-                                                            <div class="flex-shrink-0 h-8 w-8 mr-2">
-                                                                @if($attendance->user->profile_picture)
-                                                                    <img class="h-8 w-8 rounded-full object-cover" 
-                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                         alt="{{ $attendance->user->name }}'s profile picture">
-                                                                @else
-                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="min-w-0 flex-1">
-                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
-                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -1249,24 +1175,6 @@ window.editAttendance = editAttendance;
 window.deleteAttendance = deleteAttendance;
 window.closeEditModal = closeEditModal;
 window.closeDeleteModal = closeDeleteModal;
-window.testJavaScript = testJavaScript;
-
-// Test function to verify JavaScript is working
-function testJavaScript() {
-    alert('JavaScript is working! Functions available:\n' +
-          'editAttendance: ' + (typeof editAttendance) + '\n' +
-          'deleteAttendance: ' + (typeof deleteAttendance) + '\n' +
-          'closeEditModal: ' + (typeof closeEditModal) + '\n' +
-          'closeDeleteModal: ' + (typeof closeDeleteModal));
-    
-    console.log('Test function called');
-    console.log('Functions available:', {
-        editAttendance: typeof editAttendance,
-        deleteAttendance: typeof deleteAttendance,
-        closeEditModal: typeof closeEditModal,
-        closeDeleteModal: typeof closeDeleteModal
-    });
-}
 
 console.log('Global functions defined:', {
     editAttendance: typeof editAttendance,
@@ -1277,37 +1185,12 @@ console.log('Global functions defined:', {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, checking for elements...');
-    console.log('Functions available:', {
-        editAttendance: typeof window.editAttendance,
-        deleteAttendance: typeof window.deleteAttendance,
-        closeEditModal: typeof window.closeEditModal,
-        closeDeleteModal: typeof window.closeDeleteModal
-    });
     
     // Check if required elements exist
     const editModal = document.getElementById('editAttendanceModal');
     const deleteModal = document.getElementById('deleteAttendanceModal');
     const editForm = document.getElementById('editAttendanceForm');
     const deleteForm = document.getElementById('deleteAttendanceForm');
-    
-    console.log('Edit modal exists:', !!editModal);
-    console.log('Delete modal exists:', !!deleteModal);
-    console.log('Edit form exists:', !!editForm);
-    console.log('Delete form exists:', !!deleteForm);
-    
-    // Test function calls
-    console.log('Testing function availability...');
-    if (typeof window.editAttendance === 'function') {
-        console.log('✅ editAttendance function is available');
-    } else {
-        console.log('❌ editAttendance function is NOT available');
-    }
-    
-    if (typeof window.deleteAttendance === 'function') {
-        console.log('✅ deleteAttendance function is available');
-    } else {
-        console.log('❌ deleteAttendance function is NOT available');
-    }
     
     // Accordion functionality
     const accordionHeaders = document.querySelectorAll('.accordion-header');
