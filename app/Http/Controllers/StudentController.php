@@ -168,7 +168,7 @@ class StudentController extends Controller
         switch ($sessionType) {
             case 'lab':
                 $request->validate([
-                    'pc_number' => 'required|string|max:50',
+                    'pc_number' => 'required|integer|min:1|max:40',
                 ]);
                 $attendanceData['pc_number'] = $request->pc_number;
                 break;

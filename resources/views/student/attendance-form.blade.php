@@ -43,9 +43,12 @@
                 @if($sessionType === 'lab')
                     <div>
                         <label for="pc_number" class="block text-sm font-medium text-gray-700">PC Number</label>
-                        <input id="pc_number" name="pc_number" type="text" required 
+                        <input id="pc_number" name="pc_number" type="number" required 
+                               min="1" max="40" step="1"
                                class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                               placeholder="Enter PC number (e.g., PC01, PC02)">
+                               placeholder="Enter PC number (1-40)">
+                        <p class="mt-1 text-xs text-gray-500">Please enter only the number (1-40), not "PC1" or "PC01"</p>
+                        <div id="pc_error" class="mt-1 text-xs text-red-600 hidden">Please enter a valid PC number between 1 and 40</div>
                     </div>
                     
                     <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
@@ -58,7 +61,8 @@
                                 <div class="mt-2 text-sm text-blue-700">
                                     <ul class="list-disc pl-5 space-y-1">
                                         <li>Make sure you're in the correct lab/room</li>
-                                        <li>Enter the PC number you're using</li>
+                                        <li>Enter only the PC number (1-40) you're using</li>
+                                        <li>Do not enter "PC1", "PC01", or any text - just the number</li>
                                         <li>You can only mark attendance once per session</li>
                                         <li>Attendance will be recorded with your current time</li>
                                     </ul>
@@ -138,6 +142,74 @@
                 </button>
             </div>
         </form>
+        
+        @if($sessionType === 'lab')
+        <script>
+            const pcInput = document.getElementById('pc_number');
+            const pcError = document.getElementById('pc_error');
+            
+            function validatePCNumber(value) {
+                const num = parseInt(value);
+                if (value === '' || (num >= 1 && num <= 40)) {
+                    pcError.classList.add('hidden');
+                    pcInput.classList.remove('border-red-500');
+                    pcInput.classList.add('border-gray-300');
+                    return true;
+                } else {
+                    pcError.classList.remove('hidden');
+                    pcInput.classList.add('border-red-500');
+                    pcInput.classList.remove('border-gray-300');
+                    return false;
+                }
+            }
+            
+            pcInput.addEventListener('input', function(e) {
+                let value = e.target.value;
+                
+                // Remove any non-numeric characters
+                value = value.replace(/[^0-9]/g, '');
+                
+                // Ensure value is between 1-40
+                if (value !== '') {
+                    let num = parseInt(value);
+                    if (num < 1) value = '1';
+                    if (num > 40) value = '40';
+                }
+                
+                e.target.value = value;
+                validatePCNumber(value);
+            });
+            
+            // Validate on blur
+            pcInput.addEventListener('blur', function() {
+                validatePCNumber(this.value);
+            });
+            
+            // Prevent paste of invalid content
+            pcInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                let numericValue = pastedText.replace(/[^0-9]/g, '');
+                
+                if (numericValue !== '') {
+                    let num = parseInt(numericValue);
+                    if (num >= 1 && num <= 40) {
+                        this.value = num;
+                        validatePCNumber(num);
+                    }
+                }
+            });
+            
+            // Form submission validation
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (!validatePCNumber(pcInput.value)) {
+                    e.preventDefault();
+                    pcInput.focus();
+                    return false;
+                }
+            });
+        </script>
+        @endif
     </div>
 </div>
 @endsection 

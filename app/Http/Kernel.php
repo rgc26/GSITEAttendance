@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'secure.upload' => \App\Http\Middleware\SecureFileUpload::class,
+        'rate.limit.registration' => \App\Http\Middleware\RateLimitRegistration::class,
     ];
 } 

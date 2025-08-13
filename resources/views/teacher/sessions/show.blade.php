@@ -195,24 +195,41 @@
                             @php
                                 $pcNumbers = $attendances->where('status', '!=', 'absent')->pluck('pc_number')->filter()->sort()->values();
                                 $pcRanges = [];
-                                for ($i = 1; $i <= 40; $i++) {
-                                    $count = $pcNumbers->filter(function($pc) use ($i) {
-                                        return str_contains(strtolower($pc), strtolower($i));
-                                    })->count();
-                                    if ($count > 0) {
-                                        $pcRanges[] = ['pc' => $i, 'count' => $count];
+                                
+                                // Group students by PC number
+                                $pcGroups = [];
+                                foreach ($attendances->where('status', '!=', 'absent') as $attendance) {
+                                    if ($attendance->pc_number) {
+                                        $pcNum = $attendance->pc_number;
+                                        // Extract just the number from PC input (remove "PC", "pc", etc.)
+                                        $pcNum = preg_replace('/[^0-9]/', '', $pcNum);
+                                        if ($pcNum && is_numeric($pcNum) && $pcNum >= 1 && $pcNum <= 40) {
+                                            if (!isset($pcGroups[$pcNum])) {
+                                                $pcGroups[$pcNum] = [];
+                                            }
+                                            $pcGroups[$pcNum][] = $attendance->user->name;
+                                        }
                                     }
                                 }
+                                
+                                // Sort by PC number
+                                ksort($pcGroups);
                             @endphp
-                            @foreach($pcRanges as $range)
+                            
+                            @foreach($pcGroups as $pcNum => $students)
                                 <div class="text-center p-3 bg-orange-100 rounded-lg">
-                                    <div class="text-lg font-bold text-orange-800">PC{{ $range['pc'] }}</div>
-                                    <div class="text-sm text-orange-600">{{ $range['count'] }} student(s)</div>
+                                    <div class="text-lg font-bold text-orange-800">PC{{ $pcNum }}</div>
+                                    <div class="text-sm text-orange-600">{{ count($students) }} student(s)</div>
+                                    <div class="text-xs text-orange-700 mt-1">
+                                        @foreach($students as $student)
+                                            <div class="truncate" title="{{ $student }}">{{ $student }}</div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
                         <div class="mt-4 text-sm text-orange-700">
-                            <strong>Total PCs Used:</strong> {{ $pcNumbers->count() }} out of 40 available
+                            <strong>Total PCs Used:</strong> {{ count($pcGroups) }} out of 40 available
                         </div>
                     </div>
                 @elseif($session->session_type === 'online')
@@ -360,6 +377,7 @@
                                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
                                                     @endif
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -451,6 +469,13 @@
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
+                                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                <i class="fas fa-edit mr-1"></i>
+                                                                Edit
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -536,6 +561,7 @@
                                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
                                                     @endif
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -627,6 +653,13 @@
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
+                                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                <i class="fas fa-edit mr-1"></i>
+                                                                Edit
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -712,6 +745,7 @@
                                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attached Image</th>
                                                     @endif
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in Time</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="bg-white divide-y divide-gray-200">
@@ -802,6 +836,13 @@
                                                         @endif
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
+                                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                <i class="fas fa-edit mr-1"></i>
+                                                                Edit
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -894,12 +935,44 @@
                                         <div class="text-sm text-gray-500">{{ $student->student_id ?? 'N/A' }}</div>
                                         <div class="text-xs text-yellow-600">Waiting for attendance</div>
                                     </div>
-                                    <div class="flex-shrink-0">
-                                        <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="inline">
+                                    <div class="flex-shrink-0 space-y-2">
+                                        <!-- Mark Present Button -->
+                                        <form action="{{ route('teacher.sessions.mark-present', $session) }}" method="POST" class="block">
+                                            @csrf
+                                            <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                            @if($session->session_type === 'lab')
+                                                <input type="number" name="pc_number" min="1" max="40" 
+                                                       placeholder="PC #" 
+                                                       class="w-16 text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                       required>
+                                            @elseif($session->session_type === 'online')
+                                                <select name="device_type" 
+                                                        class="w-20 text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                        required>
+                                                    <option value="">Device</option>
+                                                    <option value="mobile">Mobile</option>
+                                                    <option value="desktop">Desktop</option>
+                                                    <option value="laptop">Laptop</option>
+                                                </select>
+                                            @elseif($session->session_type === 'lecture')
+                                                <input type="file" name="attached_image" 
+                                                       accept="image/*"
+                                                       class="w-24 text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                       required>
+                                            @endif
+                                            <button type="submit" 
+                                                    class="w-full text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200 transition-colors"
+                                                    onclick="return confirm('Mark {{ $student->name }} as present?')">
+                                                Mark Present
+                                            </button>
+                                        </form>
+                                        
+                                        <!-- Mark Absent Button -->
+                                        <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="block">
                                             @csrf
                                             <input type="hidden" name="student_id" value="{{ $student->id }}">
                                             <button type="submit" 
-                                                    class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors"
+                                                    class="w-full text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors"
                                                     onclick="return confirm('Mark {{ $student->name }} as absent?')">
                                                 Mark Absent
                                             </button>
@@ -914,7 +987,7 @@
                                 <i class="fas fa-info-circle text-blue-500 mr-2"></i>
                                 <div class="text-sm text-blue-700">
                                     <strong>Note:</strong> These students haven't marked their attendance yet. 
-                                    You can manually mark them as absent if needed, or wait for them to mark attendance.
+                                    You can manually mark them as <strong>present</strong> (with required details) or <strong>absent</strong>.
                                     Students marked as absent cannot change their status to present later.
                                 </div>
                             </div>
@@ -931,6 +1004,63 @@
         </div>
     </div>
 @endif
+
+<!-- Edit Attendance Modal -->
+<div id="editAttendanceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Edit Attendance</h3>
+            <form id="editAttendanceForm" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select name="status" id="editStatus" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="present">Present</option>
+                        <option value="late">Late</option>
+                        <option value="absent">Absent</option>
+                    </select>
+                </div>
+
+                @if($session->session_type === 'lab')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">PC Number</label>
+                    <input type="number" name="pc_number" id="editPcNumber" min="1" max="40" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                @elseif($session->session_type === 'online')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Device Type</label>
+                    <select name="device_type" id="editDeviceType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="mobile">Mobile</option>
+                        <option value="desktop">Desktop</option>
+                        <option value="laptop">Laptop</option>
+                    </select>
+                </div>
+                @elseif($session->session_type === 'lecture')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Attached Image</label>
+                    <input type="file" name="attached_image" accept="image/*" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <p class="text-xs text-gray-500 mt-1">Leave empty to keep existing image</p>
+                </div>
+                @endif
+
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeEditModal()" 
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        Update Attendance
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -1028,6 +1158,37 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    // Edit Attendance Functions
+    function editAttendance(attendanceId, status, pcNumber, deviceType) {
+        // Set form action
+        document.getElementById('editAttendanceForm').action = `/teacher/sessions/{{ $session->id }}/attendance/${attendanceId}`;
+        
+        // Set current values
+        document.getElementById('editStatus').value = status;
+        
+        if (pcNumber) {
+            document.getElementById('editPcNumber').value = pcNumber;
+        }
+        
+        if (deviceType) {
+            document.getElementById('editDeviceType').value = deviceType;
+        }
+        
+        // Show modal
+        document.getElementById('editAttendanceModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editAttendanceModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('editAttendanceModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
 
     studentSearch.addEventListener('input', applyFilters);
     statusFilter.addEventListener('change', applyFilters);

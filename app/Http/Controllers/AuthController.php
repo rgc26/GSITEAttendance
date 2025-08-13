@@ -110,15 +110,6 @@ class AuthController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Rate limiting check
-        $key = 'login_' . $request->ip() . '_' . $email;
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = RateLimiter::availableIn($key);
-            return back()->withErrors([
-                'email' => "Too many login attempts. Please try again in {$seconds} seconds.",
-            ])->withInput();
-        }
-
         $credentials = [
             'email' => $email,
             'password' => $password
@@ -126,7 +117,6 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            RateLimiter::clear($key);
 
             $user = Auth::user();
             
@@ -147,9 +137,6 @@ class AuthController extends Controller
                 return redirect()->route('student.dashboard');
             }
         }
-
-        // Increment failed attempts
-        RateLimiter::hit($key, 900); // 15 minutes
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

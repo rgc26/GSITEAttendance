@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,15');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
 Route::get('/register/student', [AuthController::class, 'showStudentRegister'])->name('register.student');
@@ -152,6 +152,8 @@ Route::group([], function () {
     Route::put('/teacher/sessions/{session}', [TeacherController::class, 'updateSession'])->name('teacher.sessions.update');
     Route::post('/teacher/sessions/{session}/end', [TeacherController::class, 'endSession'])->name('teacher.sessions.end');
     Route::post('/teacher/sessions/{session}/mark-absent', [TeacherController::class, 'markStudentAbsent'])->name('teacher.sessions.mark-absent');
+    Route::post('/teacher/sessions/{session}/mark-present', [TeacherController::class, 'markStudentPresent'])->name('teacher.sessions.mark-present');
+    Route::put('/teacher/sessions/{session}/attendance/{attendance}', [TeacherController::class, 'updateAttendance'])->name('teacher.sessions.update-attendance');
     Route::delete('/teacher/sessions/{session}', [TeacherController::class, 'deleteSession'])->name('teacher.sessions.delete');
     
     // Reports

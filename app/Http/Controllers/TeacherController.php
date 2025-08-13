@@ -213,7 +213,7 @@ class TeacherController extends Controller
         $totalTargetStudents = $targetSectionStudents->count();
         $presentTargetStudents = $attendances->where('status', 'present')->count();
         $lateTargetStudents = $attendances->where('status', 'late')->count();
-        $absentTargetStudents = $totalTargetStudents - $presentTargetStudents - $lateTargetStudents;
+        $absentTargetStudents = $attendances->where('status', 'absent')->count();
 
         // Group attendances by student type
         $regularAttendances = $attendances->where('user.student_type', 'regular');
@@ -316,6 +316,103 @@ class TeacherController extends Controller
         ]);
 
         return redirect()->back()->with('success', "Marked {$student->name} as absent.");
+    }
+
+    /**
+     * Manually mark a student as present (for teachers who want to mark specific students)
+     */
+    public function markStudentPresent(Request $request, AttendanceSession $session)
+    {
+        $this->authorize('view', $session->subject);
+        
+        $request->validate([
+            'student_id' => 'required|exists:users,id',
+            'pc_number' => 'nullable|integer|min:1|max:40',
+            'device_type' => 'nullable|in:mobile,desktop,laptop',
+            'attached_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $student = User::findOrFail($request->student_id);
+        
+        // Check if student is from the correct section
+        if ($student->section !== $session->section) {
+            return redirect()->back()->with('error', 'Student is not from the target section.');
+        }
+
+        // Check if student already has an attendance record
+        $existingAttendance = $session->attendances()->where('user_id', $student->id)->first();
+        
+        if ($existingAttendance) {
+            return redirect()->back()->with('error', 'Student already has an attendance record.');
+        }
+
+        // Prepare attendance data
+        $attendanceData = [
+            'user_id' => $student->id,
+            'attendance_session_id' => $session->id,
+            'subject_id' => $session->subject_id,
+            'check_in_time' => now()->setTimezone('Asia/Manila'),
+            'ip_address' => request()->ip(),
+            'status' => 'present',
+        ];
+
+        // Add session-specific data
+        if ($session->session_type === 'lab' && $request->pc_number) {
+            $attendanceData['pc_number'] = $request->pc_number;
+        } elseif ($session->session_type === 'online' && $request->device_type) {
+            $attendanceData['device_type'] = $request->device_type;
+        } elseif ($session->session_type === 'lecture' && $request->hasFile('attached_image')) {
+            $file = $request->file('attached_image');
+            $filename = time() . '_' . $student->id . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('attendance_images', $filename, 'public');
+            $attendanceData['attached_image'] = $path;
+        }
+
+        // Create present record
+        \App\Models\Attendance::create($attendanceData);
+
+        return redirect()->back()->with('success', "Marked {$student->name} as present.");
+    }
+
+    /**
+     * Update existing attendance record (for editing attendance details)
+     */
+    public function updateAttendance(Request $request, AttendanceSession $session, Attendance $attendance)
+    {
+        $this->authorize('view', $session->subject);
+        
+        $request->validate([
+            'status' => 'required|in:present,late,absent',
+            'pc_number' => 'nullable|integer|min:1|max:40',
+            'device_type' => 'nullable|in:mobile,desktop,laptop',
+            'attached_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Check if attendance belongs to this session
+        if ($attendance->attendance_session_id !== $session->id) {
+            return redirect()->back()->with('error', 'Invalid attendance record.');
+        }
+
+        // Update attendance data
+        $updateData = [
+            'status' => $request->status,
+        ];
+
+        // Update session-specific data
+        if ($session->session_type === 'lab' && $request->pc_number) {
+            $updateData['pc_number'] = $request->pc_number;
+        } elseif ($session->session_type === 'online' && $request->device_type) {
+            $updateData['device_type'] = $request->device_type;
+        } elseif ($session->session_type === 'lecture' && $request->hasFile('attached_image')) {
+            $file = $request->file('attached_image');
+            $filename = time() . '_' . $attendance->user_id . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('attendance_images', $filename, 'public');
+            $updateData['attached_image'] = $path;
+        }
+
+        $attendance->update($updateData);
+
+        return redirect()->back()->with('success', "Updated {$attendance->user->name}'s attendance.");
     }
 
     public function editSession(AttendanceSession $session)
