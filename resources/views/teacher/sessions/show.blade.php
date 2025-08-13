@@ -215,6 +215,14 @@
                     </div>
                 </div>
 
+                <!-- JavaScript Test Button -->
+                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <button type="button" onclick="testJavaScript()" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                        Test JavaScript Functions
+                    </button>
+                    <span class="ml-3 text-sm text-yellow-700">Click this to test if JavaScript functions are working</span>
+                </div>
+
                 <!-- Session-Specific Summary -->
                 @if($session->session_type === 'lab')
                     <div class="mt-6 bg-orange-50 rounded-lg p-6">
@@ -539,13 +547,15 @@
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             <div class="flex space-x-2">
-                                                                <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                <button type="button" 
+                                                                        onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer relative z-10">
                                                                     <i class="fas fa-edit mr-1"></i>
                                                                     Edit
                                                                 </button>
-                                                                <button onclick="deleteAttendance('{{ $attendance->id }}', '{{ $attendance->user->name }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200">
+                                                                <button type="button" 
+                                                                        onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer relative z-10">
                                                                     <i class="fas fa-trash mr-1"></i>
                                                                     Delete
                                                                 </button>
@@ -730,13 +740,15 @@
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             <div class="flex space-x-2">
-                                                                <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                <button type="button" 
+                                                                        onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer relative z-10">
                                                                     <i class="fas fa-edit mr-1"></i>
                                                                     Edit
                                                                 </button>
-                                                                <button onclick="deleteAttendance('{{ $attendance->id }}', '{{ $attendance->user->name }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200">
+                                                                <button type="button" 
+                                                                        onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer relative z-10">
                                                                     <i class="fas fa-trash mr-1"></i>
                                                                     Delete
                                                                 </button>
@@ -921,13 +933,15 @@
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             <div class="flex space-x-2">
-                                                                <button onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number }}', '{{ $attendance->device_type }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200">
+                                                                <button type="button" 
+                                                                        onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer relative z-10">
                                                                     <i class="fas fa-edit mr-1"></i>
                                                                     Edit
                                                                 </button>
-                                                                <button onclick="deleteAttendance('{{ $attendance->id }}', '{{ $attendance->user->name }}')" 
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200">
+                                                                <button type="button" 
+                                                                        onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer relative z-10">
                                                                     <i class="fas fa-trash mr-1"></i>
                                                                     Delete
                                                                 </button>
@@ -1184,7 +1198,117 @@
 @endsection
 
 <script>
+// Global functions for attendance management
+function editAttendance(attendanceId, status, pcNumber, deviceType) {
+    console.log('Edit button clicked:', { attendanceId, status, pcNumber, deviceType });
+    
+    // Set form action
+    document.getElementById('editAttendanceForm').action = `/teacher/sessions/{{ $session->id }}/attendance/${attendanceId}`;
+    
+    // Set current values
+    document.getElementById('editStatus').value = status;
+    
+    if (pcNumber) {
+        document.getElementById('editPcNumber').value = pcNumber;
+    }
+    
+    if (deviceType) {
+        document.getElementById('editDeviceType').value = deviceType;
+    }
+    
+    // Show modal
+    document.getElementById('editAttendanceModal').classList.remove('hidden');
+    console.log('Edit modal should be visible now');
+}
+
+function deleteAttendance(attendanceId, studentName) {
+    console.log('Delete button clicked:', { attendanceId, studentName });
+    
+    // Set the confirmation text
+    document.getElementById('deleteConfirmationText').innerHTML = 
+        `Are you sure you want to delete <strong>${studentName}</strong>'s attendance record? This action cannot be undone.`;
+    
+    // Set the form action
+    document.getElementById('deleteAttendanceForm').action = `/teacher/sessions/{{ $session->id }}/attendance/${attendanceId}`;
+    
+    // Show the delete confirmation modal
+    document.getElementById('deleteAttendanceModal').classList.remove('hidden');
+    console.log('Delete modal should be visible now');
+}
+
+function closeEditModal() {
+    document.getElementById('editAttendanceModal').classList.add('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteAttendanceModal').classList.add('hidden');
+}
+
+// Make functions globally accessible
+window.editAttendance = editAttendance;
+window.deleteAttendance = deleteAttendance;
+window.closeEditModal = closeEditModal;
+window.closeDeleteModal = closeDeleteModal;
+window.testJavaScript = testJavaScript;
+
+// Test function to verify JavaScript is working
+function testJavaScript() {
+    alert('JavaScript is working! Functions available:\n' +
+          'editAttendance: ' + (typeof editAttendance) + '\n' +
+          'deleteAttendance: ' + (typeof deleteAttendance) + '\n' +
+          'closeEditModal: ' + (typeof closeEditModal) + '\n' +
+          'closeDeleteModal: ' + (typeof closeDeleteModal));
+    
+    console.log('Test function called');
+    console.log('Functions available:', {
+        editAttendance: typeof editAttendance,
+        deleteAttendance: typeof deleteAttendance,
+        closeEditModal: typeof closeEditModal,
+        closeDeleteModal: typeof closeDeleteModal
+    });
+}
+
+console.log('Global functions defined:', {
+    editAttendance: typeof editAttendance,
+    deleteAttendance: typeof deleteAttendance,
+    closeEditModal: typeof closeEditModal,
+    closeDeleteModal: typeof closeDeleteModal
+});
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, checking for elements...');
+    console.log('Functions available:', {
+        editAttendance: typeof window.editAttendance,
+        deleteAttendance: typeof window.deleteAttendance,
+        closeEditModal: typeof window.closeEditModal,
+        closeDeleteModal: typeof window.closeDeleteModal
+    });
+    
+    // Check if required elements exist
+    const editModal = document.getElementById('editAttendanceModal');
+    const deleteModal = document.getElementById('deleteAttendanceModal');
+    const editForm = document.getElementById('editAttendanceForm');
+    const deleteForm = document.getElementById('deleteAttendanceForm');
+    
+    console.log('Edit modal exists:', !!editModal);
+    console.log('Delete modal exists:', !!deleteModal);
+    console.log('Edit form exists:', !!editForm);
+    console.log('Delete form exists:', !!deleteForm);
+    
+    // Test function calls
+    console.log('Testing function availability...');
+    if (typeof window.editAttendance === 'function') {
+        console.log('✅ editAttendance function is available');
+    } else {
+        console.log('❌ editAttendance function is NOT available');
+    }
+    
+    if (typeof window.deleteAttendance === 'function') {
+        console.log('✅ deleteAttendance function is available');
+    } else {
+        console.log('❌ deleteAttendance function is NOT available');
+    }
+    
     // Accordion functionality
     const accordionHeaders = document.querySelectorAll('.accordion-header');
     
@@ -1278,42 +1402,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Edit Attendance Functions
-    function editAttendance(attendanceId, status, pcNumber, deviceType) {
-        // Set form action
-        document.getElementById('editAttendanceForm').action = `/teacher/sessions/{{ $session->id }}/attendance/${attendanceId}`;
-        
-        // Set current values
-        document.getElementById('editStatus').value = status;
-        
-        if (pcNumber) {
-            document.getElementById('editPcNumber').value = pcNumber;
-        }
-        
-        if (deviceType) {
-            document.getElementById('editDeviceType').value = deviceType;
-        }
-        
-        // Show modal
-        document.getElementById('editAttendanceModal').classList.remove('hidden');
-    }
-
-    function deleteAttendance(attendanceId, studentName) {
-        // Set the confirmation text
-        document.getElementById('deleteConfirmationText').innerHTML = 
-            `Are you sure you want to delete <strong>${studentName}</strong>'s attendance record? This action cannot be undone.`;
-        
-        // Set the form action
-        document.getElementById('deleteAttendanceForm').action = `/teacher/sessions/{{ $session->id }}/attendance/${attendanceId}`;
-        
-        // Show the delete confirmation modal
-        document.getElementById('deleteAttendanceModal').classList.remove('hidden');
-    }
-
-    function closeEditModal() {
-        document.getElementById('editAttendanceModal').classList.add('hidden');
-    }
-
     // Close modal when clicking outside
     document.getElementById('editAttendanceModal').addEventListener('click', function(e) {
         if (e.target === this) {
@@ -1361,9 +1449,5 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.style.transform = 'rotate(0deg)';
         });
     };
-
-    function closeDeleteModal() {
-        document.getElementById('deleteAttendanceModal').classList.add('hidden');
-    }
 });
 </script> 
