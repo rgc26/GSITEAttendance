@@ -282,7 +282,8 @@
     /* Custom CSS for Students Without Attendance Records */
     .students-without-attendance-card {
         display: flex !important;
-        align-items: flex-start !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
         padding: 1rem !important;
         background-color: #fefce8 !important;
         border: 1px solid #fde047 !important;
@@ -291,17 +292,20 @@
         margin-bottom: 0.75rem !important;
     }
 
+    .students-without-attendance-card .flex.items-center.mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
     .students-without-attendance-card .student-info {
         flex: 1 !important;
         min-width: 0 !important;
-        margin-right: 1rem !important;
     }
 
     .students-without-attendance-card .action-buttons {
-        flex-shrink: 0 !important;
-        min-width: 200px !important;
+        width: 100% !important;
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
+        gap: 0.5rem !important;
     }
 
     .students-without-attendance-card .action-buttons .flex {
@@ -310,12 +314,6 @@
 
     .students-without-attendance-card .action-buttons form {
         flex: 1 !important;
-    }
-
-    .students-without-attendance-card .action-buttons input,
-    .students-without-attendance-card .action-buttons select {
-        width: 100% !important;
-        margin-bottom: 0.5rem !important;
     }
 
     .students-without-attendance-card .action-buttons button {
