@@ -310,19 +310,28 @@
 
     .students-without-attendance-card .action-buttons .flex {
         width: 100% !important;
+        display: flex !important;
+        gap: 0.5rem !important;
     }
 
     .students-without-attendance-card .action-buttons form {
-        flex: 1 !important;
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        max-width: 50% !important;
     }
 
     .students-without-attendance-card .action-buttons button {
         width: 100% !important;
+        height: 40px !important;
         padding: 0.5rem 0.75rem !important;
         font-size: 0.75rem !important;
         font-weight: 500 !important;
         border-radius: 0.375rem !important;
         transition: all 0.2s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
     }
 
     /* Button container styling for attendance tables */
