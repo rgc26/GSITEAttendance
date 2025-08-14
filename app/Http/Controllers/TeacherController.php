@@ -868,6 +868,10 @@ class TeacherController extends Controller
 
     public function updateSubject(Request $request, Subject $subject)
     {
+        // Test logging
+        \Log::info('updateSubject method called for subject ID: ' . $subject->id);
+        \Log::info('Request data: ' . json_encode($request->all()));
+        
         $this->authorize('update', $subject);
         
         try {
@@ -877,11 +881,19 @@ class TeacherController extends Controller
                 'code' => 'required|string|max:10|unique:subjects,code,' . $subject->id,
             ]);
             
+            \Log::info('About to update subject with data: ' . json_encode([
+                'name' => $request->name,
+                'description' => $request->description,
+                'code' => strtoupper($request->code),
+            ]));
+            
             $subject->update([
                 'name' => $request->name,
                 'description' => $request->description,
                 'code' => strtoupper($request->code),
             ]);
+            
+            \Log::info('Subject updated successfully');
             
             if ($request->expectsJson()) {
                 return response()->json([
@@ -903,7 +915,10 @@ class TeacherController extends Controller
             throw $e;
         } catch (\Exception $e) {
             \Log::error('Subject update failed: ' . $e->getMessage());
+            \Log::error('Error class: ' . get_class($e));
             \Log::error('Stack trace: ' . $e->getTraceAsString());
+            \Log::error('Request data: ' . json_encode($request->all()));
+            \Log::error('Subject ID: ' . $subject->id);
             
             if ($request->expectsJson()) {
                 return response()->json([
