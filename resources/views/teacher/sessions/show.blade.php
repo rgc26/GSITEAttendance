@@ -136,10 +136,6 @@
     }
     
     /* Mobile-specific improvements */
-    .mobile-friendly-container {
-        padding: 2.5rem;
-    }
-    
     .mobile-friendly-text {
         font-size: 0.875rem;
     }
@@ -195,10 +191,6 @@
             padding: 0.25rem 0.5rem;
             font-size: 0.7rem;
             min-height: 28px;
-        }
-        
-        .mobile-friendly-container {
-            padding: 0.25rem;
         }
         
         .mobile-friendly-text {
@@ -469,7 +461,9 @@
         overflow: hidden;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         table-layout: auto;
-        width: 100%;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: auto !important;
     }
 
     .attendance-table thead {
@@ -538,55 +532,55 @@
     /* Column-specific widths for better content display */
     .attendance-table th:nth-child(1), /* Student */
     .attendance-table td:nth-child(1) {
-        width: 20% !important;
-        min-width: 180px !important;
+        width: 22% !important;
+        min-width: 200px !important;
     }
     
     .attendance-table th:nth-child(2), /* Student ID */
     .attendance-table td:nth-child(2) {
-        width: 12% !important;
-        min-width: 100px !important;
+        width: 13% !important;
+        min-width: 120px !important;
     }
     
     .attendance-table th:nth-child(3), /* Year Level */
     .attendance-table td:nth-child(3) {
         width: 10% !important;
-        min-width: 90px !important;
+        min-width: 100px !important;
     }
     
     .attendance-table th:nth-child(4), /* Student Type */
     .attendance-table td:nth-child(4) {
         width: 10% !important;
-        min-width: 90px !important;
+        min-width: 100px !important;
     }
     
     .attendance-table th:nth-child(5), /* Their Section */
     .attendance-table td:nth-child(5) {
         width: 10% !important;
-        min-width: 90px !important;
+        min-width: 100px !important;
     }
     
     .attendance-table th:nth-child(6), /* Status */
     .attendance-table td:nth-child(6) {
         width: 8% !important;
-        min-width: 70px !important;
+        min-width: 80px !important;
     }
     
     .attendance-table th:nth-child(7), /* PC Number/Device Type/Image */
     .attendance-table td:nth-child(7) {
         width: 10% !important;
-        min-width: 90px !important;
+        min-width: 100px !important;
     }
     
     .attendance-table th:nth-child(8), /* Check-in Time */
     .attendance-table td:nth-child(8) {
         width: 12% !important;
-        min-width: 120px !important;
+        min-width: 140px !important;
     }
     
     .attendance-table th:nth-child(9), /* Actions */
     .attendance-table td:nth-child(9) {
-        width: 8% !important;
+        width: 5% !important;
         min-width: 80px !important;
     }
 
@@ -596,6 +590,8 @@
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         background: white;
         overflow: visible;
+        width: 100% !important;
+        max-width: none !important;
     }
 
     /* Enhanced Status Badge Styling */
@@ -724,9 +720,9 @@
     }
 </style>
 <div class="py-6">
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full mx-auto px-2 sm:px-4 lg:px-6">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200 mobile-friendly-container">
+            <div class="p-4 sm:p-6 bg-white border-b border-gray-200">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">
                         <i class="fas fa-qrcode mr-2"></i>
