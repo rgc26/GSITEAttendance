@@ -96,15 +96,26 @@ class AuthController extends Controller
         $email = filter_var($request->input('email'), FILTER_SANITIZE_EMAIL);
         $password = $request->input('password');
 
+        // Check if HCaptcha is configured
+        $hcaptchaSiteKey = config('services.hcaptcha.site_key');
+        $hcaptchaSecretKey = config('services.hcaptcha.secret_key');
+        $isHcaptchaConfigured = !empty($hcaptchaSiteKey) && !empty($hcaptchaSecretKey);
+
+        $validationRules = [
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:1',
+        ];
+
+        // Only require HCaptcha if it's properly configured
+        if ($isHcaptchaConfigured) {
+            $validationRules['h-captcha-response'] = ['required', new HCaptcha];
+        }
+
         $validator = Validator::make([
             'email' => $email,
             'password' => $password,
             'h-captcha-response' => $request->input('h-captcha-response')
-        ], [
-            'email' => 'required|email|max:255',
-            'password' => 'required|string|min:1',
-            'h-captcha-response' => ['required', new HCaptcha],
-        ]);
+        ], $validationRules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();

@@ -32,7 +32,9 @@
 
 
             <div class="flex justify-center">
-                <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}"></div>
+                @if(config('services.hcaptcha.site_key') && config('services.hcaptcha.secret_key'))
+                    <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}"></div>
+                @endif
             </div>
 
             <div>
@@ -61,6 +63,7 @@
 @endsection
 
 @push('scripts')
+@if(config('services.hcaptcha.site_key') && config('services.hcaptcha.secret_key'))
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-
+@endif
 @endpush 

@@ -20,26 +20,26 @@ Route::get('/', function () {
 
 
 // Authentication routes
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
-Route::get('/register/student', [AuthController::class, 'showStudentRegister'])->name('register.student');
+Route::get('/register/student', [AuthController::class, 'showStudentRegister'])->name('register.student')->middleware('guest');
 Route::post('/register/student', [AuthController::class, 'registerStudent'])->middleware('throttle:register');
-Route::get('/register/teacher', [AuthController::class, 'showTeacherRegister'])->name('register.teacher');
+Route::get('/register/teacher', [AuthController::class, 'showTeacherRegister'])->name('register.teacher')->middleware('guest');
 Route::post('/register/teacher', [AuthController::class, 'registerTeacher'])->middleware('throttle:register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Forgot Password routes
-Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request')->middleware('guest');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email')->middleware('throttle:3,15');
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset')->middleware('guest');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update')->middleware('throttle:3,15');
 
 // Email verification routes
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
-})->name('verification.notice');
+})->name('verification.notice')->middleware('guest');
 
 Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
     // Find the user by ID
