@@ -1252,7 +1252,7 @@
                                                         @elseif($session->session_type === 'lecture')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
                                                                        class="action-button bg-blue-500 text-white">
                                                                         <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
@@ -1518,7 +1518,7 @@
                                                         @elseif($session->session_type === 'lecture')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
                                                                        class="action-button bg-blue-500 text-white">
                                                                         <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
@@ -1784,7 +1784,7 @@
                                                         @elseif($session->session_type === 'lecture')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
                                                                        class="action-button bg-blue-500 text-white">
                                                                         <i class="fas fa-image mr-1.5"></i>
                                                                         View Image

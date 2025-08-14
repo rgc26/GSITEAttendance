@@ -130,6 +130,28 @@
         .enhanced-button:hover {
             transform: translateY(-1px) !important;
         }
+
+        /* Prevent links from opening in new tabs */
+        a:not([target="_blank"]) {
+            target: _self !important;
+        }
+
+        /* Ensure all internal links open in same tab */
+        a[href^="{{ url('/') }}"],
+        a[href^="/"],
+        a[href^="#"] {
+            target: _self !important;
+        }
+
+        /* Override any JavaScript that might force new tabs */
+        a {
+            target: _self !important;
+        }
+
+        /* Specific override for any remaining target="_blank" that shouldn't be there */
+        a:not([href^="http"]):not([href^="mailto:"]):not([href^="tel:"]) {
+            target: _self !important;
+        }
         
         /* Responsive table styles */
         .responsive-table {
