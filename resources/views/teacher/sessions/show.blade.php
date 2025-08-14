@@ -481,9 +481,9 @@
         border-left: 2px solid #c084fc !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
         transition: all 0.2s ease !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
     }
 
     .attendance-table th:first-child {
@@ -522,7 +522,10 @@
         transition: all 0.2s ease !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
-        max-width: 0 !important;
+        max-width: none !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
     }
 
     .attendance-table td:first-child {
@@ -532,56 +535,56 @@
     /* Column-specific widths for better content display */
     .attendance-table th:nth-child(1), /* Student */
     .attendance-table td:nth-child(1) {
-        width: 22% !important;
-        min-width: 200px !important;
+        width: 25% !important;
+        min-width: 300px !important;
     }
     
     .attendance-table th:nth-child(2), /* Student ID */
     .attendance-table td:nth-child(2) {
-        width: 13% !important;
-        min-width: 120px !important;
+        width: 15% !important;
+        min-width: 180px !important;
     }
     
     .attendance-table th:nth-child(3), /* Year Level */
     .attendance-table td:nth-child(3) {
-        width: 10% !important;
-        min-width: 100px !important;
+        width: 12% !important;
+        min-width: 120px !important;
     }
     
     .attendance-table th:nth-child(4), /* Student Type */
     .attendance-table td:nth-child(4) {
-        width: 10% !important;
-        min-width: 100px !important;
+        width: 12% !important;
+        min-width: 120px !important;
     }
     
     .attendance-table th:nth-child(5), /* Their Section */
     .attendance-table td:nth-child(5) {
-        width: 10% !important;
-        min-width: 100px !important;
+        width: 12% !important;
+        min-width: 120px !important;
     }
     
     .attendance-table th:nth-child(6), /* Status */
     .attendance-table td:nth-child(6) {
-        width: 8% !important;
-        min-width: 80px !important;
-    }
-    
-    .attendance-table th:nth-child(7), /* PC Number/Device Type/Image */
-    .attendance-table td:nth-child(7) {
         width: 10% !important;
         min-width: 100px !important;
     }
     
+    .attendance-table th:nth-child(7), /* PC Number/Device Type/Image */
+    .attendance-table td:nth-child(7) {
+        width: 12% !important;
+        min-width: 120px !important;
+    }
+    
     .attendance-table th:nth-child(8), /* Check-in Time */
     .attendance-table td:nth-child(8) {
-        width: 12% !important;
-        min-width: 140px !important;
+        width: 15% !important;
+        min-width: 180px !important;
     }
     
     .attendance-table th:nth-child(9), /* Actions */
     .attendance-table td:nth-child(9) {
-        width: 5% !important;
-        min-width: 80px !important;
+        width: 8% !important;
+        min-width: 100px !important;
     }
 
     /* Table wrapper for better layout */
@@ -718,11 +721,18 @@
             padding: 0.375rem 0.75rem;
         }
     }
+
+    /* Override truncate class to show full text */
+    .truncate {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
 </style>
 <div class="py-6">
-    <div class="w-full mx-auto px-2 sm:px-4 lg:px-6">
+    <div class="w-full mx-auto px-1 sm:px-2 lg:px-3">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-4 sm:p-6 bg-white border-b border-gray-200">
+            <div class="p-2 sm:p-4 bg-white border-b border-gray-200">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">
                         <i class="fas fa-qrcode mr-2"></i>
