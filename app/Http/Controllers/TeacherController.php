@@ -41,8 +41,11 @@ class TeacherController extends Controller
             ->join('schedules', 'subjects.id', '=', 'schedules.subject_id')
             ->distinct('schedules.section')
             ->count('schedules.section');
+            
+        // Get count of archived subjects
+        $archivedSubjects = $teacher->subjects()->where('archived', true)->count();
 
-        return view('teacher.dashboard', compact('subjects', 'activeSessions', 'recentSessions', 'totalStudents'));
+        return view('teacher.dashboard', compact('subjects', 'activeSessions', 'recentSessions', 'totalStudents', 'archivedSubjects'));
     }
 
     public function subjects()
