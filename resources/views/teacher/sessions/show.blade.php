@@ -1295,16 +1295,25 @@
                                     <!-- Delete Button (X) - Top Right Corner -->
                                     <form action="{{ route('teacher.sessions.delete-user', ['session' => $session, 'user' => $student->id]) }}" 
                                           method="POST" 
-                                          class="absolute top-2 right-2"
+                                          class="absolute top-2 right-2 z-10"
                                           onsubmit="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone and will remove their account completely.')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" 
-                                                class="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full p-1 transition-colors"
+                                                class="bg-red-500 text-white hover:bg-red-700 rounded-full p-2 transition-colors shadow-lg"
                                                 title="Delete student account">
                                             <i class="fas fa-times text-sm"></i>
                                         </button>
                                     </form>
+                                    
+                                    <!-- Temporary Test Button - Remove after testing -->
+                                    <div class="absolute top-2 right-16 z-10">
+                                        <button type="button" 
+                                                class="bg-blue-500 text-white rounded px-2 py-1 text-xs"
+                                                onclick="alert('Testing delete for: {{ $student->name }}')">
+                                            TEST
+                                        </button>
+                                    </div>
                                     
                                     <div class="flex-shrink-0 h-10 w-10 mr-3">
                                         @if($student->profile_picture)
@@ -1385,6 +1394,26 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        @if(config('app.debug'))
+                        <!-- Debug Information -->
+                        <div class="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-bug text-gray-500 mr-2"></i>
+                                <div class="text-sm text-gray-700">
+                                    <strong>Debug Info:</strong><br>
+                                    Total Students: {{ $totalTargetStudents }}<br>
+                                    Present: {{ $presentTargetStudents }}<br>
+                                    Late: {{ $lateTargetStudents }}<br>
+                                    Absent: {{ $absentTargetStudents }}<br>
+                                    Not Marked: {{ $notMarkedYet }}<br>
+                                    Session Start: {{ $session->scheduled_start_time ? $session->scheduled_start_time->format('H:i') : 'N/A' }}<br>
+                                    Grace Period: {{ $session->grace_period_minutes ?? 15 }} minutes<br>
+                                    Current Time: {{ now()->format('H:i') }}
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     @else
                         <div class="text-center py-8">
                             <i class="fas fa-check-circle text-4xl text-green-400 mb-4"></i>
