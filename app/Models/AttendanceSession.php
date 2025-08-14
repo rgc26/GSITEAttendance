@@ -65,8 +65,8 @@ class AttendanceSession extends Model
 
         $checkInTime = $checkInTime ?: now()->setTimezone('Asia/Manila');
         
-        // Calculate grace period end (15 minutes after start time)
-        $gracePeriodEnd = $this->scheduled_start_time->addMinutes($this->grace_period_minutes);
+        // Calculate grace period end (15 minutes after start time) - use a copy to avoid modifying original
+        $gracePeriodEnd = $this->scheduled_start_time->copy()->addMinutes($this->grace_period_minutes);
 
         if ($checkInTime <= $gracePeriodEnd) {
             return 'present'; // On time (within grace period)
@@ -86,8 +86,8 @@ class AttendanceSession extends Model
             return null;
         }
         
-        // Grace period is 15 minutes after start time
-        return $this->scheduled_start_time->addMinutes($this->grace_period_minutes);
+        // Grace period is 15 minutes after start time - use a copy to avoid modifying original
+        return $this->scheduled_start_time->copy()->addMinutes($this->grace_period_minutes);
     }
 
     /**
@@ -100,7 +100,7 @@ class AttendanceSession extends Model
         }
 
         $now = now();
-        $gracePeriodEnd = $this->scheduled_start_time->addMinutes($this->grace_period_minutes);
+        $gracePeriodEnd = $this->scheduled_start_time->copy()->addMinutes($this->grace_period_minutes);
         
         return $this->is_active && 
                $now >= $this->scheduled_start_time && 

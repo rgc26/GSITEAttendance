@@ -1248,12 +1248,64 @@
                             // Check if student has any attendance record (present, late, or absent)
                             return !$attendances->where('user_id', $student->id)->first();
                         });
+                        
+                        // Group students by email to identify potential duplicates
+                        $emailGroups = $studentsNotMarked->groupBy('email');
+                        $potentialDuplicates = $emailGroups->filter(function($group) {
+                            return $group->count() > 1;
+                        });
                     @endphp
                     
                     @if($studentsNotMarked->count() > 0)
+                        <!-- Summary Information -->
+                        <div class="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-orange-500 mr-2"></i>
+                                    <div class="text-sm text-orange-700">
+                                        <strong>Summary:</strong> {{ $studentsNotMarked->count() }} students without attendance records
+                                        @if($potentialDuplicates->count() > 0)
+                                            • <strong>{{ $potentialDuplicates->count() }} potential duplicate accounts</strong> detected
+                                        @endif
+                                    </div>
+                                </div>
+                                @if($potentialDuplicates->count() > 0)
+                                    <div class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded">
+                                        Check accounts with same email addresses
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach($studentsNotMarked as $student)
-                                <div class="flex items-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                @php
+                                    $isDuplicate = $emailGroups->get($student->email)->count() > 1;
+                                @endphp
+                                <div class="flex items-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg relative {{ $isDuplicate ? 'ring-2 ring-orange-300 bg-orange-50' : '' }}">
+                                    <!-- Duplicate Indicator -->
+                                    @if($isDuplicate)
+                                        <div class="absolute top-2 left-2">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                                <i class="fas fa-copy mr-1"></i>Duplicate
+                                            </span>
+                                        </div>
+                                    @endif
+                                    
+                                    <!-- Delete Button (X) - Top Right Corner -->
+                                    <form action="{{ route('teacher.sessions.delete-user', ['session' => $session, 'user' => $student->id]) }}" 
+                                          method="POST" 
+                                          class="absolute top-2 right-2"
+                                          onsubmit="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone and will remove their account completely.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full p-1 transition-colors"
+                                                title="Delete student account">
+                                            <i class="fas fa-times text-sm"></i>
+                                        </button>
+                                    </form>
+                                    
                                     <div class="flex-shrink-0 h-10 w-10 mr-3">
                                         @if($student->profile_picture)
                                             <img class="h-10 w-10 rounded-full object-cover" 
@@ -1268,7 +1320,11 @@
                                     <div class="flex-1">
                                         <div class="text-sm font-medium text-gray-900">{{ $student->name }}</div>
                                         <div class="text-sm text-gray-500">{{ $student->student_id ?? 'N/A' }}</div>
+                                        <div class="text-xs text-gray-500">{{ $student->email }}</div>
                                         <div class="text-xs text-yellow-600">No attendance record</div>
+                                        @if($student->created_at)
+                                            <div class="text-xs text-gray-400">Account created: {{ $student->created_at->format('M d, Y') }}</div>
+                                        @endif
                                     </div>
                                     <div class="flex-shrink-0 space-y-2">
                                         <!-- Mark Present Button -->
@@ -1323,6 +1379,8 @@
                                 <div class="text-sm text-blue-700">
                                     <strong>Note:</strong> These students have no attendance records yet. 
                                     You can manually mark them as <strong>present</strong> (with required details) or <strong>absent</strong>.
+                                    <strong>Late status is automatically determined by the system</strong> based on check-in time and grace period.
+                                    <strong>Use the X button (top-right) to delete duplicate student accounts</strong> that may have been created accidentally.
                                     If a student already has attendance marked but shows as absent, use the "Edit" button in the attendance list above to change their status.
                                 </div>
                             </div>

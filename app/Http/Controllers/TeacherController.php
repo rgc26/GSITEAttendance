@@ -548,6 +548,64 @@ class TeacherController extends Controller
         return redirect()->back()->with('success', "{$studentName}'s attendance record has been deleted successfully!");
     }
 
+    /**
+     * Delete a student user who has no attendance records
+     */
+    public function deleteUser(Request $request, AttendanceSession $session)
+    {
+        $this->authorize('view', $session->subject);
+        
+        $request->validate([
+            'student_id' => 'required|exists:users,id',
+        ]);
+
+        $student = User::findOrFail($request->student_id);
+        
+        // Check if student is from the correct section
+        if ($student->section !== $session->section) {
+            return redirect()->back()->with('error', 'Student is not from the target section.');
+        }
+
+        // Ensure only students can be deleted (not teachers or admins)
+        if ($student->role !== 'student') {
+            return redirect()->back()->with('error', 'Only student accounts can be deleted.');
+        }
+
+        // Check if student has any attendance records across all sessions
+        $hasAttendanceRecords = Attendance::where('user_id', $student->id)->exists();
+        
+        if ($hasAttendanceRecords) {
+            return redirect()->back()->with('error', 'Cannot delete student with existing attendance records.');
+        }
+
+        // Check if student has any other related data (for safety)
+        $hasOtherData = $student->subjects()->exists() || 
+                       $student->schedules()->exists() || 
+                       $student->attendanceSessions()->exists();
+        
+        if ($hasOtherData) {
+            return redirect()->back()->with('error', 'Cannot delete student with existing related data.');
+        }
+
+        // Store student information for logging
+        $studentInfo = [
+            'id' => $student->id,
+            'name' => $student->name,
+            'email' => $student->email,
+            'section' => $student->section,
+            'deleted_by' => Auth::id(),
+            'deleted_at' => now()
+        ];
+
+        // Log the deletion (you can implement logging as needed)
+        \Log::info('Student account deleted by teacher', $studentInfo);
+
+        // Delete the student user
+        $student->delete();
+
+        return redirect()->back()->with('success', "Student {$studentInfo['name']} has been deleted successfully!");
+    }
+
     public function editSession(AttendanceSession $session)
     {
         $this->authorize('view', $session->subject);
