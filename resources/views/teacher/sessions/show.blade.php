@@ -336,20 +336,26 @@
 
     /* Button container styling for attendance tables */
     .attendance-table .flex.flex-col.space-y-2 {
-        min-width: 120px !important;
-        gap: 0.5rem !important;
+        min-width: 140px !important;
+        gap: 0.75rem !important;
     }
     
     .attendance-table .flex.flex-col.space-y-1 {
-        min-width: 120px !important;
-        gap: 0.25rem !important;
+        min-width: 140px !important;
+        gap: 0.5rem !important;
     }
     
     /* Ensure consistent button sizing in tables */
     .attendance-table .action-button {
-        min-width: 100px !important;
-        max-width: 120px !important;
-        margin-bottom: 0.5rem !important;
+        min-width: 120px !important;
+        max-width: 140px !important;
+        margin-bottom: 0.75rem !important;
+        height: 36px !important;
+        font-size: 0.75rem !important;
+        padding: 0.5rem 0.75rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     
     .attendance-table .action-button:last-child {
@@ -358,33 +364,58 @@
     
     /* Force proper spacing between buttons */
     .attendance-table .space-y-2 > * + * {
-        margin-top: 0.5rem !important;
+        margin-top: 0.75rem !important;
     }
     
     .attendance-table .space-y-1 > * + * {
-        margin-top: 0.25rem !important;
+        margin-top: 0.5rem !important;
     }
     
     /* Ensure button containers have proper height */
     .attendance-table td:last-child {
         min-height: 120px !important;
         vertical-align: top !important;
+        padding: 0.5rem !important;
     }
     
     /* Button spacing override for Tailwind */
     .attendance-table .space-y-2 > button {
-        margin-top: 0.5rem !important;
+        margin-top: 0.75rem !important;
     }
     
     .attendance-table .space-y-2 > button:first-child {
         margin-top: 0 !important;
     }
     
-    /* Profile placeholder styling */
-    .profile-placeholder {
-        background-color: #f3f4f6 !important;
-        color: #6b7280 !important;
-        font-weight: 600 !important;
+    /* Specific styling for action buttons in tables */
+    .attendance-table .action-button.bg-blue-500 {
+        background-color: #3b82f6 !important;
+        color: white !important;
+    }
+    
+    .attendance-table .action-button.bg-red-500 {
+        background-color: #ef4444 !important;
+        color: white !important;
+    }
+    
+    /* Actions column width and spacing */
+    .attendance-table th:last-child,
+    .attendance-table td:last-child {
+        min-width: 160px !important;
+        width: 160px !important;
+        max-width: 160px !important;
+    }
+    
+    /* Button text overflow handling */
+    .attendance-table .action-button span,
+    .attendance-table .action-button i {
+        pointer-events: none !important;
+    }
+    
+    /* Ensure buttons don't wrap or overflow */
+    .attendance-table .action-button {
+        word-wrap: normal !important;
+        overflow-wrap: normal !important;
     }
 </style>
 <div class="py-6">

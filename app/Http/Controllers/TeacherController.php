@@ -440,7 +440,7 @@ class TeacherController extends Controller
         if ($existingAttendance) {
             // Update existing attendance record instead of creating a new one
             $updateData = [
-                'status' => 'present',
+                'status' => $session->getAttendanceStatus(now()->setTimezone('Asia/Manila')),
                 'check_in_time' => now()->setTimezone('Asia/Manila'),
             ];
 
@@ -468,7 +468,7 @@ class TeacherController extends Controller
             'subject_id' => $session->subject_id,
             'check_in_time' => now()->setTimezone('Asia/Manila'),
             'ip_address' => request()->ip(),
-            'status' => 'present',
+            'status' => $session->getAttendanceStatus(now()->setTimezone('Asia/Manila')),
         ];
 
         // Add session-specific data
