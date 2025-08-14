@@ -42,8 +42,17 @@
     }
     
     .attendance-table td {
-        padding: 1rem 0.5rem;
-        vertical-align: top;
+        padding: 1.25rem 1rem !important;
+        vertical-align: middle !important;
+        border-left: 1px solid #f3f4f6 !important;
+        transition: all 0.2s ease !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        max-width: none !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        min-width: 0 !important;
     }
     
     /* Column-specific styling */
@@ -458,12 +467,12 @@
     /* Enhanced Table Styling */
     .attendance-table {
         border-radius: 0.5rem;
-        overflow: hidden;
+        overflow: visible;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         table-layout: auto;
         width: 100% !important;
         max-width: none !important;
-        min-width: auto !important;
+        min-width: none !important;
     }
 
     .attendance-table thead {
@@ -516,7 +525,7 @@
     }
 
     .attendance-table td {
-        padding: 1rem 1rem !important;
+        padding: 1.25rem 1rem !important;
         vertical-align: middle !important;
         border-left: 1px solid #f3f4f6 !important;
         transition: all 0.2s ease !important;
@@ -526,6 +535,7 @@
         white-space: normal !important;
         overflow: visible !important;
         text-overflow: clip !important;
+        min-width: 0 !important;
     }
 
     .attendance-table td:first-child {
@@ -535,14 +545,14 @@
     /* Column-specific widths for better content display */
     .attendance-table th:nth-child(1), /* Student */
     .attendance-table td:nth-child(1) {
-        width: 25% !important;
-        min-width: 300px !important;
+        width: 30% !important;
+        min-width: 350px !important;
     }
     
     .attendance-table th:nth-child(2), /* Student ID */
     .attendance-table td:nth-child(2) {
-        width: 15% !important;
-        min-width: 180px !important;
+        width: 18% !important;
+        min-width: 200px !important;
     }
     
     .attendance-table th:nth-child(3), /* Year Level */
@@ -577,14 +587,14 @@
     
     .attendance-table th:nth-child(8), /* Check-in Time */
     .attendance-table td:nth-child(8) {
-        width: 15% !important;
-        min-width: 180px !important;
+        width: 20% !important;
+        min-width: 250px !important;
     }
     
     .attendance-table th:nth-child(9), /* Actions */
     .attendance-table td:nth-child(9) {
-        width: 8% !important;
-        min-width: 100px !important;
+        width: 10% !important;
+        min-width: 120px !important;
     }
 
     /* Table wrapper for better layout */
@@ -595,6 +605,7 @@
         overflow: visible;
         width: 100% !important;
         max-width: none !important;
+        min-width: none !important;
     }
 
     /* Enhanced Status Badge Styling */
@@ -730,9 +741,9 @@
     }
 </style>
 <div class="py-6">
-    <div class="w-full mx-auto px-1 sm:px-2 lg:px-3">
+    <div class="w-full mx-auto px-0">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-2 sm:p-4 bg-white border-b border-gray-200">
+            <div class="p-1 sm:p-2 bg-white border-b border-gray-200">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">
                         <i class="fas fa-qrcode mr-2"></i>
