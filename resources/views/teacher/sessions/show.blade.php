@@ -1327,19 +1327,7 @@
                                         </div>
                                     @endif
                                     
-                                    <!-- Delete Button (X) - Top Right Corner -->
-                                    <form action="{{ route('teacher.sessions.delete-user', ['session' => $session, 'user' => $student->id]) }}" 
-                                          method="POST" 
-                                          class="absolute top-2 right-2 z-20"
-                                          onsubmit="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone and will remove their account completely.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="delete-student-btn"
-                                                title="Delete student account">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </form>
+
                                     
                                     <div class="flex-shrink-0 h-10 w-10 mr-3">
                                         @if($student->profile_picture)

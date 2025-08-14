@@ -21,11 +21,17 @@ class StudentController extends Controller
     {
         $user = Auth::user();
         
-        // Get all subjects where student has attendance records
+        // Get all subjects where student has attendance records from their current section
         $subjects = Subject::whereHas('attendances', function($query) use ($user) {
-            $query->where('user_id', $user->id);
+            $query->where('user_id', $user->id)
+                  ->whereHas('attendanceSession', function($subQuery) use ($user) {
+                      $subQuery->where('section', $user->section);
+                  });
         })->with(['attendances' => function($query) use ($user) {
-            $query->where('user_id', $user->id);
+            $query->where('user_id', $user->id)
+                  ->whereHas('attendanceSession', function($subQuery) use ($user) {
+                      $subQuery->where('section', $user->section);
+                  });
         }])->get();
 
         $attendanceSummary = [];
@@ -36,13 +42,26 @@ class StudentController extends Controller
         ];
         
         foreach ($subjects as $subject) {
-            $totalSessions = $subject->attendanceSessions()->count();
-            $attendedSessions = $subject->attendances()->where('user_id', $user->id)->count();
+            // Only count sessions from the student's current section, not all sessions from the subject
+            $totalSessions = $subject->attendanceSessions()
+                ->where('section', $user->section) // Filter by student's current section
+                ->count();
+            
+            $attendedSessions = $subject->attendances()
+                ->where('user_id', $user->id)
+                ->whereHas('attendanceSession', function($query) use ($user) {
+                    $query->where('section', $user->section); // Only count attendance for sessions from student's section
+                })
+                ->count();
+            
             $attendancePercentage = $totalSessions > 0 ? round(($attendedSessions / $totalSessions) * 100, 2) : 0;
             
-            // Get session type breakdown for this subject
+            // Get session type breakdown for this subject (only from student's section)
             $subjectAttendances = $subject->attendances()
                 ->where('user_id', $user->id)
+                ->whereHas('attendanceSession', function($query) use ($user) {
+                    $query->where('section', $user->section); // Only include sessions from student's section
+                })
                 ->with('attendanceSession')
                 ->get();
             
