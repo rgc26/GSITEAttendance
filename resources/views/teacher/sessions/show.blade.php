@@ -473,6 +473,20 @@
         width: 100% !important;
         max-width: none !important;
         min-width: none !important;
+        display: table !important;
+        table-layout: fixed !important;
+    }
+
+    /* Force table to expand and show all content */
+    .attendance-table,
+    .attendance-table thead,
+    .attendance-table tbody,
+    .attendance-table tr,
+    .attendance-table th,
+    .attendance-table td {
+        box-sizing: border-box !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 
     .attendance-table thead {
@@ -545,56 +559,56 @@
     /* Column-specific widths for better content display */
     .attendance-table th:nth-child(1), /* Student */
     .attendance-table td:nth-child(1) {
-        width: 30% !important;
-        min-width: 350px !important;
+        width: 25% !important;
+        min-width: 300px !important;
     }
     
     .attendance-table th:nth-child(2), /* Student ID */
     .attendance-table td:nth-child(2) {
-        width: 18% !important;
-        min-width: 200px !important;
+        width: 15% !important;
+        min-width: 180px !important;
     }
     
     .attendance-table th:nth-child(3), /* Year Level */
     .attendance-table td:nth-child(3) {
-        width: 12% !important;
-        min-width: 120px !important;
-    }
-    
-    .attendance-table th:nth-child(4), /* Student Type */
-    .attendance-table td:nth-child(4) {
-        width: 12% !important;
-        min-width: 120px !important;
-    }
-    
-    .attendance-table th:nth-child(5), /* Their Section */
-    .attendance-table td:nth-child(5) {
-        width: 12% !important;
-        min-width: 120px !important;
-    }
-    
-    .attendance-table th:nth-child(6), /* Status */
-    .attendance-table td:nth-child(6) {
         width: 10% !important;
         min-width: 100px !important;
     }
     
+    .attendance-table th:nth-child(4), /* Student Type */
+    .attendance-table td:nth-child(4) {
+        width: 10% !important;
+        min-width: 100px !important;
+    }
+    
+    .attendance-table th:nth-child(5), /* Their Section */
+    .attendance-table td:nth-child(5) {
+        width: 10% !important;
+        min-width: 100px !important;
+    }
+    
+    .attendance-table th:nth-child(6), /* Status */
+    .attendance-table td:nth-child(6) {
+        width: 8% !important;
+        min-width: 80px !important;
+    }
+    
     .attendance-table th:nth-child(7), /* PC Number/Device Type/Image */
     .attendance-table td:nth-child(7) {
-        width: 12% !important;
-        min-width: 120px !important;
+        width: 10% !important;
+        min-width: 100px !important;
     }
     
     .attendance-table th:nth-child(8), /* Check-in Time */
     .attendance-table td:nth-child(8) {
-        width: 20% !important;
-        min-width: 250px !important;
+        width: 12% !important;
+        min-width: 200px !important;
     }
     
     .attendance-table th:nth-child(9), /* Actions */
     .attendance-table td:nth-child(9) {
         width: 10% !important;
-        min-width: 120px !important;
+        min-width: 150px !important;
     }
 
     /* Table wrapper for better layout */
@@ -602,10 +616,11 @@
         border-radius: 0.5rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         background: white;
-        overflow: visible;
+        overflow: visible !important;
         width: 100% !important;
         max-width: none !important;
         min-width: none !important;
+        display: block !important;
     }
 
     /* Enhanced Status Badge Styling */
