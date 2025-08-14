@@ -941,7 +941,7 @@
                                                             </td>
                                                         @endif
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                            {{ $attendance->check_in_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
@@ -1150,7 +1150,7 @@
                                                             </td>
                                                         @endif
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                            {{ $attendance->check_in_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
@@ -1359,7 +1359,7 @@
                                                             </td>
                                                         @endif
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
+                                                            {{ $attendance->check_in_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
                                                             <div class="flex space-x-2">
