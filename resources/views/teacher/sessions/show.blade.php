@@ -466,10 +466,10 @@
     /* Enhanced Table Styling */
     .attendance-table {
         border-radius: 0.5rem;
-        overflow: hidden;
+        overflow: visible;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        table-layout: fixed;
-        min-width: 1200px;
+        width: 100%;
+        table-layout: auto;
     }
 
     .attendance-table thead {
@@ -487,9 +487,9 @@
         border-left: 2px solid #c084fc !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
         transition: all 0.2s ease !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        min-width: auto !important;
     }
 
     .attendance-table th:first-child {
@@ -526,38 +526,45 @@
         vertical-align: middle !important;
         border-left: 1px solid #f3f4f6 !important;
         transition: all 0.2s ease !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        max-width: none !important;
     }
 
     .attendance-table td:first-child {
         border-left: none !important;
     }
 
-    /* Table wrapper for horizontal scrolling */
+    /* Remove table wrapper constraints */
     .table-wrapper {
-        overflow-x: auto;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        overflow: visible;
+        width: 100%;
     }
 
-    .table-wrapper::-webkit-scrollbar {
-        height: 8px;
+    /* Make main container wider */
+    .mobile-friendly-container {
+        padding: 2.5rem !important;
+        max-width: none !important;
+        width: 100% !important;
     }
 
-    .table-wrapper::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
+    /* Ensure content area is full width */
+    .max-w-7xl {
+        max-width: none !important;
+        width: 100% !important;
     }
 
-    .table-wrapper::-webkit-scrollbar-thumb {
-        background: #c084fc;
-        border-radius: 4px;
+    /* Responsive adjustments */
+    @media (min-width: 1280px) {
+        .mobile-friendly-container {
+            padding: 3rem !important;
+        }
     }
 
-    .table-wrapper::-webkit-scrollbar-thumb:hover {
-        background: #a855f7;
+    @media (min-width: 1536px) {
+        .mobile-friendly-container {
+            padding: 4rem !important;
+        }
     }
 
     /* Enhanced Status Badge Styling */
@@ -686,7 +693,7 @@
     }
 </style>
 <div class="py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200 mobile-friendly-container">
                 <div class="flex items-center justify-between mb-6">
@@ -1094,75 +1101,75 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="w-full table-wrapper">
+                                    <div class="w-full">
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
                                                 <tr>
-                                                    <th class="px-4 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[200px]">
+                                                    <th class="px-4 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-user mr-2 text-purple-600"></i>
                                                             Student
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[140px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-id-card mr-2 text-purple-600"></i>
                                                             Student ID
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-graduation-cap mr-2 text-purple-600"></i>
                                                             Year Level
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-tag mr-2 text-purple-600"></i>
                                                             Student Type
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-building mr-2 text-purple-600"></i>
                                                             Their Section
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[100px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-check-circle mr-2 text-purple-600"></i>
                                                             Status
                                                         </div>
                                                     </th>
                                                     @if($session->session_type === 'lab')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[100px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-desktop mr-2 text-purple-600"></i>
                                                                 PC Number
                                                             </div>
                                                         </th>
                                                     @elseif($session->session_type === 'online')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-mobile-alt mr-2 text-purple-600"></i>
                                                                 Device Type
                                                             </div>
                                                         </th>
                                                     @elseif($session->session_type === 'lecture')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-image mr-2 text-purple-600"></i>
                                                                 Attached Image
                                                             </div>
                                                         </th>
                                                     @endif
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[160px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-clock mr-2 text-purple-600"></i>
                                                             Check-in Time
                                                         </div>
                                                     </th>
-                                                    <th class="px-4 py-4 text-center text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-4 py-4 text-center text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center justify-center">
                                                             <i class="fas fa-cogs mr-2 text-purple-600"></i>
                                                             Actions
@@ -1360,75 +1367,75 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="w-full table-wrapper">
+                                    <div class="w-full">
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
                                                 <tr>
-                                                    <th class="px-4 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[200px]">
+                                                    <th class="px-4 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-user mr-2 text-purple-600"></i>
                                                             Student
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[140px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-id-card mr-2 text-purple-600"></i>
                                                             Student ID
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-graduation-cap mr-2 text-purple-600"></i>
                                                             Year Level
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-tag mr-2 text-purple-600"></i>
                                                             Student Type
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-building mr-2 text-purple-600"></i>
                                                             Their Section
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[100px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-check-circle mr-2 text-purple-600"></i>
                                                             Status
                                                         </div>
                                                     </th>
                                                     @if($session->session_type === 'lab')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[100px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-desktop mr-2 text-purple-600"></i>
                                                                 PC Number
                                                             </div>
                                                         </th>
                                                     @elseif($session->session_type === 'online')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-mobile-alt mr-2 text-purple-600"></i>
                                                                 Device Type
                                                             </div>
                                                         </th>
                                                     @elseif($session->session_type === 'lecture')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-image mr-2 text-purple-600"></i>
                                                                 Attached Image
                                                             </div>
                                                         </th>
                                                     @endif
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[160px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-clock mr-2 text-purple-600"></i>
                                                             Check-in Time
                                                         </div>
                                                     </th>
-                                                    <th class="px-4 py-4 text-center text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-4 py-4 text-center text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center justify-center">
                                                             <i class="fas fa-cogs mr-2 text-purple-600"></i>
                                                             Actions
@@ -1626,75 +1633,75 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="w-full table-wrapper">
+                                    <div class="w-full">
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
                                                 <tr>
-                                                    <th class="px-4 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[200px]">
+                                                    <th class="px-4 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-user mr-2 text-purple-600"></i>
                                                             Student
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[140px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-id-card mr-2 text-purple-600"></i>
                                                             Student ID
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-graduation-cap mr-2 text-purple-600"></i>
                                                             Year Level
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-tag mr-2 text-purple-600"></i>
                                                             Student Type
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-building mr-2 text-purple-600"></i>
                                                             Their Section
                                                         </div>
                                                     </th>
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[100px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-check-circle mr-2 text-purple-600"></i>
                                                             Status
                                                         </div>
                                                     </th>
                                                     @if($session->session_type === 'lab')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[100px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-desktop mr-2 text-purple-600"></i>
                                                                 PC Number
                                                             </div>
                                                         </th>
                                                     @elseif($session->session_type === 'online')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-mobile-alt mr-2 text-purple-600"></i>
                                                                 Device Type
                                                             </div>
                                                         </th>
                                                     @elseif($session->session_type === 'lecture')
-                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                        <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                             <div class="flex items-center">
                                                                 <i class="fas fa-image mr-2 text-purple-600"></i>
                                                                 Attached Image
                                                             </div>
                                                         </th>
                                                     @endif
-                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[160px] border-l border-purple-300">
+                                                    <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center">
                                                             <i class="fas fa-clock mr-2 text-purple-600"></i>
                                                             Check-in Time
                                                         </div>
                                                     </th>
-                                                    <th class="px-4 py-4 text-center text-sm font-bold text-purple-800 uppercase tracking-wider min-w-[120px] border-l border-purple-300">
+                                                    <th class="px-4 py-4 text-center text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300">
                                                         <div class="flex items-center justify-center">
                                                             <i class="fas fa-cogs mr-2 text-purple-600"></i>
                                                             Actions
