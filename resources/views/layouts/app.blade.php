@@ -43,116 +43,6 @@
             }
         }
         
-        /* Enhanced Container Styling - Full Width */
-        .main-container {
-            width: 100% !important;
-            max-width: none !important;
-            padding: 2.5rem !important;
-        }
-        
-        @media (min-width: 1280px) {
-            .main-container {
-                padding: 3rem !important;
-            }
-        }
-        
-        @media (min-width: 1536px) {
-            .main-container {
-                padding: 4rem !important;
-            }
-        }
-        
-        /* Enhanced Typography - Better Text Sizing */
-        .page-title {
-            font-size: 2.25rem !important;
-            font-weight: 700 !important;
-            line-height: 1.2 !important;
-            color: #1f2937 !important;
-            margin-bottom: 1.5rem !important;
-        }
-        
-        .section-title {
-            font-size: 1.5rem !important;
-            font-weight: 600 !important;
-            line-height: 1.4 !important;
-            color: #374151 !important;
-            margin-bottom: 1rem !important;
-        }
-        
-        .card-title {
-            font-size: 1.25rem !important;
-            font-weight: 600 !important;
-            line-height: 1.4 !important;
-            color: #374151 !important;
-            margin-bottom: 0.75rem !important;
-        }
-        
-        .body-text {
-            font-size: 1rem !important;
-            line-height: 1.6 !important;
-            color: #4b5563 !important;
-        }
-        
-        .small-text {
-            font-size: 0.875rem !important;
-            line-height: 1.5 !important;
-            color: #6b7280 !important;
-        }
-        
-        /* Enhanced Card Styling */
-        .enhanced-card {
-            background: white !important;
-            border-radius: 0.75rem !important;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-            padding: 1.5rem !important;
-            border: 1px solid #e5e7eb !important;
-            transition: all 0.2s ease !important;
-        }
-        
-        .enhanced-card:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-        }
-        
-        /* Enhanced Button Styling */
-        .enhanced-button {
-            padding: 0.75rem 1.5rem !important;
-            font-size: 1rem !important;
-            font-weight: 500 !important;
-            border-radius: 0.5rem !important;
-            transition: all 0.2s ease !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 0.5rem !important;
-        }
-        
-        .enhanced-button:hover {
-            transform: translateY(-1px) !important;
-        }
-
-        /* Prevent links from opening in new tabs */
-        a:not([target="_blank"]) {
-            target: _self !important;
-        }
-
-        /* Ensure all internal links open in same tab */
-        a[href^="{{ url('/') }}"],
-        a[href^="/"],
-        a[href^="#"] {
-            target: _self !important;
-        }
-
-        /* Override any JavaScript that might force new tabs */
-        a {
-            target: _self !important;
-        }
-
-        /* Specific override for any remaining target="_blank" that shouldn't be there */
-        a:not([href^="http"]):not([href^="mailto:"]):not([href^="tel:"]) {
-            target: _self !important;
-        }
-        
         /* Responsive table styles */
         .responsive-table {
             overflow-x: auto;
@@ -368,7 +258,7 @@
         
         /* Ensure proper vertical centering */
         .nav-container > * {
-            display: flex;
+                display: flex;
             align-items: center;
         }
         
@@ -451,34 +341,39 @@
         </nav>
     @endauth
 
-    <main class="py-4">
-        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 main-container">
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mobile-spacing">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mobile-spacing">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if(isset($errors) && $errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mobile-spacing">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
+    <div class="flex flex-col min-h-screen">
+        <!-- Page Content -->
+        <main class="flex-1">
             @yield('content')
-        </div>
-    </main>
-    
-    @stack('scripts')
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'SmartTrack') }}. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            
+            if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html> 

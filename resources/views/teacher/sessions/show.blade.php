@@ -1252,7 +1252,7 @@
                                                         @elseif($session->session_type === 'lecture')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
                                                                        class="action-button bg-blue-500 text-white">
                                                                         <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
@@ -1518,7 +1518,7 @@
                                                         @elseif($session->session_type === 'lecture')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
                                                                        class="action-button bg-blue-500 text-white">
                                                                         <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
@@ -1784,7 +1784,7 @@
                                                         @elseif($session->session_type === 'lecture')
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 @if($attendance->attached_image)
-                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" 
+                                                                    <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
                                                                        class="action-button bg-blue-500 text-white">
                                                                         <i class="fas fa-image mr-1.5"></i>
                                                                         View Image
@@ -1946,21 +1946,21 @@
                                     
                                     <div class="flex items-center mb-3">
                                         <div class="flex-shrink-0 h-12 w-12 mr-4">
-                                            @if($student->profile_picture)
+                                        @if($student->profile_picture)
                                                 <img class="h-12 w-12 rounded-full object-cover" 
-                                                     src="{{ asset('storage/' . $student->profile_picture) }}" 
-                                                     alt="{{ $student->name }}'s profile picture">
-                                            @else
+                                                 src="{{ asset('storage/' . $student->profile_picture) }}" 
+                                                 alt="{{ $student->name }}'s profile picture">
+                                        @else
                                                 <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-semibold text-lg">
-                                                    {{ strtoupper(substr($student->name, 0, 1)) }}
-                                                </div>
-                                            @endif
-                                        </div>
+                                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
                                         <div class="student-info">
                                             <div class="text-base font-semibold text-gray-900 mb-1">{{ $student->name }}</div>
                                             <div class="text-sm text-gray-600 mb-1">{{ $student->student_id ?? 'Student ID: N/A' }}</div>
                                             <div class="text-sm text-gray-500">{{ $student->email }}</div>
-                                        </div>
+                                    </div>
                                     </div>
                                     
                                     <div class="action-buttons">
@@ -1975,15 +1975,15 @@
                                             
                                             <!-- Mark Absent Button -->
                                             <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="flex-1">
-                                                @csrf
-                                                <input type="hidden" name="student_id" value="{{ $student->id }}">
-                                                <button type="submit" 
+                                            @csrf
+                                            <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                            <button type="submit" 
                                                         class="w-full text-xs bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors font-medium"
-                                                        onclick="return confirm('Mark {{ $student->name }} as absent?')">
+                                                    onclick="return confirm('Mark {{ $student->name }} as absent?')">
                                                     <i class="fas fa-times mr-1"></i>
                                                     Absent
-                                                </button>
-                                            </form>
+                                            </button>
+                                        </form>
                                         </div>
                                     </div>
                                 </div>
