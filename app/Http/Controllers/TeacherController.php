@@ -24,11 +24,25 @@ class TeacherController extends Controller
     {
         $teacher = Auth::user();
         $subjects = $teacher->subjects()->where('archived', false)->with('schedules')->get();
+        
+        // Get count of active sessions
         $activeSessions = AttendanceSession::whereHas('subject', function($query) use ($teacher) {
             $query->where('teacher_id', $teacher->id);
-        })->where('is_active', true)->get();
+        })->where('is_active', true)->count();
+        
+        // Get recent sessions (last 5)
+        $recentSessions = AttendanceSession::whereHas('subject', function($query) use ($teacher) {
+            $query->where('teacher_id', $teacher->id);
+        })->with('subject')->latest()->take(5)->get();
+        
+        // Calculate total students across all subjects (unique sections)
+        $totalStudents = $teacher->subjects()
+            ->where('archived', false)
+            ->join('schedules', 'subjects.id', '=', 'schedules.subject_id')
+            ->distinct('schedules.section')
+            ->count('schedules.section');
 
-        return view('teacher.dashboard', compact('subjects', 'activeSessions'));
+        return view('teacher.dashboard', compact('subjects', 'activeSessions', 'recentSessions', 'totalStudents'));
     }
 
     public function subjects()
