@@ -497,7 +497,7 @@
                             </div>
                             <div class="flex justify-between items-start">
                                 <span class="text-gray-600">Started:</span>
-                                <span class="font-medium text-right">{{ $session->start_time ? $session->start_time->format('M d, Y H:i') : 'Not started yet' }}</span>
+                                <span class="font-medium text-right">{{ $session->start_time ? $session->start_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') : 'Not started yet' }}</span>
                             </div>
                             @if($session->scheduled_start_time)
                                 <div class="flex justify-between items-start">
@@ -506,7 +506,7 @@
                                 </div>
                                 <div class="flex justify-between items-start">
                                     <span class="text-gray-600">Grace Period End:</span>
-                                    <span class="font-medium text-right">{{ $session->getGracePeriodEndTime()->format('M d, Y H:i') }}</span>
+                                    <span class="font-medium text-right">{{ $session->getGracePeriodEndTime() ? $session->getGracePeriodEndTime()->setTimezone('Asia/Manila')->format('M d, Y g:i A') : 'N/A' }}</span>
                                 </div>
                             @endif
                             @if($session->scheduled_end_time)
@@ -518,7 +518,7 @@
                             @if($session->end_time)
                                 <div class="flex justify-between items-start">
                                     <span class="text-gray-600">Ended:</span>
-                                    <span class="font-medium text-right">{{ $session->end_time->format('M d, Y H:i') }}</span>
+                                    <span class="font-medium text-right">{{ $session->end_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') }}</span>
                                 </div>
                             @endif
                         </div>
