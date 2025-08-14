@@ -314,7 +314,7 @@
 <body class="bg-gray-100">
     @auth
         <nav class="bg-white shadow-lg">
-            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="nav-container">
                     <!-- Logo and Brand -->
                     <div class="logo-container">
@@ -341,39 +341,34 @@
         </nav>
     @endauth
 
-    <div class="flex flex-col min-h-screen">
-        <!-- Page Content -->
-        <main class="flex-1">
-            @yield('content')
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white py-8">
-            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'SmartTrack') }}. All rights reserved.</p>
+    <main class="py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mobile-spacing">
+                    {{ session('success') }}
                 </div>
-            </div>
-        </footer>
-    </div>
+            @endif
 
-    <!-- Scripts -->
-    <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('hidden');
-        }
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mobile-spacing">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            
-            if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-    </script>
+            @if(isset($errors) && $errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mobile-spacing">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @yield('content')
+        </div>
+    </main>
+    
+    @stack('scripts')
 </body>
 </html> 

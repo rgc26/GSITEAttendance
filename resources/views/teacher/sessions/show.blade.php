@@ -466,10 +466,10 @@
     /* Enhanced Table Styling */
     .attendance-table {
         border-radius: 0.5rem;
-        overflow: visible;
+        overflow: hidden;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        width: 100%;
         table-layout: auto;
+        width: 100%;
     }
 
     .attendance-table thead {
@@ -481,15 +481,15 @@
     .attendance-table th {
         font-weight: 700 !important;
         font-size: 0.875rem !important;
-        padding: 1rem 0.75rem !important;
+        padding: 1rem 1rem !important;
         background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%) !important;
         color: #581c87 !important;
         border-left: 2px solid #c084fc !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
         transition: all 0.2s ease !important;
-        white-space: normal !important;
-        word-wrap: break-word !important;
-        min-width: auto !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 
     .attendance-table th:first-child {
@@ -522,49 +522,98 @@
     }
 
     .attendance-table td {
-        padding: 1rem 0.75rem !important;
+        padding: 1rem 1rem !important;
         vertical-align: middle !important;
         border-left: 1px solid #f3f4f6 !important;
         transition: all 0.2s ease !important;
-        white-space: normal !important;
         word-wrap: break-word !important;
-        max-width: none !important;
+        overflow-wrap: break-word !important;
+        max-width: 0 !important;
     }
 
     .attendance-table td:first-child {
         border-left: none !important;
     }
 
-    /* Remove table wrapper constraints */
+    /* Column-specific widths for better content display */
+    .attendance-table th:nth-child(1), /* Student */
+    .attendance-table td:nth-child(1) {
+        min-width: 250px !important;
+        max-width: 300px !important;
+    }
+    
+    .attendance-table th:nth-child(2), /* Student ID */
+    .attendance-table td:nth-child(2) {
+        min-width: 150px !important;
+        max-width: 180px !important;
+    }
+    
+    .attendance-table th:nth-child(3), /* Year Level */
+    .attendance-table td:nth-child(3) {
+        min-width: 120px !important;
+        max-width: 140px !important;
+    }
+    
+    .attendance-table th:nth-child(4), /* Student Type */
+    .attendance-table td:nth-child(4) {
+        min-width: 120px !important;
+        max-width: 140px !important;
+    }
+    
+    .attendance-table th:nth-child(5), /* Their Section */
+    .attendance-table td:nth-child(5) {
+        min-width: 120px !important;
+        max-width: 140px !important;
+    }
+    
+    .attendance-table th:nth-child(6), /* Status */
+    .attendance-table td:nth-child(6) {
+        min-width: 100px !important;
+        max-width: 120px !important;
+    }
+    
+    .attendance-table th:nth-child(7), /* PC Number/Device Type/Image */
+    .attendance-table td:nth-child(7) {
+        min-width: 120px !important;
+        max-width: 140px !important;
+    }
+    
+    .attendance-table th:nth-child(8), /* Check-in Time */
+    .attendance-table td:nth-child(8) {
+        min-width: 180px !important;
+        max-width: 200px !important;
+    }
+    
+    .attendance-table th:nth-child(9), /* Actions */
+    .attendance-table td:nth-child(9) {
+        min-width: 140px !important;
+        max-width: 160px !important;
+    }
+
+    /* Table wrapper for better layout */
     .table-wrapper {
-        overflow: visible;
-        width: 100%;
+        overflow-x: auto;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background: white;
     }
 
-    /* Make main container wider */
-    .mobile-friendly-container {
-        padding: 2.5rem !important;
-        max-width: none !important;
-        width: 100% !important;
+    .table-wrapper::-webkit-scrollbar {
+        height: 8px;
     }
 
-    /* Ensure content area is full width */
-    .max-w-7xl {
-        max-width: none !important;
-        width: 100% !important;
+    .table-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
     }
 
-    /* Responsive adjustments */
-    @media (min-width: 1280px) {
-        .mobile-friendly-container {
-            padding: 3rem !important;
-        }
+    .table-wrapper::-webkit-scrollbar-thumb {
+        background: #c084fc;
+        border-radius: 4px;
     }
 
-    @media (min-width: 1536px) {
-        .mobile-friendly-container {
-            padding: 4rem !important;
-        }
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #a855f7;
     }
 
     /* Enhanced Status Badge Styling */
@@ -693,7 +742,7 @@
     }
 </style>
 <div class="py-6">
-    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200 mobile-friendly-container">
                 <div class="flex items-center justify-between mb-6">
@@ -1101,7 +1150,7 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="w-full">
+                                    <div class="w-full table-wrapper">
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
                                                 <tr>
@@ -1367,7 +1416,7 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="w-full">
+                                    <div class="w-full table-wrapper">
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
                                                 <tr>
@@ -1633,7 +1682,7 @@
                             </div>
                             <div class="accordion-content bg-white">
                                 <div class="p-4">
-                                    <div class="w-full">
+                                    <div class="w-full table-wrapper">
                                         <table class="w-full divide-y divide-gray-200 attendance-table">
                                             <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
                                                 <tr>
