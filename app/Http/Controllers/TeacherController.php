@@ -884,6 +884,7 @@ class TeacherController extends Controller
             
             return redirect()->route('teacher.subjects.show', $subject)->with('success', 'Subject updated successfully!');
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Subject update validation failed: ' . json_encode($e->errors()));
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -893,13 +894,17 @@ class TeacherController extends Controller
             }
             throw $e;
         } catch (\Exception $e) {
+            \Log::error('Subject update failed: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Something went wrong while updating the subject'
+                    'message' => 'Something went wrong while updating the subject: ' . $e->getMessage()
                 ], 500);
             }
-            throw $e;
+            
+            return redirect()->back()->with('error', 'Failed to update subject: ' . $e->getMessage())->withInput();
         }
     }
 
