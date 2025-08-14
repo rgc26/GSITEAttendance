@@ -64,30 +64,63 @@
     
     /* Button styling improvements */
     .action-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.375rem 0.75rem;
-        border-radius: 0.375rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: all 0.2s ease-in-out;
-        cursor: pointer;
-        border: none;
-        outline: none;
-        width: 100%;
-        min-height: 32px;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.5rem 0.75rem !important;
+        border-radius: 0.375rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease-in-out !important;
+        cursor: pointer !important;
+        border: none !important;
+        outline: none !important;
+        width: 100% !important;
+        min-height: 36px !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
     }
     
     .action-button:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
     }
     
     .action-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
+    
+    .action-button:active {
+        transform: translateY(0) !important;
+    }
+    
+    /* Specific button color improvements */
+    .action-button.bg-blue-500 {
+        background-color: #3b82f6 !important;
+        color: white !important;
+    }
+    
+    .action-button.bg-blue-500:hover {
+        background-color: #2563eb !important;
+    }
+    
+    .action-button.bg-red-500 {
+        background-color: #ef4444 !important;
+        color: white !important;
+    }
+    
+    .action-button.bg-red-500:hover {
+        background-color: #dc2626 !important;
+    }
+    
+    .action-button.bg-green-500 {
+        background-color: #10b981 !important;
+        color: white !important;
+    }
+    
+    .action-button.bg-green-500:hover {
+        background-color: #059669 !important;
     }
     
     /* Status badge improvements */
@@ -266,14 +299,17 @@
 
     .students-without-attendance-card .action-buttons {
         flex-shrink: 0 !important;
-        min-width: 140px !important;
+        min-width: 200px !important;
         display: flex !important;
         flex-direction: column !important;
-        gap: 0.75rem !important;
+    }
+
+    .students-without-attendance-card .action-buttons .flex {
+        width: 100% !important;
     }
 
     .students-without-attendance-card .action-buttons form {
-        width: 100% !important;
+        flex: 1 !important;
     }
 
     .students-without-attendance-card .action-buttons input,
@@ -289,6 +325,28 @@
         font-weight: 500 !important;
         border-radius: 0.375rem !important;
         transition: all 0.2s ease !important;
+    }
+
+    /* Button container styling for attendance tables */
+    .attendance-table .flex.flex-col.space-y-2 {
+        min-width: 120px !important;
+    }
+    
+    .attendance-table .flex.flex-col.space-y-1 {
+        min-width: 120px !important;
+    }
+    
+    /* Ensure consistent button sizing in tables */
+    .attendance-table .action-button {
+        min-width: 100px !important;
+        max-width: 120px !important;
+    }
+    
+    /* Profile placeholder styling */
+    .profile-placeholder {
+        background-color: #f3f4f6 !important;
+        color: #6b7280 !important;
+        font-weight: 600 !important;
     }
 </style>
 <div class="py-6">
@@ -1372,84 +1430,85 @@
                                         </div>
                                     @endif
                                     
-                                    <div class="flex-shrink-0 h-10 w-10 mr-3 mt-1">
+                                    <div class="flex-shrink-0 h-12 w-12 mr-4">
                                         @if($student->profile_picture)
-                                            <img class="h-10 w-10 rounded-full object-cover" 
+                                            <img class="h-12 w-12 rounded-full object-cover" 
                                                  src="{{ asset('storage/' . $student->profile_picture) }}" 
                                                  alt="{{ $student->name }}'s profile picture">
                                         @else
-                                            <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-semibold">
+                                            <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-semibold text-lg">
                                                 {{ strtoupper(substr($student->name, 0, 1)) }}
                                             </div>
                                         @endif
                                     </div>
                                     <div class="student-info">
-                                        <div class="text-sm font-medium text-gray-900">{{ $student->name }}</div>
-                                        <div class="text-sm text-gray-500">{{ $student->student_id ?? 'N/A' }}</div>
-                                        <div class="text-xs text-gray-500">{{ $student->email }}</div>
-                                        <div class="text-xs text-yellow-600">No attendance record</div>
+                                        <div class="text-base font-semibold text-gray-900 mb-1">{{ $student->name }}</div>
+                                        <div class="text-sm text-gray-600 mb-1">{{ $student->student_id ?? 'Student ID: N/A' }}</div>
+                                        <div class="text-sm text-gray-500 mb-3">{{ $student->email }}</div>
                                         @if($student->created_at)
                                             <div class="text-xs text-gray-400">Account created: {{ $student->created_at->format('M d, Y') }}</div>
                                         @endif
                                     </div>
                                     <div class="action-buttons">
-                                        <!-- Mark Present Button -->
-                                        <form action="{{ route('teacher.sessions.mark-present', $session) }}" method="POST" class="block">
-                                            @csrf
-                                            <input type="hidden" name="student_id" value="{{ $student->id }}">
-                                            @if($session->session_type === 'lab')
-                                                <input type="number" name="pc_number" min="1" max="40" 
-                                                       placeholder="PC #" 
-                                                       class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
-                                                       required>
-                                            @elseif($session->session_type === 'online')
-                                                <select name="device_type" 
-                                                        class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
-                                                        required>
-                                                    <option value="">Device</option>
-                                                    <option value="mobile">Mobile</option>
-                                                    <option value="desktop">Desktop</option>
-                                                    <option value="laptop">Laptop</option>
-                                                </select>
-                                            @elseif($session->session_type === 'lecture')
-                                                <input type="file" name="attached_image" 
-                                                       accept="image/*"
-                                                       class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
-                                                       required>
-                                            @endif
-                                            <button type="submit" 
-                                                    class="w-full text-xs bg-green-100 text-green-700 px-3 py-2 rounded hover:bg-green-200 transition-colors font-medium"
-                                                    onclick="return confirm('Mark {{ $student->name }} as present?')">
-                                                <i class="fas fa-check mr-1"></i>
-                                                Mark Present
-                                            </button>
-                                        </form>
-                                        
-                                        <!-- Mark Absent Button -->
-                                        <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="block">
-                                            @csrf
-                                            <input type="hidden" name="student_id" value="{{ $student->id }}">
-                                            <button type="submit" 
-                                                    class="w-full text-xs bg-red-100 text-red-700 px-3 py-2 rounded hover:bg-red-200 transition-colors font-medium"
-                                                    onclick="return confirm('Mark {{ $student->name }} as absent?')">
-                                                <i class="fas fa-times mr-1"></i>
-                                                Mark Absent
-                                            </button>
-                                        </form>
+                                        <div class="flex space-x-2">
+                                            <!-- Mark Present Button -->
+                                            <form action="{{ route('teacher.sessions.mark-present', $session) }}" method="POST" class="flex-1">
+                                                @csrf
+                                                <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                                @if($session->session_type === 'lab')
+                                                    <input type="number" name="pc_number" min="1" max="40" 
+                                                           placeholder="PC #" 
+                                                           class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                           required>
+                                                @elseif($session->session_type === 'online')
+                                                    <select name="device_type" 
+                                                            class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                            required>
+                                                        <option value="">Device</option>
+                                                        <option value="mobile">Mobile</option>
+                                                        <option value="desktop">Desktop</option>
+                                                        <option value="laptop">Laptop</option>
+                                                    </select>
+                                                @elseif($session->session_type === 'lecture')
+                                                    <input type="file" name="attached_image" 
+                                                           accept="image/*"
+                                                           class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                           required>
+                                                @endif
+                                                <button type="submit" 
+                                                        class="w-full text-xs bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 transition-colors font-medium"
+                                                        onclick="return confirm('Mark {{ $student->name }} as present?')">
+                                                    <i class="fas fa-check mr-1"></i>
+                                                    Present
+                                                </button>
+                                            </form>
+                                            
+                                            <!-- Mark Absent Button -->
+                                            <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="flex-1">
+                                                @csrf
+                                                <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                                <button type="submit" 
+                                                        class="w-full text-xs bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition-colors font-medium"
+                                                        onclick="return confirm('Mark {{ $student->name }} as absent?')">
+                                                    <i class="fas fa-times mr-1"></i>
+                                                    Absent
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                         
-                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                            <div class="flex items-center">
-                                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div class="flex items-start">
+                                <i class="fas fa-info-circle text-blue-500 mr-3 text-lg"></i>
                                 <div class="text-sm text-blue-700">
-                                    <strong>Note:</strong> These students have no attendance records yet. 
-                                    You can manually mark them as <strong>present</strong> (with required details) or <strong>absent</strong>.
-                                    <strong>Late status is automatically determined by the system</strong> based on check-in time and grace period.
-                                    <strong>Use the X button (top-right) to delete duplicate student accounts</strong> that may have been created accidentally.
-                                    If a student already has attendance marked but shows as absent, use the "Edit" button in the attendance list above to change their status.
+                                    <strong>Quick Actions for Students Without Attendance:</strong><br><br>
+                                    • <strong>Mark Present:</strong> Use the green "Present" button to mark attendance. For lab sessions, enter PC number (1-40). For online sessions, select device type. For lecture sessions, upload an image.<br>
+                                    • <strong>Mark Absent:</strong> Use the red "Absent" button to mark students as absent.<br>
+                                    • <strong>Late Status:</strong> Automatically calculated by the system based on check-in time and grace period.<br>
+                                    • <strong>Duplicate Accounts:</strong> Students with orange "Duplicate" badges may have multiple accounts. Consider cleaning up duplicate accounts if needed.
                                 </div>
                             </div>
                         </div>
