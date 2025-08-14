@@ -330,16 +330,47 @@
     /* Button container styling for attendance tables */
     .attendance-table .flex.flex-col.space-y-2 {
         min-width: 120px !important;
+        gap: 0.5rem !important;
     }
     
     .attendance-table .flex.flex-col.space-y-1 {
         min-width: 120px !important;
+        gap: 0.25rem !important;
     }
     
     /* Ensure consistent button sizing in tables */
     .attendance-table .action-button {
         min-width: 100px !important;
         max-width: 120px !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .attendance-table .action-button:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    /* Force proper spacing between buttons */
+    .attendance-table .space-y-2 > * + * {
+        margin-top: 0.5rem !important;
+    }
+    
+    .attendance-table .space-y-1 > * + * {
+        margin-top: 0.25rem !important;
+    }
+    
+    /* Ensure button containers have proper height */
+    .attendance-table td:last-child {
+        min-height: 120px !important;
+        vertical-align: top !important;
+    }
+    
+    /* Button spacing override for Tailwind */
+    .attendance-table .space-y-2 > button {
+        margin-top: 0.5rem !important;
+    }
+    
+    .attendance-table .space-y-2 > button:first-child {
+        margin-top: 0 !important;
     }
     
     /* Profile placeholder styling */
@@ -1430,25 +1461,25 @@
                                         </div>
                                     @endif
                                     
-                                    <div class="flex-shrink-0 h-12 w-12 mr-4">
-                                        @if($student->profile_picture)
-                                            <img class="h-12 w-12 rounded-full object-cover" 
-                                                 src="{{ asset('storage/' . $student->profile_picture) }}" 
-                                                 alt="{{ $student->name }}'s profile picture">
-                                        @else
-                                            <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-semibold text-lg">
-                                                {{ strtoupper(substr($student->name, 0, 1)) }}
-                                            </div>
-                                        @endif
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex-shrink-0 h-12 w-12 mr-4">
+                                            @if($student->profile_picture)
+                                                <img class="h-12 w-12 rounded-full object-cover" 
+                                                     src="{{ asset('storage/' . $student->profile_picture) }}" 
+                                                     alt="{{ $student->name }}'s profile picture">
+                                            @else
+                                                <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-semibold text-lg">
+                                                    {{ strtoupper(substr($student->name, 0, 1)) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="student-info">
+                                            <div class="text-base font-semibold text-gray-900 mb-1">{{ $student->name }}</div>
+                                            <div class="text-sm text-gray-600 mb-1">{{ $student->student_id ?? 'Student ID: N/A' }}</div>
+                                            <div class="text-sm text-gray-500">{{ $student->email }}</div>
+                                        </div>
                                     </div>
-                                    <div class="student-info">
-                                        <div class="text-base font-semibold text-gray-900 mb-1">{{ $student->name }}</div>
-                                        <div class="text-sm text-gray-600 mb-1">{{ $student->student_id ?? 'Student ID: N/A' }}</div>
-                                        <div class="text-sm text-gray-500 mb-3">{{ $student->email }}</div>
-                                        @if($student->created_at)
-                                            <div class="text-xs text-gray-400">Account created: {{ $student->created_at->format('M d, Y') }}</div>
-                                        @endif
-                                    </div>
+                                    
                                     <div class="action-buttons">
                                         <div class="flex space-x-2">
                                             <!-- Mark Present Button -->
