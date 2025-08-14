@@ -43,6 +43,94 @@
             }
         }
         
+        /* Enhanced Container Styling - Full Width */
+        .main-container {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 2.5rem !important;
+        }
+        
+        @media (min-width: 1280px) {
+            .main-container {
+                padding: 3rem !important;
+            }
+        }
+        
+        @media (min-width: 1536px) {
+            .main-container {
+                padding: 4rem !important;
+            }
+        }
+        
+        /* Enhanced Typography - Better Text Sizing */
+        .page-title {
+            font-size: 2.25rem !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+            color: #1f2937 !important;
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .section-title {
+            font-size: 1.5rem !important;
+            font-weight: 600 !important;
+            line-height: 1.4 !important;
+            color: #374151 !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        .card-title {
+            font-size: 1.25rem !important;
+            font-weight: 600 !important;
+            line-height: 1.4 !important;
+            color: #374151 !important;
+            margin-bottom: 0.75rem !important;
+        }
+        
+        .body-text {
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            color: #4b5563 !important;
+        }
+        
+        .small-text {
+            font-size: 0.875rem !important;
+            line-height: 1.5 !important;
+            color: #6b7280 !important;
+        }
+        
+        /* Enhanced Card Styling */
+        .enhanced-card {
+            background: white !important;
+            border-radius: 0.75rem !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+            padding: 1.5rem !important;
+            border: 1px solid #e5e7eb !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        .enhanced-card:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        }
+        
+        /* Enhanced Button Styling */
+        .enhanced-button {
+            padding: 0.75rem 1.5rem !important;
+            font-size: 1rem !important;
+            font-weight: 500 !important;
+            border-radius: 0.5rem !important;
+            transition: all 0.2s ease !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+        }
+        
+        .enhanced-button:hover {
+            transform: translateY(-1px) !important;
+        }
+        
         /* Responsive table styles */
         .responsive-table {
             overflow-x: auto;
@@ -314,7 +402,7 @@
 <body class="bg-gray-100">
     @auth
         <nav class="bg-white shadow-lg">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="nav-container">
                     <!-- Logo and Brand -->
                     <div class="logo-container">
@@ -342,7 +430,7 @@
     @endauth
 
     <main class="py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 main-container">
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mobile-spacing">
                     {{ session('success') }}
