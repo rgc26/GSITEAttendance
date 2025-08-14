@@ -1483,36 +1483,12 @@
                                     <div class="action-buttons">
                                         <div class="flex space-x-2">
                                             <!-- Mark Present Button -->
-                                            <form action="{{ route('teacher.sessions.mark-present', $session) }}" method="POST" class="flex-1">
-                                                @csrf
-                                                <input type="hidden" name="student_id" value="{{ $student->id }}">
-                                                @if($session->session_type === 'lab')
-                                                    <input type="number" name="pc_number" min="1" max="40" 
-                                                           placeholder="PC #" 
-                                                           class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
-                                                           required>
-                                                @elseif($session->session_type === 'online')
-                                                    <select name="device_type" 
-                                                            class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
-                                                            required>
-                                                        <option value="">Device</option>
-                                                        <option value="mobile">Mobile</option>
-                                                        <option value="desktop">Desktop</option>
-                                                        <option value="laptop">Laptop</option>
-                                                    </select>
-                                                @elseif($session->session_type === 'lecture')
-                                                    <input type="file" name="attached_image" 
-                                                           accept="image/*"
-                                                           class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
-                                                           required>
-                                                @endif
-                                                <button type="submit" 
-                                                        class="w-full text-xs bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 transition-colors font-medium"
-                                                        onclick="return confirm('Mark {{ $student->name }} as present?')">
-                                                    <i class="fas fa-check mr-1"></i>
-                                                    Present
-                                                </button>
-                                            </form>
+                                            <button type="button" 
+                                                    onclick="openPresentModal('{{ $student->id }}', '{{ $student->name }}')"
+                                                    class="flex-1 text-xs bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 transition-colors font-medium">
+                                                <i class="fas fa-check mr-1"></i>
+                                                Present
+                                            </button>
                                             
                                             <!-- Mark Absent Button -->
                                             <form action="{{ route('teacher.sessions.mark-absent', $session) }}" method="POST" class="flex-1">
@@ -1655,6 +1631,68 @@
                     <button type="submit" 
                             class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
                         Delete Record
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Mark Present Modal -->
+<div id="presentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Mark Student Present</h3>
+            <form action="{{ route('teacher.sessions.mark-present', $session) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="student_id" id="presentStudentId">
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Student</label>
+                    <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded border" id="presentStudentName"></p>
+                </div>
+
+                @if($session->session_type === 'lab')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">PC Number <span class="text-red-500">*</span></label>
+                    <input type="number" name="pc_number" id="presentPcNumber" min="1" max="40" 
+                           placeholder="Enter PC number (1-40)"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           required>
+                    <p class="text-xs text-gray-500 mt-1">Please enter the PC number the student is using</p>
+                </div>
+                @elseif($session->session_type === 'online')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Device Type <span class="text-red-500">*</span></label>
+                    <select name="device_type" id="presentDeviceType" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            required>
+                        <option value="">Select device type</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="desktop">Desktop</option>
+                        <option value="laptop">Laptop</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Please select the device type the student is using</p>
+                </div>
+                @elseif($session->session_type === 'lecture')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Attached Image <span class="text-red-500">*</span></label>
+                    <input type="file" name="attached_image" accept="image/*" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           required>
+                    <p class="text-xs text-gray-500 mt-1">Please upload an image for lecture attendance</p>
+                </div>
+                @endif
+
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closePresentModal()" 
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+                        <i class="fas fa-check mr-2"></i>
+                        Mark Present
                     </button>
                 </div>
             </form>
@@ -1873,5 +1911,28 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.style.transform = 'rotate(0deg)';
         });
     };
+
+    // Mark Present Modal Functions
+    window.openPresentModal = function(studentId, studentName) {
+        document.getElementById('presentModal').classList.remove('hidden');
+        document.getElementById('presentStudentId').value = studentId;
+        document.getElementById('presentStudentName').textContent = studentName;
+        document.getElementById('presentPcNumber').focus();
+    };
+
+    window.closePresentModal = function() {
+        document.getElementById('presentModal').classList.add('hidden');
+        document.getElementById('presentPcNumber').value = '';
+    };
+
+    // Close present modal when clicking outside
+    const presentModal = document.getElementById('presentModal');
+    if (presentModal) {
+        presentModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePresentModal();
+            }
+        });
+    }
 });
 </script> 
