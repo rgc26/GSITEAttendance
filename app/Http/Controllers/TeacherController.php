@@ -551,37 +551,31 @@ class TeacherController extends Controller
     /**
      * Delete a student user who has no attendance records
      */
-    public function deleteUser(Request $request, AttendanceSession $session)
+    public function deleteUser(Request $request, AttendanceSession $session, User $user)
     {
         $this->authorize('view', $session->subject);
         
-        $request->validate([
-            'student_id' => 'required|exists:users,id',
-        ]);
-
-        $student = User::findOrFail($request->student_id);
-        
         // Check if student is from the correct section
-        if ($student->section !== $session->section) {
+        if ($user->section !== $session->section) {
             return redirect()->back()->with('error', 'Student is not from the target section.');
         }
 
         // Ensure only students can be deleted (not teachers or admins)
-        if ($student->role !== 'student') {
+        if ($user->role !== 'student') {
             return redirect()->back()->with('error', 'Only student accounts can be deleted.');
         }
 
         // Check if student has any attendance records across all sessions
-        $hasAttendanceRecords = Attendance::where('user_id', $student->id)->exists();
+        $hasAttendanceRecords = Attendance::where('user_id', $user->id)->exists();
         
         if ($hasAttendanceRecords) {
             return redirect()->back()->with('error', 'Cannot delete student with existing attendance records.');
         }
 
         // Check if student has any other related data (for safety)
-        $hasOtherData = $student->subjects()->exists() || 
-                       $student->schedules()->exists() || 
-                       $student->attendanceSessions()->exists();
+        $hasOtherData = $user->subjects()->exists() || 
+                       $user->schedules()->exists() || 
+                       $user->attendanceSessions()->exists();
         
         if ($hasOtherData) {
             return redirect()->back()->with('error', 'Cannot delete student with existing related data.');
@@ -589,10 +583,10 @@ class TeacherController extends Controller
 
         // Store student information for logging
         $studentInfo = [
-            'id' => $student->id,
-            'name' => $student->name,
-            'email' => $student->email,
-            'section' => $student->section,
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'section' => $user->section,
             'deleted_by' => Auth::id(),
             'deleted_at' => now()
         ];
@@ -601,7 +595,7 @@ class TeacherController extends Controller
         \Log::info('Student account deleted by teacher', $studentInfo);
 
         // Delete the student user
-        $student->delete();
+        $user->delete();
 
         return redirect()->back()->with('success', "Student {$studentInfo['name']} has been deleted successfully!");
     }

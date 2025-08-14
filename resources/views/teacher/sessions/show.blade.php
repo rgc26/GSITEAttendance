@@ -1306,15 +1306,6 @@
                                         </button>
                                     </form>
                                     
-                                    <!-- Temporary Test Button - Remove after testing -->
-                                    <div class="absolute top-2 right-16 z-10">
-                                        <button type="button" 
-                                                class="bg-blue-500 text-white rounded px-2 py-1 text-xs"
-                                                onclick="alert('Testing delete for: {{ $student->name }}')">
-                                            TEST
-                                        </button>
-                                    </div>
-                                    
                                     <div class="flex-shrink-0 h-10 w-10 mr-3">
                                         @if($student->profile_picture)
                                             <img class="h-10 w-10 rounded-full object-cover" 
