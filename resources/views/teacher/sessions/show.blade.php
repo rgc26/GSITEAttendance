@@ -347,15 +347,18 @@
     
     /* Ensure consistent button sizing in tables */
     .attendance-table .action-button {
-        min-width: 120px !important;
-        max-width: 140px !important;
-        margin-bottom: 0.75rem !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
         height: 36px !important;
-        font-size: 0.75rem !important;
-        padding: 0.5rem 0.75rem !important;
+        margin-bottom: 0 !important;
+        font-size: 0.875rem !important;
+        padding: 0.5rem !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
     .attendance-table .action-button:last-child {
@@ -364,23 +367,23 @@
     
     /* Force proper spacing between buttons */
     .attendance-table .space-y-2 > * + * {
-        margin-top: 0.75rem !important;
+        margin-top: 0 !important;
     }
     
-    .attendance-table .space-y-1 > * + * {
-        margin-top: 0.5rem !important;
+    .attendance-table .space-x-2 > * + * {
+        margin-left: 0.5rem !important;
     }
     
     /* Ensure button containers have proper height */
     .attendance-table td:last-child {
-        min-height: 120px !important;
-        vertical-align: top !important;
+        min-height: 60px !important;
+        vertical-align: middle !important;
         padding: 0.5rem !important;
     }
     
     /* Button spacing override for Tailwind */
     .attendance-table .space-y-2 > button {
-        margin-top: 0.75rem !important;
+        margin-top: 0 !important;
     }
     
     .attendance-table .space-y-2 > button:first-child {
@@ -416,6 +419,12 @@
     .attendance-table .action-button {
         word-wrap: normal !important;
         overflow-wrap: normal !important;
+    }
+    
+    /* Icon-only button styling */
+    .attendance-table .action-button i {
+        font-size: 14px !important;
+        line-height: 1 !important;
     }
 </style>
 <div class="py-6">
@@ -493,7 +502,7 @@
                             @if($session->scheduled_start_time)
                                 <div class="flex justify-between items-start">
                                     <span class="text-gray-600">Scheduled Start:</span>
-                                    <span class="font-medium text-right">{{ $session->scheduled_start_time->format('M d, Y H:i') }}</span>
+                                    <span class="font-medium text-right">{{ $session->scheduled_start_time ? $session->scheduled_start_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') : 'N/A' }}</span>
                                 </div>
                                 <div class="flex justify-between items-start">
                                     <span class="text-gray-600">Grace Period End:</span>
@@ -503,7 +512,7 @@
                             @if($session->scheduled_end_time)
                                 <div class="flex justify-between items-start">
                                     <span class="text-gray-600">Scheduled End:</span>
-                                    <span class="font-medium text-right">{{ $session->scheduled_end_time->format('M d, Y H:i') }}</span>
+                                    <span class="font-medium text-right">{{ $session->scheduled_end_time ? $session->scheduled_end_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') : 'N/A' }}</span>
                                 </div>
                             @endif
                             @if($session->end_time)
@@ -935,18 +944,18 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="flex flex-col space-y-2">
+                                                            <div class="flex space-x-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                        class="action-button bg-blue-500 text-white">
-                                                                    <i class="fas fa-edit mr-1.5"></i>
-                                                                    Edit
+                                                                        class="action-button bg-blue-500 text-white"
+                                                                        title="Edit Attendance">
+                                                                    <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button type="button" 
                                                                         onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                        class="action-button bg-red-500 text-white">
-                                                                    <i class="fas fa-trash mr-1.5"></i>
-                                                                    Delete
+                                                                        class="action-button bg-red-500 text-white"
+                                                                        title="Delete Attendance">
+                                                                    <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -982,18 +991,18 @@
                                                                 <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
                                                             </div>
                                                             <div class="flex-shrink-0">
-                                                                <div class="flex flex-col space-y-1">
+                                                                <div class="flex space-x-2">
                                                                     <button type="button" 
                                                                             onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1">
-                                                                        <i class="fas fa-edit mr-1"></i>
-                                                                        Edit
+                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1"
+                                                                            title="Edit Attendance">
+                                                                        <i class="fas fa-edit"></i>
                                                                     </button>
                                                                     <button type="button" 
                                                                             onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1">
-                                                                        <i class="fas fa-trash mr-1"></i>
-                                                                        Delete
+                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1"
+                                                                            title="Delete Attendance">
+                                                                        <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -1144,18 +1153,18 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="flex flex-col space-y-2">
+                                                            <div class="flex space-x-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                        class="action-button bg-blue-500 text-white">
-                                                                    <i class="fas fa-edit mr-1.5"></i>
-                                                                    Edit
+                                                                        class="action-button bg-blue-500 text-white"
+                                                                        title="Edit Attendance">
+                                                                    <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button type="button" 
                                                                         onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                        class="action-button bg-red-500 text-white">
-                                                                    <i class="fas fa-trash mr-1.5"></i>
-                                                                    Delete
+                                                                        class="action-button bg-red-500 text-white"
+                                                                        title="Delete Attendance">
+                                                                    <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -1191,18 +1200,18 @@
                                                                 <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
                                                             </div>
                                                             <div class="flex-shrink-0">
-                                                                <div class="flex flex-col space-y-1">
+                                                                <div class="flex space-x-2">
                                                                     <button type="button" 
                                                                             onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1">
-                                                                        <i class="fas fa-edit mr-1"></i>
-                                                                        Edit
+                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1"
+                                                                            title="Edit Attendance">
+                                                                        <i class="fas fa-edit"></i>
                                                                     </button>
                                                                     <button type="button" 
                                                                             onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1">
-                                                                        <i class="fas fa-trash mr-1"></i>
-                                                                        Delete
+                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1"
+                                                                            title="Delete Attendance">
+                                                                        <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -1353,18 +1362,18 @@
                                                             {{ $attendance->check_in_time->format('M d, Y H:i:s') }}
                                                         </td>
                                                         <td class="px-2 py-4 text-sm text-gray-900">
-                                                            <div class="flex flex-col space-y-2">
+                                                            <div class="flex space-x-2">
                                                                 <button type="button" 
                                                                         onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                        class="action-button bg-blue-500 text-white">
-                                                                    <i class="fas fa-edit mr-1.5"></i>
-                                                                    Edit
+                                                                        class="action-button bg-blue-500 text-white"
+                                                                        title="Edit Attendance">
+                                                                    <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 <button type="button" 
                                                                         onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                        class="action-button bg-red-500 text-white">
-                                                                    <i class="fas fa-trash mr-1.5"></i>
-                                                                    Delete
+                                                                        class="action-button bg-red-500 text-white"
+                                                                        title="Delete Attendance">
+                                                                    <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -1400,18 +1409,18 @@
                                                                 <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
                                                             </div>
                                                             <div class="flex-shrink-0">
-                                                                <div class="flex flex-col space-y-1">
+                                                                <div class="flex space-x-2">
                                                                     <button type="button" 
                                                                             onclick="editAttendance('{{ $attendance->id }}', '{{ $attendance->status }}', '{{ $attendance->pc_number ?? '' }}', '{{ $attendance->device_type ?? '' }}')" 
-                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1">
-                                                                        <i class="fas fa-edit mr-1"></i>
-                                                                        Edit
+                                                                            class="action-button bg-blue-500 text-white text-xs px-2 py-1"
+                                                                            title="Edit Attendance">
+                                                                        <i class="fas fa-edit"></i>
                                                                     </button>
                                                                     <button type="button" 
                                                                             onclick="deleteAttendance('{{ $attendance->id }}', '{{ addslashes($attendance->user->name) }}')" 
-                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1">
-                                                                        <i class="fas fa-trash mr-1"></i>
-                                                                        Delete
+                                                                            class="action-button bg-red-500 text-white text-xs px-2 py-1"
+                                                                            title="Delete Attendance">
+                                                                        <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -1570,7 +1579,7 @@
                                     Late: {{ $lateTargetStudents }}<br>
                                     Absent: {{ $absentTargetStudents }}<br>
                                     Not Marked: {{ $notMarkedYet }}<br>
-                                    Session Start: {{ $session->scheduled_start_time ? $session->scheduled_start_time->format('H:i') : 'N/A' }}<br>
+                                    Session Start: {{ $session->scheduled_start_time ? $session->scheduled_start_time->setTimezone('Asia/Manila')->format('g:i A') : 'N/A' }}<br>
                                     Grace Period: {{ $session->grace_period_minutes ?? 15 }} minutes<br>
                                     Current Time: {{ now()->format('H:i') }}
                                 </div>

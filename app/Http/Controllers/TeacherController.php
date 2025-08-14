@@ -632,8 +632,8 @@ class TeacherController extends Controller
             'name' => $request->name,
             'section' => $request->section,
             'session_type' => $request->session_type,
-            'scheduled_start_time' => $request->scheduled_start_time ? now()->parse($request->scheduled_start_time) : null,
-            'scheduled_end_time' => $request->scheduled_end_time ? now()->parse($request->scheduled_end_time) : null,
+            'scheduled_start_time' => $request->scheduled_start_time ? now()->setTimezone('Asia/Manila')->parse($request->scheduled_start_time)->setTimezone('Asia/Manila') : null,
+            'scheduled_end_time' => $request->scheduled_end_time ? now()->setTimezone('Asia/Manila')->parse($request->scheduled_end_time)->setTimezone('Asia/Manila') : null,
             'grace_period_minutes' => $request->grace_period_minutes ?? 15,
             'notes' => $request->notes,
         ]);
