@@ -649,11 +649,35 @@
         font-size: 0.875rem !important;
         opacity: 0.8 !important;
         transition: all 0.2s ease !important;
+        display: inline-block !important;
+        margin: 0 auto !important;
     }
 
-    .attendance-table th:hover i {
+    /* Make the following table headers icon-only (hide text) */
+    .attendance-table thead th:nth-child(3), /* Year Level */
+    .attendance-table thead th:nth-child(4), /* Student Type */
+    .attendance-table thead th:nth-child(5), /* Their Section */
+    .attendance-table thead th:nth-child(6), /* Status */
+    .attendance-table thead th:nth-child(7), /* PC Number/Device Type/Image */
+    .attendance-table thead th:nth-child(8), /* Check-in Time */
+    .attendance-table thead th:nth-child(9)  /* Actions */ {
+        font-size: 0 !important;        /* hide header text */
+        text-align: center !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        letter-spacing: normal !important;
+    }
+
+    /* Ensure icons remain visible when text is hidden */
+    .attendance-table thead th:nth-child(3) i,
+    .attendance-table thead th:nth-child(4) i,
+    .attendance-table thead th:nth-child(5) i,
+    .attendance-table thead th:nth-child(6) i,
+    .attendance-table thead th:nth-child(7) i,
+    .attendance-table thead th:nth-child(8) i,
+    .attendance-table thead th:nth-child(9) i {
+        font-size: 0.9rem !important;
         opacity: 1 !important;
-        transform: scale(1.1) !important;
     }
 
     /* Responsive table improvements */
