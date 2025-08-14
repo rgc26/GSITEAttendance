@@ -68,6 +68,10 @@ class TeacherController extends Controller
 
     public function showSubject(Subject $subject)
     {
+        // Add debugging to see what's happening
+        \Log::info('showSubject called with subject ID: ' . $subject->id ?? 'NULL');
+        \Log::info('Subject data: ' . json_encode($subject->toArray()));
+        
         $this->authorize('view', $subject);
         
         $sessions = $subject->attendanceSessions()->with('attendances.user')->latest()->get();
@@ -155,6 +159,10 @@ class TeacherController extends Controller
 
     public function createSession(Subject $subject)
     {
+        // Add debugging to see what's happening
+        \Log::info('createSession called with subject ID: ' . $subject->id ?? 'NULL');
+        \Log::info('Subject data: ' . json_encode($subject->toArray()));
+        
         $this->authorize('view', $subject);
         return view('teacher.sessions.create', compact('subject'));
     }

@@ -1430,19 +1430,19 @@
 
                     <!-- Full-width container for attendance tables -->
                     <div class="w-full mx-auto px-0">
-                        <!-- Regular Students Accordion -->
-                        @if($regularAttendances->count() > 0)
+                    <!-- Regular Students Accordion -->
+                    @if($regularAttendances->count() > 0)
                             <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                                 <div class="accordion-header bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 cursor-pointer transition-all duration-300">
                                     <div class="px-6 py-5">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
                                                 <i class="fas fa-chevron-down accordion-icon mr-4 text-white transition-transform duration-200 text-lg"></i>
                                                 <h3 class="text-xl font-semibold text-white">
                                                     <i class="fas fa-users text-white mr-3 text-lg"></i>
                                                     Regular Students (Section {{ $session->section }})
-                                                </h3>
-                                            </div>
+                                            </h3>
+                                        </div>
                                             <div class="flex items-center space-x-6">
                                                 <div class="text-center">
                                                     <div class="text-white text-sm font-medium">Total Students</div>
@@ -1452,12 +1452,12 @@
                                                     <div class="text-white text-sm font-medium">Present</div>
                                                     <div class="text-white text-2xl font-bold">{{ $regularAttendances->where('status', 'present')->count() }}</div>
                                                 </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-content bg-white">
-                                    <div class="p-4">
+                            </div>
+                            <div class="accordion-content bg-white">
+                                <div class="p-4">
                                         <div class="w-full table-wrapper">
                                             <table class="w-full divide-y divide-gray-200 attendance-table">
                                                 <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
@@ -1494,25 +1494,25 @@
                                                                 <i class="fas fa-check-circle text-purple-600"></i>
                                                             </div>
                                                         </th>
-                                                        @if($session->session_type === 'lab')
+                                                    @if($session->session_type === 'lab')
                                                             <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="PC Number">
                                                                 <div class="flex items-center justify-center">
                                                                     <i class="fas fa-desktop text-purple-600"></i>
                                                                 </div>
                                                             </th>
-                                                        @elseif($session->session_type === 'online')
+                                                    @elseif($session->session_type === 'online')
                                                             <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="Device Type">
                                                                 <div class="flex items-center justify-center">
                                                                     <i class="fas fa-mobile-alt text-purple-600"></i>
                                                                 </div>
                                                             </th>
-                                                        @elseif($session->session_type === 'lecture')
+                                                    @elseif($session->session_type === 'lecture')
                                                             <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="Attached Image">
                                                                 <div class="flex items-center justify-center">
                                                                     <i class="fas fa-image text-purple-600"></i>
                                                                 </div>
                                                             </th>
-                                                        @endif
+                                                    @endif
                                                         <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="Check-in Time">
                                                             <div class="flex items-center justify-center">
                                                                 <i class="fas fa-clock text-purple-600"></i>
@@ -1523,93 +1523,93 @@
                                                                 <i class="fas fa-cogs text-purple-600"></i>
                                                             </div>
                                                         </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="bg-white divide-y divide-gray-200">
-                                                    @foreach($regularAttendances->where('status', '!=', 'absent') as $attendance)
-                                                        <tr class="bg-green-50 attendance-row" 
-                                                            data-name="{{ strtolower($attendance->user->name) }}"
-                                                            data-status="{{ $attendance->status }}"
-                                                            data-section="regular"
-                                                            data-type="{{ $attendance->user->student_type }}">
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                @foreach($regularAttendances->where('status', '!=', 'absent') as $attendance)
+                                                    <tr class="bg-green-50 attendance-row" 
+                                                        data-name="{{ strtolower($attendance->user->name) }}"
+                                                        data-status="{{ $attendance->status }}"
+                                                        data-section="regular"
+                                                        data-type="{{ $attendance->user->student_type }}">
                                                             <td class="px-3 py-4">
-                                                                <div class="flex items-center">
-                                                                    <div class="flex-shrink-0 h-10 w-10 mr-3">
-                                                                        @if($attendance->user->profile_picture)
-                                                                            <img class="h-10 w-10 rounded-full object-cover profile-picture" 
-                                                                                 src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                                 alt="{{ $attendance->user->name }}'s profile picture">
-                                                                        @else
-                                                                            <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                                {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                                                    @if($attendance->user->profile_picture)
+                                                                        <img class="h-10 w-10 rounded-full object-cover profile-picture" 
+                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                             alt="{{ $attendance->user->name }}'s profile picture">
+                                                                    @else
+                                                                        <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
                                                                     <div class="min-w-0">
                                                                         <div class="text-sm font-medium text-gray-900 truncate">{{ $attendance->user->name }}</div>
                                                                         <div class="text-sm text-gray-500 student-email">{{ $attendance->user->email }}</div>
-                                                                    </div>
                                                                 </div>
-                                                            </td>
+                                                            </div>
+                                                        </td>
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                {{ $attendance->user->student_id ?? 'N/A' }}
-                                                            </td>
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        </td>
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                {{ $attendance->user->year_level ?? 'N/A' }}
-                                                            </td>
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        </td>
                                                             <td class="px-2 py-4">
                                                                 <span class="status-badge 
-                                                                    @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
-                                                                    @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
-                                                                    @else bg-purple-100 text-purple-800
-                                                                    @endif">
-                                                                    {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
-                                                                </span>
-                                                            </td>
+                                                                @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
+                                                                @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
+                                                                @else bg-purple-100 text-purple-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
+                                                            </span>
+                                                        </td>
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="status-badge bg-purple-100 text-purple-800">
-                                                                    {{ $attendance->user->section }}
-                                                                </span>
-                                                            </td>
+                                                                {{ $attendance->user->section }}
+                                                            </span>
+                                                        </td>
                                                             <td class="px-2 py-4">
                                                                 <span class="status-badge 
-                                                                    @if($attendance->status === 'present') bg-green-100 text-green-800
-                                                                    @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
-                                                                    @else bg-red-100 text-red-800
-                                                                    @endif">
-                                                                    {{ ucfirst($attendance->status) }}
-                                                                </span>
-                                                            </td>
-                                                            @if($session->session_type === 'lab')
+                                                                @if($attendance->status === 'present') bg-green-100 text-green-800
+                                                                @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
+                                                                @else bg-red-100 text-red-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->status) }}
+                                                            </span>
+                                                        </td>
+                                                        @if($session->session_type === 'lab')
                                                                 <td class="px-2 py-4 text-sm text-gray-900">
                                                                     <span class="status-badge bg-blue-100 text-blue-800">
-                                                                        {{ $attendance->pc_number ?? 'N/A' }}
-                                                                    </span>
-                                                                </td>
-                                                            @elseif($session->session_type === 'online')
+                                                                    {{ $attendance->pc_number ?? 'N/A' }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'online')
                                                                 <td class="px-2 py-4 text-sm text-gray-900">
                                                                     <span class="status-badge 
-                                                                        @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
-                                                                        @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
-                                                                        @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
-                                                                        @else bg-gray-100 text-gray-800
-                                                                        @endif">
-                                                                        {{ ucfirst($attendance->device_type ?? 'N/A') }}
-                                                                    </span>
-                                                                </td>
-                                                            @elseif($session->session_type === 'lecture')
+                                                                    @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
+                                                                    @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
+                                                                    @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
+                                                                    @else bg-gray-100 text-gray-800
+                                                                    @endif">
+                                                                    {{ ucfirst($attendance->device_type ?? 'N/A') }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'lecture')
                                                                 <td class="px-2 py-4 text-sm text-gray-900">
-                                                                    @if($attendance->attached_image)
+                                                                @if($attendance->attached_image)
                                                                         <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
                                                                            class="action-button bg-blue-500 text-white">
                                                                             <i class="fas fa-image mr-1.5"></i>
-                                                                            View Image
-                                                                        </a>
-                                                                    @else
-                                                                        <span class="text-gray-500 text-xs">No image</span>
-                                                                    @endif
-                                                                </td>
-                                                            @endif
+                                                                        View Image
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-gray-500 text-xs">No image</span>
+                                                                @endif
+                                                            </td>
+                                                        @endif
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 {{ $attendance->check_in_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') }}
                                                             </td>
@@ -1628,36 +1628,36 @@
                                                                         <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </div>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                            
-                                            <!-- Absent Students for Regular Section -->
-                                            @if($regularAttendances->where('status', 'absent')->count() > 0)
-                                                <div class="mt-4 pt-4 border-t border-gray-200">
-                                                    <h4 class="text-sm font-medium text-red-700 mb-3">
-                                                        <i class="fas fa-user-times mr-2"></i>
-                                                        Absent Students ({{ $regularAttendances->where('status', 'absent')->count() }})
-                                                    </h4>
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                        @foreach($regularAttendances->where('status', 'absent') as $attendance)
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        
+                                        <!-- Absent Students for Regular Section -->
+                                        @if($regularAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $regularAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($regularAttendances->where('status', 'absent') as $attendance)
                                                             <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
                                                                 <div class="flex-shrink-0 h-8 w-8 mr-3">
-                                                                    @if($attendance->user->profile_picture)
-                                                                        <img class="h-8 w-8 rounded-full object-cover" 
-                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                             alt="{{ $attendance->user->name }}'s profile picture">
-                                                                    @else
-                                                                        <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="min-w-0 flex-1">
-                                                                    <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
-                                                                    <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
                                                                     <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
                                                                 </div>
                                                                 <div class="flex-shrink-0">
@@ -1675,31 +1675,31 @@
                                                                             <i class="fas fa-trash"></i>
                                                                         </button>
                                                                     </div>
-                                                                </div>
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
-                        @endif
+                        </div>
+                    @endif
 
-                        <!-- Irregular Students Accordion -->
-                        @if($irregularAttendances->count() > 0)
+                    <!-- Irregular Students Accordion -->
+                    @if($irregularAttendances->count() > 0)
                             <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                                 <div class="accordion-header bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 cursor-pointer transition-all duration-300">
                                     <div class="px-6 py-5">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
                                                 <i class="fas fa-chevron-down accordion-icon mr-4 text-white transition-transform duration-200 text-lg"></i>
                                                 <h3 class="text-xl font-semibold text-white">
                                                     <i class="fas fa-user-plus text-white mr-3 text-lg"></i>
-                                                    Irregular Students (Other Sections)
-                                                </h3>
-                                            </div>
+                                                Irregular Students (Other Sections)
+                                            </h3>
+                                        </div>
                                             <div class="flex items-center space-x-6">
                                                 <div class="text-center">
                                                     <div class="text-white text-sm font-medium">Total Students</div>
@@ -1709,12 +1709,12 @@
                                                     <div class="text-white text-sm font-medium">Present</div>
                                                     <div class="text-white text-2xl font-bold">{{ $irregularAttendances->where('status', 'present')->count() }}</div>
                                                 </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="accordion-content bg-white">
-                                    <div class="p-4">
+                            </div>
+                            <div class="accordion-content bg-white">
+                                <div class="p-4">
                                         <div class="w-full table-wrapper">
                                             <table class="w-full divide-y divide-gray-200 attendance-table">
                                                 <thead class="bg-gradient-to-r from-purple-100 to-purple-200 border-b-2 border-purple-300">
@@ -1751,25 +1751,25 @@
                                                                 <i class="fas fa-check-circle text-purple-600"></i>
                                                             </div>
                                                         </th>
-                                                        @if($session->session_type === 'lab')
+                                                    @if($session->session_type === 'lab')
                                                             <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="PC Number">
                                                                 <div class="flex items-center justify-center">
                                                                     <i class="fas fa-desktop text-purple-600"></i>
                                                                 </div>
                                                             </th>
-                                                        @elseif($session->session_type === 'online')
+                                                    @elseif($session->session_type === 'online')
                                                             <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="Device Type">
                                                                 <div class="flex items-center justify-center">
                                                                     <i class="fas fa-mobile-alt text-purple-600"></i>
                                                                 </div>
                                                             </th>
-                                                        @elseif($session->session_type === 'lecture')
+                                                    @elseif($session->session_type === 'lecture')
                                                             <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="Attached Image">
                                                                 <div class="flex items-center justify-center">
                                                                     <i class="fas fa-image text-purple-600"></i>
                                                                 </div>
                                                             </th>
-                                                        @endif
+                                                    @endif
                                                         <th class="px-3 py-4 text-left text-sm font-bold text-purple-800 uppercase tracking-wider border-l border-purple-300" title="Check-in Time">
                                                             <div class="flex items-center justify-center">
                                                                 <i class="fas fa-clock text-purple-600"></i>
@@ -1780,93 +1780,93 @@
                                                                 <i class="fas fa-cogs text-purple-600"></i>
                                                             </div>
                                                         </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="bg-white divide-y divide-gray-200">
-                                                    @foreach($irregularAttendances->where('status', '!=', 'absent') as $attendance)
-                                                        <tr class="bg-yellow-50 attendance-row" 
-                                                            data-name="{{ strtolower($attendance->user->name) }}"
-                                                            data-status="{{ $attendance->status }}"
-                                                            data-section="irregular"
-                                                            data-type="{{ $attendance->user->student_type }}">
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                @foreach($irregularAttendances->where('status', '!=', 'absent') as $attendance)
+                                                    <tr class="bg-yellow-50 attendance-row" 
+                                                        data-name="{{ strtolower($attendance->user->name) }}"
+                                                        data-status="{{ $attendance->status }}"
+                                                        data-section="irregular"
+                                                        data-type="{{ $attendance->user->student_type }}">
                                                             <td class="px-3 py-4">
-                                                                <div class="flex items-center">
-                                                                    <div class="flex-shrink-0 h-10 w-10 mr-3">
-                                                                        @if($attendance->user->profile_picture)
-                                                                            <img class="h-10 w-10 rounded-full object-cover profile-picture" 
-                                                                                 src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                                 alt="{{ $attendance->user->name }}'s profile picture">
-                                                                        @else
-                                                                            <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                                {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                                                    @if($attendance->user->profile_picture)
+                                                                        <img class="h-10 w-10 rounded-full object-cover profile-picture" 
+                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                             alt="{{ $attendance->user->name }}'s profile picture">
+                                                                    @else
+                                                                        <div class="h-10 w-10 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
                                                                     <div class="min-w-0">
                                                                         <div class="text-sm font-medium text-gray-900 truncate">{{ $attendance->user->name }}</div>
                                                                         <div class="text-sm text-gray-500 student-email">{{ $attendance->user->email }}</div>
-                                                                    </div>
                                                                 </div>
-                                                            </td>
+                                                            </div>
+                                                        </td>
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                {{ $attendance->user->student_id ?? 'N/A' }}
-                                                            </td>
+                                                            {{ $attendance->user->student_id ?? 'N/A' }}
+                                                        </td>
                                                             <td class="px-2 py-4 text-sm text-gray-900">
-                                                                {{ $attendance->user->year_level ?? 'N/A' }}
-                                                            </td>
+                                                            {{ $attendance->user->year_level ?? 'N/A' }}
+                                                        </td>
                                                             <td class="px-2 py-4">
                                                                 <span class="status-badge 
-                                                                    @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
-                                                                    @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
-                                                                    @else bg-purple-100 text-purple-800
-                                                                    @endif">
-                                                                    {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
-                                                                </span>
-                                                            </td>
+                                                                @if($attendance->user->student_type == 'regular') bg-blue-100 text-blue-800
+                                                                @elseif($attendance->user->student_type == 'irregular') bg-yellow-100 text-yellow-800
+                                                                @else bg-purple-100 text-purple-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->user->student_type ?? 'N/A') }}
+                                                            </span>
+                                                        </td>
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 <span class="status-badge bg-purple-100 text-purple-800">
-                                                                    {{ $attendance->user->section }}
-                                                                </span>
-                                                            </td>
+                                                                {{ $attendance->user->section }}
+                                                            </span>
+                                                        </td>
                                                             <td class="px-2 py-4">
                                                                 <span class="status-badge 
-                                                                    @if($attendance->status === 'present') bg-green-100 text-green-800
-                                                                    @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
-                                                                    @else bg-red-100 text-red-800
-                                                                    @endif">
-                                                                    {{ ucfirst($attendance->status) }}
-                                                                </span>
-                                                            </td>
-                                                            @if($session->session_type === 'lab')
+                                                                @if($attendance->status === 'present') bg-green-100 text-green-800
+                                                                @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800
+                                                                @else bg-red-100 text-red-800
+                                                                @endif">
+                                                                {{ ucfirst($attendance->status) }}
+                                                            </span>
+                                                        </td>
+                                                        @if($session->session_type === 'lab')
                                                                 <td class="px-2 py-4 text-sm text-gray-900">
                                                                     <span class="status-badge bg-blue-100 text-blue-800">
-                                                                        {{ $attendance->pc_number ?? 'N/A' }}
-                                                                    </span>
-                                                                </td>
-                                                            @elseif($session->session_type === 'online')
+                                                                    {{ $attendance->pc_number ?? 'N/A' }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'online')
                                                                 <td class="px-2 py-4 text-sm text-gray-900">
                                                                     <span class="status-badge 
-                                                                        @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
-                                                                        @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
-                                                                        @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
-                                                                        @else bg-gray-100 text-gray-800
-                                                                        @endif">
-                                                                        {{ ucfirst($attendance->device_type ?? 'N/A') }}
-                                                                    </span>
-                                                                </td>
-                                                            @elseif($session->session_type === 'lecture')
+                                                                    @if($attendance->device_type === 'mobile') bg-green-100 text-green-800
+                                                                    @elseif($attendance->device_type === 'desktop') bg-blue-100 text-blue-800
+                                                                    @elseif($attendance->device_type === 'laptop') bg-purple-100 text-purple-800
+                                                                    @else bg-gray-100 text-gray-800
+                                                                    @endif">
+                                                                    {{ ucfirst($attendance->device_type ?? 'N/A') }}
+                                                                </span>
+                                                            </td>
+                                                        @elseif($session->session_type === 'lecture')
                                                                 <td class="px-2 py-4 text-sm text-gray-900">
-                                                                    @if($attendance->attached_image)
+                                                                @if($attendance->attached_image)
                                                                         <a href="{{ asset('storage/' . $attendance->attached_image) }}" target="_blank" 
                                                                            class="action-button bg-blue-500 text-white">
                                                                             <i class="fas fa-image mr-1.5"></i>
-                                                                            View Image
-                                                                        </a>
-                                                                    @else
-                                                                        <span class="text-gray-500 text-xs">No image</span>
-                                                                    @endif
-                                                                </td>
-                                                            @endif
+                                                                        View Image
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-gray-500 text-xs">No image</span>
+                                                                @endif
+                                                            </td>
+                                                        @endif
                                                             <td class="px-2 py-4 text-sm text-gray-900">
                                                                 {{ $attendance->check_in_time->setTimezone('Asia/Manila')->format('M d, Y g:i A') }}
                                                             </td>
@@ -1885,36 +1885,36 @@
                                                                         <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </div>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                            
-                                            <!-- Absent Students for Irregular Section -->
-                                            @if($irregularAttendances->where('status', 'absent')->count() > 0)
-                                                <div class="mt-4 pt-4 border-t border-gray-200">
-                                                    <h4 class="text-sm font-medium text-red-700 mb-3">
-                                                        <i class="fas fa-user-times mr-2"></i>
-                                                        Absent Students ({{ $irregularAttendances->where('status', 'absent')->count() }})
-                                                    </h4>
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                        @foreach($irregularAttendances->where('status', 'absent') as $attendance)
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        
+                                        <!-- Absent Students for Irregular Section -->
+                                        @if($irregularAttendances->where('status', 'absent')->count() > 0)
+                                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                                <h4 class="text-sm font-medium text-red-700 mb-3">
+                                                    <i class="fas fa-user-times mr-2"></i>
+                                                    Absent Students ({{ $irregularAttendances->where('status', 'absent')->count() }})
+                                                </h4>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    @foreach($irregularAttendances->where('status', 'absent') as $attendance)
                                                             <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
                                                                 <div class="flex-shrink-0 h-8 w-8 mr-3">
-                                                                    @if($attendance->user->profile_picture)
-                                                                        <img class="h-8 w-8 rounded-full object-cover" 
-                                                                             src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
-                                                                             alt="{{ $attendance->user->name }}'s profile picture">
-                                                                    @else
-                                                                        <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
-                                                                            {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="min-w-0 flex-1">
-                                                                    <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
-                                                                    <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
+                                                                @if($attendance->user->profile_picture)
+                                                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                                                         src="{{ asset('storage/' . $attendance->user->profile_picture) }}" 
+                                                                         alt="{{ $attendance->user->name }}'s profile picture">
+                                                                @else
+                                                                    <div class="h-8 w-8 rounded-full profile-placeholder flex items-center justify-center text-xs">
+                                                                        {{ strtoupper(substr($attendance->user->name, 0, 1)) }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="min-w-0 flex-1">
+                                                                <p class="text-sm font-medium text-red-900 truncate">{{ $attendance->user->name }}</p>
+                                                                <p class="text-xs text-red-600 truncate">{{ $attendance->user->email }}</p>
                                                                     <p class="text-xs text-red-500">{{ $attendance->user->student_id ?? 'N/A' }}</p>
                                                                 </div>
                                                                 <div class="flex-shrink-0">
@@ -1932,18 +1932,18 @@
                                                                             <i class="fas fa-trash"></i>
                                                                         </button>
                                                                     </div>
-                                                                </div>
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
+                        </div>
                 </div>
             </div>
         </div>
