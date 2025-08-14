@@ -426,6 +426,105 @@
         font-size: 14px !important;
         line-height: 1 !important;
     }
+
+    /* Enhanced Section Header Styling */
+    .accordion-header {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .accordion-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        pointer-events: none;
+    }
+
+    .accordion-header:hover::before {
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+    }
+
+    /* Section header count styling */
+    .accordion-header .text-center {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .accordion-header .text-center:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+
+    /* Improved accordion icon animation */
+    .accordion-icon {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .accordion-header[aria-expanded="true"] .accordion-icon {
+        transform: rotate(180deg);
+    }
+
+    /* Section-specific color enhancements */
+    .accordion-header.bg-gradient-to-r.from-purple-500.to-purple-600 {
+        box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+    }
+
+    .accordion-header.bg-gradient-to-r.from-green-500.to-green-600 {
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .accordion-header.bg-gradient-to-r.from-yellow-500.to-yellow-600 {
+        box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+    }
+
+    /* Responsive header adjustments */
+    @media (max-width: 768px) {
+        .accordion-header .px-6 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .accordion-header .py-5 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        
+        .accordion-header h3 {
+            font-size: 1.125rem;
+        }
+        
+        .accordion-header .text-2xl {
+            font-size: 1.25rem;
+        }
+        
+        .accordion-header .space-x-6 {
+            gap: 1rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .accordion-header .flex.items-center.justify-between {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .accordion-header .space-x-6 {
+            gap: 0.75rem;
+        }
+        
+        .accordion-header .text-center {
+            padding: 0.375rem 0.75rem;
+        }
+    }
 </style>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -810,24 +909,26 @@
                 <div class="space-y-4">
                     <!-- Block Students Accordion -->
                     @if($blockAttendances->count() > 0)
-                        <div class="border border-gray-200 rounded-lg overflow-hidden">
-                            <div class="accordion-header bg-purple-50 hover:bg-purple-100 cursor-pointer transition-colors duration-200">
-                                <div class="p-4">
+                        <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                            <div class="accordion-header bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 cursor-pointer transition-all duration-300">
+                                <div class="px-6 py-5">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
-                                            <i class="fas fa-chevron-down accordion-icon mr-3 text-purple-600 transition-transform duration-200"></i>
-                                            <h3 class="text-lg font-medium text-purple-900">
-                                                <i class="fas fa-user-clock text-purple-600 mr-2"></i>
-                                                Block Students
+                                            <i class="fas fa-chevron-down accordion-icon mr-4 text-white transition-transform duration-200 text-lg"></i>
+                                            <h3 class="text-xl font-semibold text-white">
+                                                <i class="fas fa-user-clock text-white mr-3 text-lg"></i>
+                                                Block Students (Section {{ $session->section }})
                                             </h3>
                                         </div>
-                                        <div class="flex items-center space-x-4">
-                                            <span class="text-sm text-purple-600">
-                                                <span class="font-medium">{{ $blockAttendances->count() }}</span> students
-                                            </span>
-                                            <span class="text-sm text-purple-600">
-                                                <span class="font-medium">{{ $blockAttendances->where('status', 'present')->count() }}</span> present
-                                            </span>
+                                        <div class="flex items-center space-x-6">
+                                            <div class="text-center">
+                                                <div class="text-white text-sm font-medium">Total Students</div>
+                                                <div class="text-white text-2xl font-bold">{{ $blockAttendances->count() }}</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-white text-sm font-medium">Present</div>
+                                                <div class="text-white text-2xl font-bold">{{ $blockAttendances->where('status', 'present')->count() }}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1019,24 +1120,26 @@
 
                     <!-- Regular Students Accordion -->
                     @if($regularAttendances->count() > 0)
-                        <div class="border border-gray-200 rounded-lg overflow-hidden">
-                            <div class="accordion-header bg-green-50 hover:bg-green-100 cursor-pointer transition-colors duration-200">
-                                <div class="p-4">
+                        <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                            <div class="accordion-header bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 cursor-pointer transition-all duration-300">
+                                <div class="px-6 py-5">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
-                                            <i class="fas fa-chevron-down accordion-icon mr-3 text-green-600 transition-transform duration-200"></i>
-                                            <h3 class="text-lg font-medium text-green-900">
-                                                <i class="fas fa-users text-green-600 mr-2"></i>
-                                                Section {{ $session->section }} Students
+                                            <i class="fas fa-chevron-down accordion-icon mr-4 text-white transition-transform duration-200 text-lg"></i>
+                                            <h3 class="text-xl font-semibold text-white">
+                                                <i class="fas fa-users text-white mr-3 text-lg"></i>
+                                                Regular Students (Section {{ $session->section }})
                                             </h3>
                                         </div>
-                                        <div class="flex items-center space-x-4">
-                                            <span class="text-sm text-green-600">
-                                                <span class="font-medium">{{ $regularAttendances->count() }}</span> students
-                                            </span>
-                                            <span class="text-sm text-green-600">
-                                                <span class="font-medium">{{ $regularAttendances->where('status', 'present')->count() }}</span> present
-                                            </span>
+                                        <div class="flex items-center space-x-6">
+                                            <div class="text-center">
+                                                <div class="text-white text-sm font-medium">Total Students</div>
+                                                <div class="text-white text-2xl font-bold">{{ $regularAttendances->count() }}</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-white text-sm font-medium">Present</div>
+                                                <div class="text-white text-2xl font-bold">{{ $regularAttendances->where('status', 'present')->count() }}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1228,24 +1331,26 @@
 
                     <!-- Irregular Students Accordion -->
                     @if($irregularAttendances->count() > 0)
-                        <div class="border border-gray-200 rounded-lg overflow-hidden">
-                            <div class="accordion-header bg-yellow-50 hover:bg-yellow-100 cursor-pointer transition-colors duration-200">
-                                <div class="p-4">
+                        <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                            <div class="accordion-header bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 cursor-pointer transition-all duration-300">
+                                <div class="px-6 py-5">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
-                                            <i class="fas fa-chevron-down accordion-icon mr-3 text-yellow-600 transition-transform duration-200"></i>
-                                            <h3 class="text-lg font-medium text-yellow-900">
-                                                <i class="fas fa-user-plus text-yellow-600 mr-2"></i>
+                                            <i class="fas fa-chevron-down accordion-icon mr-4 text-white transition-transform duration-200 text-lg"></i>
+                                            <h3 class="text-xl font-semibold text-white">
+                                                <i class="fas fa-user-plus text-white mr-3 text-lg"></i>
                                                 Irregular Students (Other Sections)
                                             </h3>
                                         </div>
-                                        <div class="flex items-center space-x-4">
-                                            <span class="text-sm text-yellow-600">
-                                                <span class="font-medium">{{ $irregularAttendances->count() }}</span> students
-                                            </span>
-                                            <span class="text-sm text-yellow-600">
-                                                <span class="font-medium">{{ $irregularAttendances->where('status', 'present')->count() }}</span> present
-                                            </span>
+                                        <div class="flex items-center space-x-6">
+                                            <div class="text-center">
+                                                <div class="text-white text-sm font-medium">Total Students</div>
+                                                <div class="text-white text-2xl font-bold">{{ $irregularAttendances->count() }}</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-white text-sm font-medium">Present</div>
+                                                <div class="text-white text-2xl font-bold">{{ $irregularAttendances->where('status', 'present')->count() }}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
