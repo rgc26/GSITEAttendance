@@ -551,9 +551,12 @@ class TeacherController extends Controller
     /**
      * Delete a student user who has no attendance records
      */
-    public function deleteUser(Request $request, AttendanceSession $session, User $user)
+    public function deleteUser(Request $request, AttendanceSession $session, $userId)
     {
         $this->authorize('view', $session->subject);
+        
+        // Find the user by ID
+        $user = User::findOrFail($userId);
         
         // Check if student is from the correct section
         if ($user->section !== $session->section) {
@@ -581,23 +584,28 @@ class TeacherController extends Controller
             return redirect()->back()->with('error', 'Cannot delete student with existing related data.');
         }
 
-        // Store student information for logging
-        $studentInfo = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'section' => $user->section,
-            'deleted_by' => Auth::id(),
-            'deleted_at' => now()
-        ];
+        try {
+            // Store student information for logging
+            $studentInfo = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'section' => $user->section,
+                'deleted_by' => Auth::id(),
+                'deleted_at' => now()
+            ];
 
-        // Log the deletion (you can implement logging as needed)
-        \Log::info('Student account deleted by teacher', $studentInfo);
+            // Log the deletion (you can implement logging as needed)
+            \Log::info('Student account deleted by teacher', $studentInfo);
 
-        // Delete the student user
-        $user->delete();
+            // Delete the student user
+            $user->delete();
 
-        return redirect()->back()->with('success', "Student {$studentInfo['name']} has been deleted successfully!");
+            return redirect()->back()->with('success', "Student {$studentInfo['name']} has been deleted successfully!");
+        } catch (\Exception $e) {
+            \Log::error('Error deleting student: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while deleting the student. Please try again.');
+        }
     }
 
     public function editSession(AttendanceSession $session)

@@ -210,6 +210,41 @@
             min-height: 24px;
         }
     }
+    
+    /* Custom CSS for Delete Button */
+    .delete-student-btn {
+        position: absolute !important;
+        top: 8px !important;
+        right: 8px !important;
+        z-index: 50 !important;
+        width: 32px !important;
+        height: 32px !important;
+        background-color: #dc2626 !important;
+        color: white !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    }
+    
+    .delete-student-btn:hover {
+        background-color: #b91c1c !important;
+        transform: scale(1.1) !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    }
+    
+    .delete-student-btn:active {
+        transform: scale(0.95) !important;
+    }
+    
+    .delete-student-btn i {
+        font-size: 14px !important;
+        font-weight: bold !important;
+    }
 </style>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1295,14 +1330,14 @@
                                     <!-- Delete Button (X) - Top Right Corner -->
                                     <form action="{{ route('teacher.sessions.delete-user', ['session' => $session, 'user' => $student->id]) }}" 
                                           method="POST" 
-                                          class="absolute top-2 right-2 z-10"
+                                          class="absolute top-2 right-2 z-20"
                                           onsubmit="return confirm('Are you sure you want to delete {{ $student->name }}? This action cannot be undone and will remove their account completely.')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" 
-                                                class="bg-red-500 text-white hover:bg-red-700 rounded-full p-2 transition-colors shadow-lg"
+                                                class="delete-student-btn"
                                                 title="Delete student account">
-                                            <i class="fas fa-times text-sm"></i>
+                                            <i class="fas fa-times"></i>
                                         </button>
                                     </form>
                                     
