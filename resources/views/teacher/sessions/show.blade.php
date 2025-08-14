@@ -245,6 +245,51 @@
         font-size: 14px !important;
         font-weight: bold !important;
     }
+
+    /* Custom CSS for Students Without Attendance Records */
+    .students-without-attendance-card {
+        display: flex !important;
+        align-items: flex-start !important;
+        padding: 1rem !important;
+        background-color: #fefce8 !important;
+        border: 1px solid #fde047 !important;
+        border-radius: 0.5rem !important;
+        position: relative !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .students-without-attendance-card .student-info {
+        flex: 1 !important;
+        min-width: 0 !important;
+        margin-right: 1rem !important;
+    }
+
+    .students-without-attendance-card .action-buttons {
+        flex-shrink: 0 !important;
+        min-width: 140px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+
+    .students-without-attendance-card .action-buttons form {
+        width: 100% !important;
+    }
+
+    .students-without-attendance-card .action-buttons input,
+    .students-without-attendance-card .action-buttons select {
+        width: 100% !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .students-without-attendance-card .action-buttons button {
+        width: 100% !important;
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+        border-radius: 0.375rem !important;
+        transition: all 0.2s ease !important;
+    }
 </style>
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1317,7 +1362,7 @@
                                 @php
                                     $isDuplicate = $emailGroups->get($student->email)->count() > 1;
                                 @endphp
-                                <div class="flex items-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg relative {{ $isDuplicate ? 'ring-2 ring-orange-300 bg-orange-50' : '' }}">
+                                <div class="students-without-attendance-card {{ $isDuplicate ? 'ring-2 ring-orange-300 bg-orange-50' : '' }}">
                                     <!-- Duplicate Indicator -->
                                     @if($isDuplicate)
                                         <div class="absolute top-2 left-2">
@@ -1327,9 +1372,7 @@
                                         </div>
                                     @endif
                                     
-
-                                    
-                                    <div class="flex-shrink-0 h-10 w-10 mr-3">
+                                    <div class="flex-shrink-0 h-10 w-10 mr-3 mt-1">
                                         @if($student->profile_picture)
                                             <img class="h-10 w-10 rounded-full object-cover" 
                                                  src="{{ asset('storage/' . $student->profile_picture) }}" 
@@ -1340,7 +1383,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                    <div class="flex-1">
+                                    <div class="student-info">
                                         <div class="text-sm font-medium text-gray-900">{{ $student->name }}</div>
                                         <div class="text-sm text-gray-500">{{ $student->student_id ?? 'N/A' }}</div>
                                         <div class="text-xs text-gray-500">{{ $student->email }}</div>
@@ -1349,7 +1392,7 @@
                                             <div class="text-xs text-gray-400">Account created: {{ $student->created_at->format('M d, Y') }}</div>
                                         @endif
                                     </div>
-                                    <div class="flex-shrink-0 space-y-2">
+                                    <div class="action-buttons">
                                         <!-- Mark Present Button -->
                                         <form action="{{ route('teacher.sessions.mark-present', $session) }}" method="POST" class="block">
                                             @csrf
@@ -1357,11 +1400,11 @@
                                             @if($session->session_type === 'lab')
                                                 <input type="number" name="pc_number" min="1" max="40" 
                                                        placeholder="PC #" 
-                                                       class="w-16 text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                       class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
                                                        required>
                                             @elseif($session->session_type === 'online')
                                                 <select name="device_type" 
-                                                        class="w-20 text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                        class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
                                                         required>
                                                     <option value="">Device</option>
                                                     <option value="mobile">Mobile</option>
@@ -1371,12 +1414,13 @@
                                             @elseif($session->session_type === 'lecture')
                                                 <input type="file" name="attached_image" 
                                                        accept="image/*"
-                                                       class="w-24 text-xs px-2 py-1 border border-gray-300 rounded mb-2"
+                                                       class="w-full text-xs px-2 py-1 border border-gray-300 rounded mb-2"
                                                        required>
                                             @endif
                                             <button type="submit" 
-                                                    class="w-full text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200 transition-colors"
+                                                    class="w-full text-xs bg-green-100 text-green-700 px-3 py-2 rounded hover:bg-green-200 transition-colors font-medium"
                                                     onclick="return confirm('Mark {{ $student->name }} as present?')">
+                                                <i class="fas fa-check mr-1"></i>
                                                 Mark Present
                                             </button>
                                         </form>
@@ -1386,8 +1430,9 @@
                                             @csrf
                                             <input type="hidden" name="student_id" value="{{ $student->id }}">
                                             <button type="submit" 
-                                                    class="w-full text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 transition-colors"
+                                                    class="w-full text-xs bg-red-100 text-red-700 px-3 py-2 rounded hover:bg-red-200 transition-colors font-medium"
                                                     onclick="return confirm('Mark {{ $student->name }} as absent?')">
+                                                <i class="fas fa-times mr-1"></i>
                                                 Mark Absent
                                             </button>
                                         </form>
