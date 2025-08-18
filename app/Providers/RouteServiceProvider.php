@@ -57,5 +57,20 @@ class RouteServiceProvider extends ServiceProvider
                 Limit::perMinutes(15, 10)->by($compositeKey),
             ];
         });
+
+        // Gentler limiter for password reset requests to avoid 429s for students
+        RateLimiter::for('password', function (Request $request) {
+            $emailKey = strtolower((string) $request->input('email'));
+            $compositeKey = sha1('password|'.$request->ip().'|'.$emailKey);
+
+            return [
+                // Allow a few quick retries in case of typos
+                Limit::perMinutes(1, 6)->by($compositeKey),
+                // Reasonable cap over 15 minutes per IP+email
+                Limit::perMinutes(15, 30)->by($compositeKey),
+                // Broad IP cap to tolerate shared school labs while preventing abuse
+                Limit::perMinutes(60, 120)->by('password-ip:'.$request->ip()),
+            ];
+        });
     }
 } 

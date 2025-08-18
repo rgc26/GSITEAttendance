@@ -3,8 +3,8 @@
 return [
     'app' => [
         'env' => 'production',
-        'debug' => false,
-        'url' => 'https://yourdomain.com',
+        'debug' => false, // Keep this false in production!
+        'url' => 'https://your_actual_domain.com', // <-- IMPORTANT: Change this
         'timezone' => 'UTC',
         'locale' => 'en',
         'fallback_locale' => 'en',
@@ -16,11 +16,11 @@ return [
         'connections' => [
             'mysql' => [
                 'driver' => 'mysql',
-                'host' => '127.0.0.1',
+                'host' => 'mysql.yourdomain.com', // <-- IMPORTANT: Get this from your DreamHost panel
                 'port' => '3306',
-                'database' => 'websys_db',
-                'username' => 'websys_user',
-                'password' => 'your_secure_password_here',
+                'database' => 'your_dreamhost_db_name',    // <-- IMPORTANT: Change this
+                'username' => 'your_dreamhost_db_user',    // <-- IMPORTANT: Change this
+                'password' => 'your_dreamhost_db_password',// <-- IMPORTANT: Change this
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix' => '',
@@ -31,24 +31,23 @@ return [
     ],
     
     'cache' => [
-        'default' => 'redis',
+        // IMPORTANT: Check if your DreamHost plan includes Redis. If not, use 'file'.
+        'default' => 'file', 
         'stores' => [
-            'redis' => [
-                'driver' => 'redis',
-                'connection' => 'cache',
-                'lock_connection' => 'default',
+            'file' => [
+                'driver' => 'file',
+                'path' => storage_path('framework/cache/data'),
             ],
         ],
     ],
     
     'session' => [
-        'driver' => 'redis',
+        // IMPORTANT: Check if your DreamHost plan includes Redis. If not, use 'file'.
+        'driver' => 'file',
         'lifetime' => 120,
         'expire_on_close' => false,
         'encrypt' => true,
-        'secure' => true,
-        'http_only' => true,
-        'same_site' => 'strict',
+        'secure' => true, // This should be true if you are using HTTPS
     ],
     
     'queue' => [
@@ -69,17 +68,16 @@ return [
         'mailers' => [
             'smtp' => [
                 'transport' => 'smtp',
-                'host' => 'your_smtp_host',
+                'host' => 'smtp.dreamhost.com', // Or your specific mail provider's host
                 'port' => 587,
                 'encryption' => 'tls',
-                'username' => 'your_email_username',
-                'password' => 'your_email_password',
+                'username' => 'your_email_username', // <-- IMPORTANT: Change this
+                'password' => 'your_email_password', // <-- IMPORTANT: Change this
                 'timeout' => null,
-                'local_domain' => null,
             ],
         ],
         'from' => [
-            'address' => 'noreply@yourdomain.com',
+            'address' => 'noreply@your_actual_domain.com', // <-- IMPORTANT: Change this
             'name' => 'WebSys',
         ],
     ],

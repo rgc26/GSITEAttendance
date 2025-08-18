@@ -868,6 +868,9 @@ class TeacherController extends Controller
 
     public function updateSubject(Request $request, Subject $subject)
     {
+        // Simple debug log
+        file_put_contents(storage_path('debug.log'), 'updateSubject called at: ' . now() . "\n", FILE_APPEND);
+        
         // Test logging
         \Log::info('updateSubject method called for subject ID: ' . $subject->id);
         \Log::info('Request data: ' . json_encode($request->all()));
